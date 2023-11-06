@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+import { ChevronDown } from 'lucide-react';
+
 const components: {
   title: string;
   href?: string;
@@ -182,34 +184,42 @@ export default function NavBar() {
   };
 
   return (
-    <ul className='flex flex-col list-none md:flex-row'>
+    <ul className='flex flex-col list-none md:flex-row text-white'>
       {components.map((component) => (
-        <li key={component.title} className='mr-4'>
+        <li key={component.title} className='mx-4'>
           {component.href && (
             <Link href={component.href}>{component.title}</Link>
           )}
           {component.children && (
             <>
-              <span
-                className='block cursor-pointer'
+              <button
+                className='flex items-center'
                 onClick={() => toggleCategory(component.title)}
               >
                 {component.title}
-              </span>
+                <ChevronDown
+                  className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
+                  aria-hidden='true'
+                />
+              </button>
               {showCategoryList[component.title] && (
-                <ul className='flex flex-col list-none'>
+                <ul className='flex flex-col list-none md:absolute border-2 border-solid border-orange-400 bg-orange-400'>
                   {component.children.map((child) => (
-                    <li key={child.title} className='mr-4'>
-                      <span
-                        className='block cursor-pointer'
+                    <li key={child.title} className='my-1 mx-4'>
+                      <button
+                        className='flex items-center'
                         onClick={() => toggleSubcategory(child.title)}
                       >
                         {child.title}
-                      </span>
+                        <ChevronDown
+                          className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
+                          aria-hidden='true'
+                        />
+                      </button>
                       {showSubcategoryList[child.title] && (
-                        <ul className='flex flex-col list-none md:flex-row'>
+                        <ul className='flex flex-col list-none md:flex-row bg-black'>
                           {child.children?.map((subchild) => (
-                            <li key={subchild.title} className='mr-4'>
+                            <li key={subchild.title} className='my-2 mx-4'>
                               <Link href={`${child.href}${subchild.href}`}>
                                 {subchild.title}
                               </Link>

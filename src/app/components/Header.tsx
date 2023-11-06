@@ -19,12 +19,15 @@ export default function Header({
 
   return (
     <header className='flex items-center justify-between p-4 bg-teal-900 mb-10 h-32'>
-      <Link href='/'>
-        <h2 className='scroll-m-20 pb-2 text-3xl font-semibold text-amber-500 tracking-tight first:mt-0'>
-          PetShop
-        </h2>
-      </Link>
-      <div
+      <h2 className='scroll-m-20 pb-2 text-3xl font-semibold text-amber-500 tracking-tight first:mt-0'>
+        PetShop
+      </h2>
+
+      <NavBar />
+
+      <button>Search</button>
+
+      <button
         className='flex items-center justify-center w-10 h-10 bg-blue-700 rounded-full'
         onClick={() => {
           setShowCart(!showCart);
@@ -34,8 +37,9 @@ export default function Header({
           {cart.products.length}
         </span>
         {showCart && <CartPopup clearCartAction={clearCartAction} />}
-      </div>
-      <NavBar />
+      </button>
+
+      <button>Login</button>
     </header>
   );
 }

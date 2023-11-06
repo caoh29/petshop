@@ -1,122 +1,230 @@
 'use client';
 
-import * as React from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
 
-import { cn } from '@/lib/utils';
-
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  // navigationMenuTriggerStyle,
-} from './ui/navigation-menu';
-
-const components: { title: string; href: string; description: string }[] = [
+const components: {
+  title: string;
+  href?: string;
+  children?: {
+    title: string;
+    href: string;
+    children?: { title: string; href: string }[];
+  }[];
+}[] = [
   {
-    title: 'Alert Dialog',
-    href: '/docs/primitives/alert-dialog',
-    description:
-      'A modal dialog that interrupts the user with important content and expects a response.',
+    title: 'Home',
+    href: '/',
   },
   {
-    title: 'Hover Card',
-    href: '/docs/primitives/hover-card',
-    description:
-      'For sighted users to preview content available behind a link.',
+    title: 'Shop by Pet',
+    children: [
+      {
+        title: 'Dogs',
+        href: '/dogs',
+        children: [
+          {
+            title: 'Raw Food',
+            href: '/raw-food',
+          },
+          {
+            title: 'Wet Food',
+            href: '/wet-food',
+          },
+          {
+            title: 'Dry Food',
+            href: '/dry-food',
+          },
+          {
+            title: 'Bowls',
+            href: '/bowls',
+          },
+          {
+            title: 'Daycare',
+            href: '/daycare',
+          },
+          {
+            title: 'Toys',
+            href: '/toys',
+          },
+          {
+            title: 'Leashes',
+            href: '/leashes',
+          },
+          {
+            title: 'Beds',
+            href: '/beds',
+          },
+        ],
+      },
+      {
+        title: 'Cats',
+        href: '/cats',
+        children: [
+          {
+            title: 'Raw Food',
+            href: '/raw-food',
+          },
+          {
+            title: 'Wet Food',
+            href: '/wet-food',
+          },
+          {
+            title: 'Dry Food',
+            href: '/dry-food',
+          },
+          {
+            title: 'Bowls',
+            href: '/bowls',
+          },
+          {
+            title: 'Daycare',
+            href: '/daycare',
+          },
+          {
+            title: 'Toys',
+            href: '/toys',
+          },
+          {
+            title: 'Leashes',
+            href: '/leashes',
+          },
+          {
+            title: 'Beds',
+            href: '/beds',
+          },
+        ],
+      },
+      {
+        title: 'Birds',
+        href: '/birds',
+        children: [
+          {
+            title: 'Food',
+            href: '/food',
+          },
+          {
+            title: 'Bowls',
+            href: '/bowls',
+          },
+          {
+            title: 'Daycare',
+            href: '/daycare',
+          },
+          {
+            title: 'Cages',
+            href: '/cages',
+          },
+        ],
+      },
+      {
+        title: 'Fishes',
+        href: '/fishes',
+        children: [
+          {
+            title: 'Food',
+            href: '/food',
+          },
+          {
+            title: 'Decoration',
+            href: '/decoration',
+          },
+          {
+            title: 'Daycare',
+            href: '/daycare',
+          },
+          {
+            title: 'Tanks',
+            href: '/tanks',
+          },
+        ],
+      },
+    ],
   },
   {
-    title: 'Progress',
-    href: '/docs/primitives/progress',
-    description:
-      'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
+    title: 'New Arrivals',
+    href: '/new-arrivals',
   },
   {
-    title: 'Scroll-area',
-    href: '/docs/primitives/scroll-area',
-    description: 'Visually or semantically separates content.',
+    title: 'Rewards',
+    href: '/rewards',
   },
   {
-    title: 'Tabs',
-    href: '/docs/primitives/tabs',
-    description:
-      'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
+    title: 'Gift Cards',
+    href: '/gift-cards',
   },
   {
-    title: 'Tooltip',
-    href: '/docs/primitives/tooltip',
-    description:
-      'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
+    title: 'Contact',
+    href: '/contact',
   },
 ];
 
 export default function NavBar() {
+  const [showCategoryList, setShowCategoryList] = useState<
+    Record<string, boolean>
+  >({});
+  const [showSubcategoryList, setShowSubcategoryList] = useState<
+    Record<string, boolean>
+  >({});
+
+  const toggleCategory = (category: string) => {
+    setShowCategoryList({
+      ...showCategoryList,
+      [category]: !showCategoryList[category],
+    });
+  };
+
+  const toggleSubcategory = (subcategory: string) => {
+    setShowSubcategoryList({
+      ...showSubcategoryList,
+      [subcategory]: !showSubcategoryList[subcategory],
+    });
+  };
+
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Shop by Pet</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className='flex flex-col gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
-              <ListItem href='/docs' title='Introduction'>
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </ListItem>
-              <ListItem href='/docs/installation' title='Installation'>
-                How to install dependencies and structure your app.
-              </ListItem>
-              <ListItem href='/docs/primitives/typography' title='Typography'>
-                Styles for headings, paragraphs, lists...etc
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className='flex flex-col w-[200px] gap-3 p-4'>
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                />
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href='/docs'>Documentation</Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <ul className='flex flex-col list-none md:flex-row'>
+      {components.map((component) => (
+        <li key={component.title} className='mr-4'>
+          {component.href && (
+            <Link href={component.href}>{component.title}</Link>
+          )}
+          {component.children && (
+            <>
+              <span
+                className='block cursor-pointer'
+                onClick={() => toggleCategory(component.title)}
+              >
+                {component.title}
+              </span>
+              {showCategoryList[component.title] && (
+                <ul className='flex flex-col list-none'>
+                  {component.children.map((child) => (
+                    <li key={child.title} className='mr-4'>
+                      <span
+                        className='block cursor-pointer'
+                        onClick={() => toggleSubcategory(child.title)}
+                      >
+                        {child.title}
+                      </span>
+                      {showSubcategoryList[child.title] && (
+                        <ul className='flex flex-col list-none md:flex-row'>
+                          {child.children?.map((subchild) => (
+                            <li key={subchild.title} className='mr-4'>
+                              <Link href={`${child.href}${subchild.href}`}>
+                                {subchild.title}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }
-
-const ListItem = React.forwardRef<
-  React.ElementRef<'a'>,
-  React.ComponentPropsWithoutRef<'a'>
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            className,
-          )}
-          {...props}
-        >
-          <div className='text-sm font-medium leading-none'>{title}</div>
-          <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-ListItem.displayName = 'ListItem';

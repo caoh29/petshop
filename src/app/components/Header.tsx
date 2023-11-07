@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import Link from 'next/link';
 
 import { useCart } from '../store/store';
 
@@ -8,6 +7,8 @@ import CartPopup from './CartPopup';
 import { type Cart } from '@/api/types';
 
 import NavBar from './NavBar';
+
+import { SearchBar } from './SearchBar';
 
 export default function Header({
   clearCartAction,
@@ -25,7 +26,7 @@ export default function Header({
 
       <NavBar />
 
-      <button>Search</button>
+      <SearchBar />
 
       <button
         className='flex items-center justify-center w-10 h-10 bg-blue-700 rounded-full'

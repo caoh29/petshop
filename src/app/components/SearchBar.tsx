@@ -49,7 +49,7 @@ export function SearchBar() {
               ) {
                 return post;
               }
-            }).map((post, index) => (
+            }).map((post) => (
               <div className='box' key={post.id}>
                 <p>{post.product_name}</p>
                 <p>{post.category}</p>

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { getProducts } from '@/api/products';
-import ProductCard from './components/ProductCard';
+import ProductCard from '../components/ProductCard';
 
 export default async function Home() {
   const products = await getProducts();

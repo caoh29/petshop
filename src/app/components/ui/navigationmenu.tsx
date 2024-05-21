@@ -79,6 +79,24 @@ NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 
 const NavigationMenuLink = NavigationMenuPrimitive.Link;
 
+const NavigationMenuSub = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Sub>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Sub>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Sub
+    ref={ref}
+    className={cn(
+      'relative z-10 flex max-w-max flex-1 items-center justify-center',
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <NavigationMenuViewport />
+  </NavigationMenuPrimitive.Sub>
+));
+NavigationMenuSub.displayName = NavigationMenuPrimitive.Content.displayName;
+
 const NavigationMenuViewport = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
   React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
@@ -121,6 +139,7 @@ export {
   NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuContent,
+  NavigationMenuSub,
   NavigationMenuTrigger,
   NavigationMenuLink,
   NavigationMenuIndicator,

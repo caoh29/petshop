@@ -9,7 +9,7 @@ import CartPopup from './CartPopup';
 import { type Cart } from '@/api/types';
 
 import { SearchBar } from './SearchBar';
-import { NavBar } from './NavBar';
+import { NavigationMenuDemo } from './Navbar2';
 
 export default function Header({
   clearCartAction,
@@ -25,7 +25,7 @@ export default function Header({
         PetShop
       </h2>
 
-      <NavBar className='order-1 lg:order-2 lg:flex' />
+      <NavigationMenuDemo className='order-1 mx-auto lg:order-2' />
 
       <SearchBar className='order-3' />
 

@@ -1,14 +1,15 @@
 'use client';
 import { useState } from 'react';
 
+import { ShoppingCart } from 'lucide-react';
+
 import { useCart } from '../store/store';
 
 import CartPopup from './CartPopup';
 import { type Cart } from '@/api/types';
 
-import NavBar from './NavBar';
-
 import { SearchBar } from './SearchBar';
+import { NavBar } from './NavBar';
 
 export default function Header({
   clearCartAction,
@@ -19,28 +20,29 @@ export default function Header({
   const [showCart, setShowCart] = useState(false);
 
   return (
-    <header className='flex items-center justify-between p-4 bg-teal-900 mb-10 h-32'>
-      <h2 className='scroll-m-20 pb-2 text-3xl font-semibold text-amber-500 tracking-tight first:mt-0'>
+    <header className='flex items-center p-4 bg-teal-900 mb-10 h-32 gap-8'>
+      <h2 className='scroll-m-20 text-3xl font-semibold text-amber-500 tracking-tight mx-auto order-2 lg:order-1 lg:mx-0'>
         PetShop
       </h2>
 
-      <NavBar />
+      <NavBar className='order-1 lg:order-2 lg:flex' />
 
-      <SearchBar />
+      <SearchBar className='order-3' />
 
       <button
-        className='flex items-center justify-center w-10 h-10 bg-blue-700 rounded-full'
+        className='relative order-4'
         onClick={() => {
           setShowCart(!showCart);
         }}
       >
-        <span className='text-xl font-bold leading-10 text-gray-100'>
+        <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
           {cart.products.length}
         </span>
         {showCart && <CartPopup clearCartAction={clearCartAction} />}
+        <ShoppingCart color='#ffffff' />
       </button>
 
-      <button>Login</button>
+      <button className='order-5'>Login</button>
     </header>
   );
 }

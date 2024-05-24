@@ -3,6 +3,18 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+import { Search } from 'lucide-react';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from './ui/sheet';
+
 import { ChevronDown } from 'lucide-react';
 
 const components: {
@@ -161,14 +173,13 @@ const components: {
   },
 ];
 
-export function NavBar({ className }: Readonly<{ className?: string }>) {
+export function SideNavBar({ className }: Readonly<{ className?: string }>) {
   const [showCategoryList, setShowCategoryList] = useState<
     Record<string, boolean>
   >({});
   const [showSubcategoryList, setShowSubcategoryList] = useState<
     Record<string, boolean>
   >({});
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({
@@ -185,72 +196,67 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
   };
 
   return (
-    <nav
-      className={`flex justify-between items-center h-16 p-4 lg:mx-auto ${className}`}
-    >
-      {/* <button
-        className='lg:hidden flex items-center mr-4 focus:outline-none'
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className='text-white text-xl mr-2'>☰</span>
-      </button> */}
-      {/* <ul
-        className={`flex flex-col flex-nowrap lg:flex-row list-none text-white ${
-          isOpen ? '' : 'hidden'
-        }`}
-      > */}
-      <ul className='flex flex-col flex-nowrap lg:flex-row list-none text-white'>
-        {components.map((component) => (
-          <li key={component.title} className='mx-4'>
-            {component.href && (
-              <Link href={component.href}>{component.title}</Link>
-            )}
-            {component.children && (
-              <>
-                <button
-                  className='flex items-center'
-                  onClick={() => toggleCategory(component.title)}
-                >
-                  {component.title}
-                  <ChevronDown
-                    className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
-                    aria-hidden='true'
-                  />
-                </button>
-                {showCategoryList[component.title] && (
-                  <ul className='flex flex-col list-none md:absolute border-2 border-solid border-orange-400 bg-orange-400'>
-                    {component.children.map((child) => (
-                      <li key={child.title} className='my-1 mx-4'>
-                        <button
-                          className='flex items-center'
-                          onClick={() => toggleSubcategory(child.title)}
-                        >
-                          {child.title}
-                          <ChevronDown
-                            className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
-                            aria-hidden='true'
-                          />
-                        </button>
-                        {showSubcategoryList[child.title] && (
-                          <ul className='flex flex-col list-none md:flex-row bg-black'>
-                            {child.children?.map((subchild) => (
-                              <li key={subchild.title} className='my-2 mx-4'>
-                                <Link href={`${child.href}${subchild.href}`}>
-                                  {subchild.title}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <Sheet>
+      <SheetTrigger asChild>
+        <span className={`text-white text-xl mr-2 ${className}`}>☰</span>
+      </SheetTrigger>
+      <SheetContent side='left'>
+        <ul className='flex flex-col flex-nowrap list-none text-black'>
+          {components.map((component) => (
+            <li key={component.title} className='mx-4'>
+              {component.href && (
+                <Link href={component.href}>{component.title}</Link>
+              )}
+              {component.children && (
+                <>
+                  <button
+                    className='flex items-center'
+                    onClick={() => toggleCategory(component.title)}
+                  >
+                    {component.title}
+                    <ChevronDown
+                      className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
+                      aria-hidden='true'
+                    />
+                  </button>
+                  {showCategoryList[component.title] && (
+                    <ul className='flex flex-col list-none border-2 border-solid border-orange-400 bg-orange-400'>
+                      {component.children.map((child) => (
+                        <li key={child.title} className='my-1 mx-4'>
+                          <button
+                            className='flex items-center'
+                            onClick={() => toggleSubcategory(child.title)}
+                          >
+                            {child.title}
+                            <ChevronDown
+                              className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
+                              aria-hidden='true'
+                            />
+                          </button>
+                          {showSubcategoryList[child.title] && (
+                            <ul className='flex flex-col list-none bg-black'>
+                              {child.children?.map((subchild) => (
+                                <li
+                                  key={subchild.title}
+                                  className='my-2 mx-4 text-white'
+                                >
+                                  <Link href={`${child.href}${subchild.href}`}>
+                                    {subchild.title}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+      </SheetContent>
+    </Sheet>
   );
 }

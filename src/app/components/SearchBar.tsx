@@ -27,7 +27,10 @@ export function SearchBar({ className }: Readonly<{ className?: string }>) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Search color='white' className={`hover:scale-110 ${className}`} />
+        <Search
+          color='white'
+          className={`hover:scale-110 hover:cursor-pointer ${className}`}
+        />
       </SheetTrigger>
       <SheetContent side='top'>
         <div className='flex justify-center gap-4'>

@@ -198,7 +198,7 @@ export function SideNavBar({ className }: Readonly<{ className?: string }>) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <span className={`text-white text-xl mr-2 ${className}`}>☰</span>
+        <span className={`text-white text-xl ${className}`}>☰</span>
       </SheetTrigger>
       <SheetContent side='left'>
         <ul className='flex flex-col flex-nowrap list-none text-black'>

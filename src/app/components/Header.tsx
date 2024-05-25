@@ -21,7 +21,7 @@ export default function Header({
   const [showCart, setShowCart] = useState(false);
 
   return (
-    <header className='flex items-center justify-center py-4 px-8 bg-teal-900 h-20 gap-8'>
+    <header className='flex items-center justify-center py-4 px-8 bg-[#2A5135] h-20 gap-8'>
       <SideNavBar className='lg:hidden' />
       <h2 className='scroll-m-20 text-3xl font-semibold text-amber-500 tracking-tight mx-auto order-2 lg:order-1 lg:mx-0'>
         PetShop
@@ -40,7 +40,7 @@ export default function Header({
         {showCart && <CartPopup clearCartAction={clearCartAction} />}
         <ShoppingCart color='#ffffff' />
       </button>
-      <button className='order-5'>Login</button>
+      <button className='order-5 text-white'>Login</button>
     </header>
   );
 }

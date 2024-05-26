@@ -168,7 +168,6 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
   const [showSubcategoryList, setShowSubcategoryList] = useState<
     Record<string, boolean>
   >({});
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({
@@ -185,20 +184,7 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
   };
 
   return (
-    <nav
-      className={`flex justify-between items-center h-16 p-4 lg:mx-auto ${className}`}
-    >
-      {/* <button
-        className='lg:hidden flex items-center mr-4 focus:outline-none'
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className='text-white text-xl mr-2'>☰</span>
-      </button> */}
-      {/* <ul
-        className={`flex flex-col flex-nowrap lg:flex-row list-none text-white ${
-          isOpen ? '' : 'hidden'
-        }`}
-      > */}
+    <nav className={`flex justify-between items-center mx-auto ${className}`}>
       <ul className='flex flex-col flex-nowrap lg:flex-row list-none text-white'>
         {components.map((component) => (
           <li key={component.title} className='mx-4'>
@@ -218,7 +204,7 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
                   />
                 </button>
                 {showCategoryList[component.title] && (
-                  <ul className='flex flex-col list-none md:absolute border-2 border-solid border-orange-400 bg-orange-400'>
+                  <ul className='flex flex-col list-none absolute border-2 border-solid border-orange-400 bg-orange-400'>
                     {component.children.map((child) => (
                       <li key={child.title} className='my-1 mx-4'>
                         <button
@@ -232,7 +218,7 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
                           />
                         </button>
                         {showSubcategoryList[child.title] && (
-                          <ul className='flex flex-col list-none md:flex-row bg-black'>
+                          <ul className='flex flex-row list-none bg-black'>
                             {child.children?.map((subchild) => (
                               <li key={subchild.title} className='my-2 mx-4'>
                                 <Link href={`${child.href}${subchild.href}`}>

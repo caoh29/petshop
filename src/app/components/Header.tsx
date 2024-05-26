@@ -12,6 +12,8 @@ import { SearchBar } from './SearchBar';
 import { NavBar } from './NavBar';
 import { SideNavBar } from './SideNavBar';
 
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
+
 export default function Header({
   clearCartAction,
 }: {
@@ -40,7 +42,14 @@ export default function Header({
         {showCart && <CartPopup clearCartAction={clearCartAction} />}
         <ShoppingCart color='#ffffff' />
       </button>
-      <button className='order-5 text-white'>Login</button>
+      <div className='order-5 text-white'>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </div>
     </header>
   );
 }

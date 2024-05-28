@@ -40,7 +40,7 @@ export default async function RootLayout({
         <body className={titleFont.className}>
           <StoreProvider cart={cart}>
             <Header clearCartAction={clearCartAction} />
-            <main className='mx-auto max-w-3xl'>{children}</main>
+            <main className=''>{children}</main>
           </StoreProvider>
         </body>
       </html>

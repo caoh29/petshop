@@ -3,18 +3,18 @@ import { Cart } from "./types";
 
 const cart: Cart = {
   products: [
-    {
-      id: 1,
-      name: "Castle T-Shirt",
-      image: "/castle-t-shirt.jpg",
-      price: 25,
-    },
-    {
-      id: 2,
-      name: "Dragon T-Shirt",
-      image: "/dragon-t-shirt.jpg",
-      price: 25,
-    },
+    // {
+    //   id: 1,
+    //   name: "Castle T-Shirt",
+    //   image: "/castle-t-shirt.jpg",
+    //   price: 25,
+    // },
+    // {
+    //   id: 2,
+    //   name: "Dragon T-Shirt",
+    //   image: "/dragon-t-shirt.jpg",
+    //   price: 25,
+    // },
   ],
 };
 

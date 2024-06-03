@@ -1,19 +1,12 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { titleFont } from '../lib/fonts';
 
 import StoreProvider from '../lib/store/StoreProvider';
 import Header from './components/Header';
 
 import { getCart, clearCart } from '@/api/cart';
 
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -24,9 +17,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   const cart = await getCart();
 
   const clearCartAction = async () => {
@@ -37,7 +30,7 @@ export default async function RootLayout({
   return (
     <ClerkProvider>
       <html lang='en'>
-        <body className={titleFont.className}>
+        <body>
           <StoreProvider cart={cart}>
             <Header clearCartAction={clearCartAction} />
             <main className=''>{children}</main>

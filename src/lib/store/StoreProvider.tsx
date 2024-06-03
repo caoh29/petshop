@@ -7,10 +7,10 @@ import { AppStore, makeStore, setCart } from './store';
 export default function StoreProvider({
   cart,
   children,
-}: {
+}: Readonly<{
   cart: Cart;
   children: React.ReactNode;
-}) {
+}>) {
   const storeRef = useRef<AppStore | null>(null);
   if (!storeRef.current) {
     storeRef.current = makeStore();

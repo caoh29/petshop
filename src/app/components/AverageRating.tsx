@@ -1,9 +1,10 @@
-"use client";
-import { useStore } from "react-redux";
-import { useRef } from "react";
-import { useReviews, setReviews, RootState } from "@/app/store/store";
+'use client';
+import { useStore } from 'react-redux';
+import { useRef } from 'react';
 
-import { Review } from "@/api/types";
+import { Review } from '@/api/types';
+import { setReviews, RootState } from '@/lib/store/store';
+import { useReviews } from '@/lib/hooks';
 
 export default function AverageRating({
   reviews: initialReviews,
@@ -21,8 +22,8 @@ export default function AverageRating({
   return (
     <>
       {reviews && reviews?.length && (
-        <div className="mt-4 font-light">
-          Average Rating:{" "}
+        <div className='mt-4 font-light'>
+          Average Rating:{' '}
           {(
             reviews?.reduce((a, b) => a + b.rating, 0) / reviews?.length
           ).toFixed(1)}

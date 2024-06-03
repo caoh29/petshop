@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { titleFont } from '../lib/fonts';
 
-import StoreProvider from './store/StoreProvider';
+import StoreProvider from '../lib/store/StoreProvider';
 import Header from './components/Header';
 
 import { getCart, clearCart } from '@/api/cart';

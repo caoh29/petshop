@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { ShoppingCart } from 'lucide-react';
 
-import { useCart } from '../store/store';
+import { useCart } from '../../lib/hooks';
 
 import CartPopup from './CartPopup';
 import { type Cart } from '@/api/types';

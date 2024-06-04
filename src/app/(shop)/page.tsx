@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getProducts } from '@/api/products';
 import ProductCard from '../components/ProductCard';
 import { Button } from '../components/ui/button';
+import PetCard from '../components/PetCard';
 
 export default async function Home() {
   const products = await getProducts();
@@ -19,12 +20,19 @@ export default async function Home() {
           </Button>
         </div>
       </section>
-      <section className='flex flex-wrap gap-2'>
-        <ul className='flex flex-row flex-wrap m-2'>
-          {products.map((product) => (
+      <section className='flex flex-wrap px-8'>
+        <ul className='flex flex-row flex-wrap justify-center items-center m-2 gap-x-2 gap-y-4'>
+          {/* {products.map((product) => (
             <li key={product.id} className='md:w-1/3'>
               <Link href={`/products/${product.id}`}>
                 <ProductCard {...product} />
+              </Link>
+            </li>
+          ))} */}
+          {products.map((product) => (
+            <li key={product.name}>
+              <Link href={`/shopByPet/${product.name}`}>
+                <PetCard {...product} />
               </Link>
             </li>
           ))}

@@ -9,7 +9,7 @@ const PetCard = ({ name, image }: { name?: string; image?: string | null }) => {
 
   return (
     <button
-      className='flex flex-col p-2 w-[350px]'
+      className='flex flex-col p-2 w-[320px]'
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -26,8 +26,8 @@ const PetCard = ({ name, image }: { name?: string; image?: string | null }) => {
           />
         </CardContent>
       </Card>
-      <h3 className='font-bold'>
-        {name} <span className={hovered ? 'text-2xl' : ''}>&rarr;</span>
+      <h3 className={`font-bold ${hovered ? 'text-red-500' : ''}`}>
+        {name} <span className={hovered ? 'text-red-500' : ''}>&rarr;</span>
       </h3>
     </button>
   );

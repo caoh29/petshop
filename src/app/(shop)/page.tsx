@@ -20,23 +20,40 @@ export default async function Home() {
           </Button>
         </div>
       </section>
-      <section className='flex flex-wrap px-8'>
-        <ul className='flex flex-row flex-wrap justify-center items-center m-2 gap-x-2 gap-y-4'>
-          {/* {products.map((product) => (
-            <li key={product.id} className='md:w-1/3'>
-              <Link href={`/products/${product.id}`}>
-                <ProductCard {...product} />
-              </Link>
-            </li>
-          ))} */}
-          {products.map((product) => (
-            <li key={product.name}>
-              <Link href={`/shopByPet/${product.name}`}>
-                <PetCard {...product} />
-              </Link>
-            </li>
-          ))}
-        </ul>
+      <section className='bg-slate-400 py-10'>
+        <div className='max-w-screen-lg flex flex-col gap-6 mx-auto'>
+          <h2 className='text-4xl px-4'>Featured Products</h2>
+          <ul className='grid justify-items-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+            {/* {products.map((product) => (
+              <li key={product.id} className='md:w-1/3'>
+                <Link href={`/products/${product.id}`}>
+                  <ProductCard {...product} />
+                </Link>
+              </li>
+            ))} */}
+            {products.map((product) => (
+              <li key={product.name}>
+                <Link href={`/shopByPet/${product.name}`}>
+                  <PetCard {...product} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+      <section className='bg-green-400 py-8'>
+        <div className='max-w-screen-lg flex flex-col gap-6 mx-auto'>
+          <h2 className='text-4xl px-4'>Hot deals</h2>
+          <ul className='grid justify-items-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+            {products.map((product) => (
+              <li key={product.name}>
+                <Link href={`/shopByPet/${product.name}`}>
+                  <PetCard {...product} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
     </>
   );

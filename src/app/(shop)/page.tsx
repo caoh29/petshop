@@ -1,9 +1,10 @@
 import Link from 'next/link';
 
 import { getProducts } from '@/api/products';
-import ProductCard from '../components/ProductCard';
+// import ProductCard from '../components/ProductCard';
 import { Button } from '../components/ui/button';
 import PetCard from '../components/PetCard';
+import { CarouselComponent } from '../components/Carousel';
 
 export default async function Home() {
   const products = await getProducts();
@@ -44,15 +45,10 @@ export default async function Home() {
       <section className='bg-green-400 py-8'>
         <div className='max-w-screen-lg flex flex-col gap-6 mx-auto'>
           <h2 className='text-4xl px-4'>Hot deals</h2>
-          <ul className='grid justify-items-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-            {products.map((product) => (
-              <li key={product.name}>
-                <Link href={`/shopByPet/${product.name}`}>
-                  <PetCard {...product} />
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <CarouselComponent
+            className='self-center md:max-w-xl lg:max-w-4xl'
+            items={products}
+          />
         </div>
       </section>
     </>

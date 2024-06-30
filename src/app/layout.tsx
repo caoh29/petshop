@@ -7,6 +7,7 @@ import Header from './components/Header';
 import { getCart, clearCart } from '@/api/cart';
 
 import { ClerkProvider } from '@clerk/nextjs';
+import { Footer } from './components/Footer';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -34,6 +35,7 @@ export default async function RootLayout({
           <StoreProvider cart={cart}>
             <Header clearCartAction={clearCartAction} />
             <main className=''>{children}</main>
+            <Footer />
           </StoreProvider>
         </body>
       </html>

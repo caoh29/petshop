@@ -85,7 +85,7 @@ export function FooterLinks() {
           ))}
         </Accordion>
       ) : (
-        <div className='grid grid-cols-2 gap-10'>
+        <div className='grid grid-cols-2 gap-10 max-w-screen-lg w-full justify-items-center'>
           {data.map((item, i) => (
             <div key={item.title} className={`order-${i + 1}`}>
               <h3 className='mb-4 text-lg font-bold'>{item.title}</h3>

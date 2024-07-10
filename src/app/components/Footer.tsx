@@ -23,7 +23,7 @@ const socials: { title: string; icon: ReactNode; href: string }[] = [
 
 const links = [
   {
-    title: 'Home',
+    title: '2024 PetShop',
     href: '/',
   },
   {
@@ -74,9 +74,9 @@ export function Footer() {
 
       <hr className='w-full border border-input' />
       <p>
-        &copy; 2024 PetShop
+        &copy;
         {links.map((link) => (
-          <span key={link.title} className='mx-2'>
+          <span key={link.title} className='mx-2 hover:underline'>
             <Link href={link.href}>{link.title}</Link>
           </span>
         ))}

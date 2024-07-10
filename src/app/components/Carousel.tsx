@@ -16,7 +16,10 @@ interface CarouselProps {
   className?: string;
 }
 
-export function CarouselComponent({ items, className }: CarouselProps) {
+export function CarouselComponent({
+  items,
+  className,
+}: Readonly<CarouselProps>) {
   return (
     <Carousel
       opts={{

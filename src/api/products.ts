@@ -6,6 +6,8 @@ const products = [
     image: "/castle-t-shirt.jpg",
     name: "Castle T-Shirt",
     price: 25,
+    category: "t-shirts",
+    subcategory: "castle",
     description:
       "Beware the castle of the blue wizard of Bazmagar! It is said that he has a dragon!",
     reviews: [
@@ -23,6 +25,8 @@ const products = [
     id: 2,
     image: "/dragon-t-shirt.jpg",
     name: "Dragon T-Shirt",
+    category: "t-shirts",
+    subcategory: "dragon",
     price: 25,
     description:
       "This dragon is not to be trifled with, his fire has burned many enemies to ash!",
@@ -42,6 +46,8 @@ const products = [
     image: "/elf-t-shirt.jpg",
     name: "Elf T-Shirt",
     price: 25,
+    category: "t-shirts",
+    subcategory: "elf",
     description:
       "This fierce elf is ready to take on any foe, with her trusty bow and arrow!",
     reviews: [
@@ -60,6 +66,8 @@ const products = [
     image: "/wizard-t-shirt.jpg",
     name: "Wizard T-Shirt",
     price: 25,
+    category: "t-shirts",
+    subcategory: "wizard",
     description:
       "This wizard is ready to cast a spell on you, and it won't be a good one!",
     reviews: [
@@ -78,6 +86,8 @@ const products = [
     image: "/wizard-t-shirt-2.jpg",
     name: "Wizard T-Shirt ][",
     price: 25,
+    category: "t-shirts",
+    subcategory: "wizard",
     description:
       "The wizard is powerful and knows many dangerous spells, beware traveller!",
     reviews: [
@@ -96,6 +106,8 @@ const products = [
     image: "/barbarian-t-shirt.jpg",
     name: "Barbarian T-Shirt",
     price: 25,
+    category: "dogs",
+    subcategory: "barbarian",
     description:
       "This barbarian is ready to take on any foe, with his trusty broadsword!",
     reviews: [
@@ -131,3 +143,16 @@ export const getProductById = async (
   id: number
 ): Promise<Product | undefined> =>
   getProducts().then((products) => products.find((p) => p.id === id));
+
+
+export const getProductsByCategory = async (
+  category: string
+): Promise<Product[] | undefined> =>
+  getProducts().then((products) => products.filter((p) => p.category === category));
+
+
+  export const getProductsBySubCategory = async (
+    category: string,
+    subcategory: string
+  ): Promise<Product[] | undefined> =>
+    getProducts().then((products) => products.filter((p) => p.category === category && p.subcategory === subcategory));

@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <>
       <HeroSection />
-      <ProductsSection products={products} />
+      <ProductsSection title='featured-products' products={products} />
       <CarouselSection products={products} />
     </>
   );

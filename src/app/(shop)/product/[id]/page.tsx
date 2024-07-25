@@ -3,22 +3,21 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { revalidatePath } from 'next/cache';
 
-import Reviews from '../../components/Reviews';
+import Reviews from '@/app/components/Reviews';
 import AddToCart from '@/app/components/AddToCart';
 import ProductCard from '@/app/components/ProductCard';
-import AverageRating from '../../components/AverageRating';
+import AverageRating from '@/app/components/AverageRating';
 
-import { getProductById, getProducts } from '@/api/products';
+import { getProductById, getProducts, addReview } from '@/api/products';
 import { addToCart } from '@/api/cart';
-import { addReview } from '@/api/products';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProductDetail({
   params: { id },
-}: {
+}: Readonly<{
   params: { id: string };
-}) {
+}>) {
   const product = await getProductById(+id);
   const products = await getProducts();
 
@@ -71,7 +70,7 @@ export default async function ProductDetail({
       </div>
       <div className='flex flex-wrap gap-2 w-full'>
         <h1 className='text-2xl font-bold mt-2 -mb-2'>Related Products</h1>
-        <ul role='list' className='flex flex-row flex-wrap m-2'>
+        <ul className='flex flex-row flex-wrap m-2'>
           {products
             .filter((p) => p.id !== +id)
             .map((product) => (

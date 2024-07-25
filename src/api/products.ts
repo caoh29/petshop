@@ -125,19 +125,6 @@ const products = [
 
 export const getProducts = async (): Promise<Product[]> => products;
 
-export const addReview = async (
-  id: number,
-  review: {
-    rating: number;
-    text: string;
-  }
-): Promise<Review[] | undefined> => {
-  const product = await getProductById(id);
-  if (product) {
-    product.reviews.push(review);
-  }
-  return product?.reviews;
-};
 
 export const getProductById = async (
   id: number
@@ -156,3 +143,17 @@ export const getProductsByCategory = async (
     subcategory: string
   ): Promise<Product[] | undefined> =>
     getProducts().then((products) => products.filter((p) => p.category === category && p.subcategory === subcategory));
+
+export const addReview = async (
+  id: number,
+  review: {
+    rating: number;
+    text: string;
+  }
+): Promise<Review[] | undefined> => {
+  const product = await getProductById(id);
+  if (product) {
+    product.reviews.push(review);
+  }
+  return product?.reviews;
+};

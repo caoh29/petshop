@@ -3,17 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { Search } from 'lucide-react';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from './ui/sheet';
+import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
@@ -40,6 +30,11 @@ export function SideNavBar({ className }: Readonly<{ className?: string }>) {
     });
   };
 
+  const resetStates = () => {
+    setShowCategoryList({});
+    setShowSubcategoryList({});
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -54,7 +49,9 @@ export function SideNavBar({ className }: Readonly<{ className?: string }>) {
           {ROUTES.map((component) => (
             <li key={component.title} className='mx-4'>
               {component.href && (
-                <Link href={component.href}>{component.title}</Link>
+                <Link onClick={resetStates} href={component.href}>
+                  {component.title}
+                </Link>
               )}
               {component.children && (
                 <>
@@ -89,7 +86,10 @@ export function SideNavBar({ className }: Readonly<{ className?: string }>) {
                                   key={subchild.title}
                                   className='my-2 mx-4 text-white'
                                 >
-                                  <Link href={`${child.href}${subchild.href}`}>
+                                  <Link
+                                    onClick={resetStates}
+                                    href={`${child.href}${subchild.href}`}
+                                  >
                                     {subchild.title}
                                   </Link>
                                 </li>

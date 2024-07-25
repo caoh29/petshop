@@ -1,12 +1,14 @@
 'use client';
-
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useParams } from 'next/navigation';
 
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 
 export function NavBar({ className }: Readonly<{ className?: string }>) {
+  const params = useParams();
+
   const [showCategoryList, setShowCategoryList] = useState<
     Record<string, boolean>
   >({});
@@ -28,13 +30,28 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
     });
   };
 
+  const resetStates = () => {
+    setShowCategoryList({});
+    setShowSubcategoryList({});
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', resetStates);
+
+    return () => {
+      window.removeEventListener('resize', resetStates);
+    };
+  }, []);
+
   return (
     <nav className={`flex justify-between items-center mx-auto ${className}`}>
       <ul className='flex flex-col flex-nowrap lg:flex-row list-none text-white'>
         {ROUTES.map((component) => (
           <li key={component.title} className='mx-4'>
             {component.href && (
-              <Link href={component.href}>{component.title}</Link>
+              <Link onClick={resetStates} href={component.href}>
+                {component.title}
+              </Link>
             )}
             {component.children && (
               <>
@@ -66,7 +83,10 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
                           <ul className='flex flex-row list-none bg-black'>
                             {child.children?.map((subchild) => (
                               <li key={subchild.title} className='my-2 mx-4'>
-                                <Link href={`${child.href}${subchild.href}`}>
+                                <Link
+                                  onClick={resetStates}
+                                  href={`${child.href}${subchild.href}`}
+                                >
                                   {subchild.title}
                                 </Link>
                               </li>

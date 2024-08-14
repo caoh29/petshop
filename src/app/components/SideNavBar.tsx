@@ -1,12 +1,10 @@
 'use client';
-
-import Link from 'next/link';
 import { useState } from 'react';
-
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import Link from 'next/link';
 
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
+import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 
 export function SideNavBar({ className }: Readonly<{ className?: string }>) {
   const [showCategoryList, setShowCategoryList] = useState<
@@ -44,7 +42,7 @@ export function SideNavBar({ className }: Readonly<{ className?: string }>) {
           ☰
         </span>
       </SheetTrigger>
-      <SheetContent side='left'>
+      <SheetContent side='left' onCloseAutoFocus={resetStates}>
         <ul className='flex flex-col flex-nowrap list-none text-black'>
           {ROUTES.map((component) => (
             <li key={component.title} className='mx-4'>

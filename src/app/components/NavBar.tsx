@@ -1,14 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 
 export function NavBar({ className }: Readonly<{ className?: string }>) {
-  const params = useParams();
-
   const [showCategoryList, setShowCategoryList] = useState<
     Record<string, boolean>
   >({});

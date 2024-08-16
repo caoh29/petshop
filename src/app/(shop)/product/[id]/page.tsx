@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
 import Reviews from '@/app/components/Reviews';

@@ -107,7 +107,7 @@ const products = [
     name: "Barbarian T-Shirt",
     price: 25,
     category: "dogs",
-    subcategory: "barbarian",
+    subcategory: "raw-food",
     description:
       "This barbarian is ready to take on any foe, with his trusty broadsword!",
     reviews: [

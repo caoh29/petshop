@@ -8,7 +8,10 @@ export default function NotFound() {
       <div className='text-center px-5 mx-5'>
         <h1 className={`${titleFont.className} antialiased text-9xl`}>404</h1>
         <p className='font-semibold text-xl'>Whoops! Something went wrong</p>
-        <Link href={'/'} className='font-normal hover:underline transition-all'>
+        <Link
+          href={'/'}
+          className='font-normal text-[#2A5135] underline transition-all'
+        >
           Return to Home page
         </Link>
       </div>

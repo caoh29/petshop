@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from './ui/card';
+import { capitalizeString } from '@/lib/utils';
 
-const PetCard = ({ name, image }: { name?: string; image?: string | null }) => {
+const PetCard = ({ name, image }: { name: string; image: string | null }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -27,7 +28,8 @@ const PetCard = ({ name, image }: { name?: string; image?: string | null }) => {
         </CardContent>
       </Card>
       <h3 className={`font-bold ${hovered ? 'text-red-500' : ''}`}>
-        {name} <span className={hovered ? 'text-red-500' : ''}>&rarr;</span>
+        {capitalizeString(name)}{' '}
+        <span className={hovered ? 'text-red-500' : ''}>&rarr;</span>
       </h3>
     </button>
   );

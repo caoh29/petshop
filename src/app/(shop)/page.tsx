@@ -1,17 +1,19 @@
 import { getProducts } from '@/api/products';
+import { getCategories } from '@/api/categories';
 
 import { HeroSection } from '../components/HeroSection';
-import { ProductsSection } from '../components/ProductsSection';
+import { GridSection } from '../components/GridSection';
 import { CarouselSection } from '../components/CarouselSection';
 
 export default async function Home() {
   const products = await getProducts();
+  const categories = await getCategories();
   return (
     <>
       <HeroSection />
-      <ProductsSection title='featured-products' products={products} />
+      <GridSection title='featured-products' products={products} />
       <CarouselSection products={products} />
-      <ProductsSection title='shop-by-animal' products={products} />
+      <GridSection title='shop-by-animal' categories={categories} />
     </>
   );
 }

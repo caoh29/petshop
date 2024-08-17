@@ -132,6 +132,50 @@ export const ROUTES: Route[] = [
           },
         ],
       },
+      {
+        title: 'Reptiles',
+        href: '/reptiles',
+        children: [
+          {
+            title: 'Food',
+            href: '/food',
+          },
+          {
+            title: 'Decoration',
+            href: '/decoration',
+          },
+          {
+            title: 'Daycare',
+            href: '/daycare',
+          },
+          {
+            title: 'Terrariums',
+            href: '/terrariums',
+          },
+          {
+            title: 'Stands',
+            href: '/stands',
+          },
+        ],
+      },
+      {
+        title: 'Others',
+        href: '/others',
+        children: [
+          {
+            title: 'Food',
+            href: '/food',
+          },
+          {
+            title: 'Decoration',
+            href: '/decoration',
+          },
+          {
+            title: 'Daycare',
+            href: '/daycare',
+          },
+        ],
+      },
     ],
   },
   {

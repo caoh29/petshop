@@ -22,3 +22,8 @@ export interface Cart {
     price: number;
   }[];
 }
+
+export interface Category {
+  name: string;
+  image: string;
+}

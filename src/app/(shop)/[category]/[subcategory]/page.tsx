@@ -1,7 +1,7 @@
 import { getProductsBySubCategory } from '@/api/products';
 import { VALID_ROUTES } from '@/api/routes';
 import NotFound from '@/app/components/PageNotFound';
-import { ProductsSection } from '@/app/components/ProductsSection';
+import { GridSection } from '@/app/components/GridSection';
 
 export default async function SubCategoryPage({
   params,
@@ -15,5 +15,5 @@ export default async function SubCategoryPage({
     params.category,
     params.subcategory,
   );
-  return <ProductsSection title={params.subcategory} products={products!} />;
+  return <GridSection title={params.subcategory} products={products!} />;
 }

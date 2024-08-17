@@ -21,52 +21,38 @@ export default function Header({
 }>) {
   const cart = useCart();
   const [showCart, setShowCart] = useState(false);
+
   const [isVisible, setIsVisible] = useState(true);
-
-  const prevScrollPosRef = useRef(0);
-  const [count, setCount] = useState(0);
-
-  const handleScroll = useCallback(() => {
-    const currentScrollPos = window.scrollY;
-    const isScrollingDown = currentScrollPos > prevScrollPosRef.current;
-
-    if (isScrollingDown !== !isVisible) {
-      setIsVisible(!isScrollingDown);
-    }
-
-    prevScrollPosRef.current = currentScrollPos;
-    setCount(count + 1);
-  }, [isVisible, count]);
-
-  // const handleScroll = () => {
-  //   const currentScrollPos = window.scrollY;
-  //   const isScrollingDown = currentScrollPos > prevScrollPosRef.current;
-
-  //   if (isScrollingDown !== !isVisible) {
-  //     setIsVisible(!isScrollingDown);
-  //   }
-
-  //   prevScrollPosRef.current = currentScrollPos;
-  //   setCount(count + 1);
-  // };
+  const prevScrollPos = useRef(0);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      const isScrollingDown = currentScrollPos > prevScrollPos.current;
+
+      if (isScrollingDown !== !isVisible && currentScrollPos > 150) {
+        setIsVisible(!isScrollingDown);
+      }
+
+      prevScrollPos.current = currentScrollPos;
+    };
+
     window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isVisible, count, handleScroll]);
+  }, [isVisible]);
 
   return (
     <header
       className={`${
-        !isVisible ? 'invisible' : 'visible'
-      } sticky z-10 top-0 flex items-center justify-center py-4 px-8 bg-[#2A5135] h-20 gap-8 ease-in duration-500`}
+        !isVisible ? '-top-20' : 'top-0 '
+      } sticky z-10 flex items-center justify-center py-4 px-8 bg-[#2A5135] h-20 gap-8 transition-all ease-in duration-500`}
     >
       <SideNavBar className='lg:hidden' />
       <h2 className='scroll-m-20 text-3xl font-semibold text-amber-500 tracking-tight mx-auto order-2 lg:order-1 lg:mx-0'>
-        PetShop {count}
+        PetShop
       </h2>
       <NavBar className='hidden lg:block lg:mx-auto lg:order-2' />
       <SearchBar className='order-3' />

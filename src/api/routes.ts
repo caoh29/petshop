@@ -163,16 +163,16 @@ export const ROUTES: Route[] = [
         href: '/others',
         children: [
           {
-            title: 'Food',
-            href: '/food',
+            title: 'Hamster',
+            href: '/hamster',
           },
           {
-            title: 'Decoration',
-            href: '/decoration',
+            title: 'Pig',
+            href: '/pig',
           },
           {
-            title: 'Daycare',
-            href: '/daycare',
+            title: 'Rabbit',
+            href: '/rabbit',
           },
         ],
       },

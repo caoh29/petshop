@@ -27,9 +27,9 @@ const PetCard = ({ name, image }: { name: string; image: string | null }) => {
           />
         </CardContent>
       </Card>
-      <h3 className={`font-bold ${hovered ? 'text-red-500' : ''}`}>
+      <h3 className={`font-bold ${hovered ? 'text-amber-500' : ''}`}>
         {capitalizeString(name)}{' '}
-        <span className={hovered ? 'text-red-500' : ''}>&rarr;</span>
+        <span className={hovered ? 'text-amber-500' : ''}>&rarr;</span>
       </h3>
     </button>
   );

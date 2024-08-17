@@ -11,6 +11,7 @@ export default async function Home() {
       <HeroSection />
       <ProductsSection title='featured-products' products={products} />
       <CarouselSection products={products} />
+      <ProductsSection title='shop-by-animal' products={products} />
     </>
   );
 }

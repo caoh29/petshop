@@ -22,7 +22,7 @@ export default function Header({
   const cart = useCart();
   const [showCart, setShowCart] = useState(false);
 
-  const [isVisible, setIsVisible] = useState(true);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const prevScrollPos = useRef(0);
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export default function Header({
       const currentScrollPos = window.scrollY;
       const isScrollingDown = currentScrollPos > prevScrollPos.current;
 
-      if (isScrollingDown !== !isVisible && currentScrollPos > 150) {
-        setIsVisible(!isScrollingDown);
+      if (isScrollingDown !== !isHeaderVisible && currentScrollPos > 150) {
+        setIsHeaderVisible(!isScrollingDown);
       }
 
       prevScrollPos.current = currentScrollPos;
@@ -42,12 +42,12 @@ export default function Header({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isVisible]);
+  }, [isHeaderVisible]);
 
   return (
     <header
       className={`${
-        !isVisible ? '-top-20' : 'top-0 '
+        isHeaderVisible ? 'top-0 ' : '-top-20'
       } sticky z-10 flex items-center justify-center py-4 px-8 bg-[#2A5135] h-20 gap-8 transition-all ease-in duration-500`}
     >
       <SideNavBar className='lg:hidden' />

@@ -5,6 +5,13 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 
+import { useHeaderVisibility } from '@/lib/hooks';
+import { useDispatch } from 'react-redux';
+
+// export function NavBar({
+//   className,
+//   isVisible,
+// }: Readonly<{ className?: string; isVisible: boolean }>) {
 export function NavBar({ className }: Readonly<{ className?: string }>) {
   const [showCategoryList, setShowCategoryList] = useState<
     Record<string, boolean>
@@ -12,6 +19,8 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
   const [showSubcategoryList, setShowSubcategoryList] = useState<
     Record<string, boolean>
   >({});
+
+  const isVisible = useHeaderVisibility();
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({
@@ -39,6 +48,12 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
       window.removeEventListener('resize', resetStates);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isVisible) {
+      resetStates();
+    }
+  }, [isVisible]);
 
   return (
     <nav className={`flex justify-between items-center mx-auto ${className}`}>

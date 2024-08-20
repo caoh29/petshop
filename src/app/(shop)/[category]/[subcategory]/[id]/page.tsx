@@ -10,13 +10,16 @@ import AverageRating from '@/app/components/AverageRating';
 
 import { getProductById, getProducts, addReview } from '@/api/products';
 import { addToCart } from '@/api/cart';
+import SizeSelector from '@/app/components/SizeSelector';
+
+import { capitalizeString } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProductDetail({
-  params: { id },
+  params: { id, category, subcategory },
 }: Readonly<{
-  params: { id: string };
+  params: { id: string; category: string; subcategory: string };
 }>) {
   const product = await getProductById(+id);
   const products = await getProducts();
@@ -32,7 +35,7 @@ export default async function ProductDetail({
   const addReviewAction = async (text: string, rating: number) => {
     'use server';
     const reviews = await addReview(+id, { text, rating });
-    revalidatePath(`/products/${id}`);
+    revalidatePath(`/${category}/${subcategory}/${id}`);
     return reviews || [];
   };
 
@@ -48,19 +51,28 @@ export default async function ProductDetail({
         />
       </div>
       <div className='w-full md:w-1/2 p-5'>
-        <h1 className='text-3xl font-bold leading-10 text-gray-100'>
+        <h1 className='text-3xl font-bold leading-10 text-black'>
           {product.name}
         </h1>
+        <h3 className='text-md leading-5 text-gray-300'>
+          {capitalizeString(product.category)} -{' '}
+          {capitalizeString(product.subcategory)}
+        </h3>
+        <AverageRating reviews={product.reviews} />
         <div className='my-1 text-md leading-5 text-gray-300'>
           {product.price.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
           })}
         </div>
+        <SizeSelector
+          sizes={product.sizes}
+          availableSizes={product.availableSizes}
+        />
         <div className='mt-1 text-sm leading-5 text-gray-300 font-light italic'>
           {product.description}
         </div>
-        <AverageRating reviews={product.reviews} />
+
         <div className='flex justify-end'>
           <AddToCart addToCartAction={addToCartAction} />
         </div>

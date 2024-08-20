@@ -12,6 +12,20 @@ export interface Product {
   subcategory: string;
   description: string;
   reviews: Review[];
+  sizes: string[];
+  availableSizes: string[];
+}
+
+export interface SelectedProduct {
+  id: number;
+  name: string;
+  // price: number;
+  // category: string;
+  // subcategory: string;
+  // reviews: Review[];
+  size: string;
+  color?: string;
+  quantity: number;
 }
 
 export interface Cart {

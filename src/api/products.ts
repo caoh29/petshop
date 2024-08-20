@@ -1,6 +1,6 @@
 import { Product, Review } from "./types";
 
-const products = [
+const products: Product[] = [
   {
     id: 1,
     image: "/castle-t-shirt.jpg",
@@ -20,6 +20,8 @@ const products = [
         text: "I really like this t-shirt, the design is cool and it's comfortable to wear. The only downside is that it shrunk a bit after washing.",
       },
     ],
+    sizes: ["S", "M", "L", "XL"],
+    availableSizes: ["S", "M", "L", "XL"],
   },
   {
     id: 2,
@@ -40,6 +42,8 @@ const products = [
         text: "This is my new favorite t-shirt! The dragon design is so cool and the fit is perfect.",
       },
     ],
+    sizes: ["S", "M", "L", "XL"],
+    availableSizes: ["S", "M", "L", "XL"],
   },
   {
     id: 3,
@@ -60,6 +64,8 @@ const products = [
         text: "This t-shirt is amazing! The elf design is so cool and the fit is perfect. I've gotten so many compliments on it.",
       },
     ],
+    sizes: ["S", "M", "L", "XL"],
+    availableSizes: ["L", "XL"],
   },
   {
     id: 4,
@@ -80,6 +86,8 @@ const products = [
         text: "I really like this t-shirt, the wizard design is unique and the fabric is soft. The only downside is that it's a bit too tight around the neck.",
       },
     ],
+    sizes: ["S", "M", "L", "XL"],
+    availableSizes: ["S", "L", "XL"],
   },
   {
     id: 5,
@@ -100,6 +108,8 @@ const products = [
         text: "I love this t-shirt! The wizard design is so cool and the fit is perfect. I wear it all the time.",
       },
     ],
+    sizes: ["S", "M", "L", "XL"],
+    availableSizes: ["S", "M", "L", "XL"],
   },
   {
     id: 6,
@@ -120,6 +130,8 @@ const products = [
         text: "This t-shirt is amazing! The barbarian design is so cool and the fit is perfect. I've gotten so many compliments on it.",
       },
     ],
+    sizes: ["S", "M", "L", "XL"],
+    availableSizes: [],
   },
 ];
 

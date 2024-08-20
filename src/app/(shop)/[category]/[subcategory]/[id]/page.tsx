@@ -7,10 +7,11 @@ import Reviews from '@/app/components/Reviews';
 import AddToCart from '@/app/components/AddToCart';
 import ProductCard from '@/app/components/ProductCard';
 import AverageRating from '@/app/components/AverageRating';
+import QuantitySelector from '@/app/components/QuantitySelector';
+import SizeSelector from '@/app/components/SizeSelector';
 
 import { getProductById, getProducts, addReview } from '@/api/products';
 import { addToCart } from '@/api/cart';
-import SizeSelector from '@/app/components/SizeSelector';
 
 import { capitalizeString } from '@/lib/utils';
 
@@ -69,6 +70,7 @@ export default async function ProductDetail({
           sizes={product.sizes}
           availableSizes={product.availableSizes}
         />
+        <QuantitySelector />
         <div className='mt-1 text-sm leading-5 text-gray-300 font-light italic'>
           {product.description}
         </div>

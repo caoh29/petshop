@@ -18,7 +18,7 @@ export interface Product {
 
 export interface SelectedProduct {
   id: number;
-  name: string;
+  // name: string;
   // price: number;
   // category: string;
   // subcategory: string;

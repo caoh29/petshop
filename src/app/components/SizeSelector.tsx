@@ -1,7 +1,10 @@
 'use client';
+import { MouseEvent } from 'react';
 
 import { useDispatch } from 'react-redux';
 import { setSize } from '@/lib/store/store';
+
+import { ToggleGroup, ToggleGroupItem } from '@/app/components/ui/toggle-group';
 
 interface Props {
   sizes: string[];
@@ -16,13 +19,11 @@ export default function SizeSelector({
 
   if (sizes.length === 0) return null;
 
-  const handleSizeClick = (e: any) => {
-    const size = e.target.innerText;
+  const handleSizeClick = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+  ) => {
+    const size = e.currentTarget.innerText;
     if (availableSizes.includes(size)) {
-      e.target.parentElement.childNodes.forEach((node: any) => {
-        node.classList.remove('underline');
-      });
-      e.target.classList.add('underline');
       dispatch(setSize(size));
     }
   };
@@ -30,19 +31,19 @@ export default function SizeSelector({
   return (
     <div className='my-4'>
       <h3>Sizes</h3>
-      {sizes.map((size) => (
-        <button
-          className={`${
-            availableSizes.includes(size)
-              ? 'text-black hover:underline'
-              : 'text-slate-400 hover:cursor-default'
-          } mx-4`}
-          key={size}
-          onClick={(e) => handleSizeClick(e)}
-        >
-          {size}
-        </button>
-      ))}
+      <ToggleGroup type='single' className='flex flex-wrap justify-start'>
+        {sizes.map((size) => (
+          <ToggleGroupItem
+            key={size}
+            value={size}
+            aria-label={`Toggle ${size}`}
+            onClick={(e) => handleSizeClick(e)}
+            disabled={!availableSizes.includes(size)}
+          >
+            {size}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
     </div>
   );
 }

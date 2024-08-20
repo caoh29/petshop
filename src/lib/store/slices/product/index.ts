@@ -8,9 +8,8 @@ export interface ProductState {
 const initialState: ProductState = {
   product: {
     id: 0,
-    name: "",
     size: "",
-    quantity: 0
+    quantity: 1
   },
 };
 
@@ -18,11 +17,19 @@ export const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    setProduct: (state, action: PayloadAction<SelectedProduct>) => {
-      state.product = action.payload;
+    setId: (state, action: PayloadAction<number>) => {
+      state.product.id = action.payload;
     },
     setSize: (state, action: PayloadAction<string>) => {
       state.product.size = action.payload;
+    },
+    increaseQuantity: (state) => {
+      state.product.quantity = state.product.quantity + 1;
+    },
+    decreaseQuantity: (state) => {
+      if (state.product.quantity > 1) {
+        state.product.quantity = state.product.quantity - 1;
+      }
     },
   },
 });

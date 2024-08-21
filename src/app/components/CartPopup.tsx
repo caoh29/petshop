@@ -25,20 +25,25 @@ export default function CartPopup({
         )}
         {cart.products.length > 0 && (
           <>
-            {cart.products.map((product, index) => (
-              <div
-                key={index}
-                className='flex text-black w-full justify-between'
-              >
-                <div className='font-bold'>{product.name}</div>
-                <div className=''>
-                  {product.price.toLocaleString('en-US', {
-                    style: 'currency',
-                    currency: 'USD',
-                  })}
+            {cart.products.map((product, index) => {
+              const price = product.price * product.quantity;
+              return (
+                <div
+                  key={index}
+                  className='flex text-black w-full justify-between'
+                >
+                  <div className='font-bold'>{product.name}</div>
+                  <div>{product.size}</div>
+                  <div>{product.quantity}</div>
+                  <div className=''>
+                    {price.toLocaleString('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </>
         )}
         <div className='flex justify-between w-full'>

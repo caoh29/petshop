@@ -23,6 +23,9 @@ export const productSlice = createSlice({
     setSize: (state, action: PayloadAction<string>) => {
       state.product.size = action.payload;
     },
+    setQuantity: (state, action: PayloadAction<number>) => {
+      state.product.quantity = action.payload;
+    },
     increaseQuantity: (state) => {
       state.product.quantity = state.product.quantity + 1;
     },
@@ -30,6 +33,9 @@ export const productSlice = createSlice({
       if (state.product.quantity > 1) {
         state.product.quantity = state.product.quantity - 1;
       }
+    },
+    resetProductState: (state) => {
+      state.product = initialState.product;
     },
   },
 });

@@ -29,9 +29,9 @@ export default async function ProductDetail({
     notFound();
   }
 
-  const addToCartAction = async () => {
+  const addToCartAction = async (size: string, quantity: number) => {
     'use server';
-    return await addToCart(+id);
+    return await addToCart(+id, { size, quantity });
   };
   const addReviewAction = async (text: string, rating: number) => {
     'use server';
@@ -76,7 +76,10 @@ export default async function ProductDetail({
         </div>
 
         <div className='flex justify-end'>
-          <AddToCart addToCartAction={addToCartAction} />
+          <AddToCart
+            addToCartAction={addToCartAction}
+            disabled={product.isOutOfStock}
+          />
         </div>
       </div>
       <div className='w-full'>

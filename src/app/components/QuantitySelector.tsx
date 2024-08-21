@@ -1,7 +1,9 @@
 'use client';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useRef } from 'react';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import {
+  setQuantity,
   increaseQuantity,
   decreaseQuantity,
   RootState,
@@ -10,6 +12,12 @@ import {
 import { Minus, Plus } from 'lucide-react';
 
 export default function QuantitySelector() {
+  const store = useStore<RootState>();
+  const initialized = useRef(false);
+  if (!initialized.current) {
+    store.dispatch(setQuantity(1));
+    initialized.current = true;
+  }
   const dispatch = useDispatch();
   const quantity = useSelector(
     (state: RootState) => state.product.product.quantity,

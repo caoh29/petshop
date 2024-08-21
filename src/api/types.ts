@@ -14,15 +14,11 @@ export interface Product {
   reviews: Review[];
   sizes: string[];
   availableSizes: string[];
+  isOutOfStock: boolean;
 }
 
 export interface SelectedProduct {
   id: number;
-  // name: string;
-  // price: number;
-  // category: string;
-  // subcategory: string;
-  // reviews: Review[];
   size: string;
   color?: string;
   quantity: number;
@@ -34,6 +30,8 @@ export interface Cart {
     name: string;
     image: string;
     price: number;
+    size: string;
+    quantity: number;
   }[];
 }
 

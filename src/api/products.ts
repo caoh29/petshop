@@ -22,6 +22,7 @@ const products: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     availableSizes: ["S", "M", "L", "XL"],
+    isOutOfStock: false,
   },
   {
     id: 2,
@@ -44,6 +45,7 @@ const products: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     availableSizes: ["S", "M", "L", "XL"],
+    isOutOfStock: false,
   },
   {
     id: 3,
@@ -66,6 +68,7 @@ const products: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     availableSizes: ["L", "XL"],
+    isOutOfStock: false,
   },
   {
     id: 4,
@@ -88,6 +91,7 @@ const products: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     availableSizes: ["S", "L", "XL"],
+    isOutOfStock: false,
   },
   {
     id: 5,
@@ -110,6 +114,7 @@ const products: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     availableSizes: ["S", "M", "L", "XL"],
+    isOutOfStock: false,
   },
   {
     id: 6,
@@ -132,6 +137,7 @@ const products: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     availableSizes: [],
+    isOutOfStock: true,
   },
 ];
 

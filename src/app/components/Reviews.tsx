@@ -1,7 +1,6 @@
 'use client';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
-import { useState } from 'react';
 
 import { Review } from '@/api/types';
 import { setReviews, RootState } from '@/lib/store/store';
@@ -39,8 +38,8 @@ export default function Reviews({
         </div>
       ))}
       <form
-        onSubmit={async (evt) => {
-          evt.preventDefault();
+        onSubmit={async (e) => {
+          e.preventDefault();
           dispatch(setReviews(await addReviewAction(reviewText, reviewRating)));
           setReviewText('');
           setReviewRating(5);
@@ -69,7 +68,6 @@ export default function Reviews({
           <button
             disabled={!reviewText}
             className='mt-6 px-8 py-2 text-lg font-bold text-white bg-blue-800 rounded-lg disabled:bg-gray-500 disabled:cursor-not-allowed'
-            onClick={async () => {}}
           >
             Submit Review
           </button>

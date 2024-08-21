@@ -1,8 +1,9 @@
 'use client';
 import { MouseEvent } from 'react';
+import { useRef } from 'react';
 
-import { useDispatch } from 'react-redux';
-import { setSize } from '@/lib/store/store';
+import { useDispatch, useStore } from 'react-redux';
+import { RootState, setSize } from '@/lib/store/store';
 
 import { ToggleGroup, ToggleGroupItem } from '@/app/components/ui/toggle-group';
 
@@ -15,6 +16,13 @@ export default function SizeSelector({
   sizes,
   availableSizes,
 }: Readonly<Props>) {
+  const store = useStore<RootState>();
+  const initialized = useRef(false);
+  if (!initialized.current) {
+    store.dispatch(setSize(''));
+    initialized.current = true;
+  }
+
   const dispatch = useDispatch();
 
   if (sizes.length === 0) return null;

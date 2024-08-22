@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet';
 
 export function SideNavBar({ className }: Readonly<{ className?: string }>) {
   const [showCategoryList, setShowCategoryList] = useState<
@@ -47,9 +47,11 @@ export function SideNavBar({ className }: Readonly<{ className?: string }>) {
           {ROUTES.map((component) => (
             <li key={component.title} className='mx-4'>
               {component.href && (
-                <Link onClick={resetStates} href={component.href}>
-                  {component.title}
-                </Link>
+                <SheetClose asChild>
+                  <Link onClick={resetStates} href={component.href}>
+                    {component.title}
+                  </Link>
+                </SheetClose>
               )}
               {component.children && (
                 <>
@@ -84,12 +86,14 @@ export function SideNavBar({ className }: Readonly<{ className?: string }>) {
                                   key={subchild.title}
                                   className='my-2 mx-4 text-white'
                                 >
-                                  <Link
-                                    onClick={resetStates}
-                                    href={`${child.href}${subchild.href}`}
-                                  >
-                                    {subchild.title}
-                                  </Link>
+                                  <SheetClose asChild>
+                                    <Link
+                                      onClick={resetStates}
+                                      href={`${child.href}${subchild.href}`}
+                                    >
+                                      {subchild.title}
+                                    </Link>
+                                  </SheetClose>
                                 </li>
                               ))}
                             </ul>

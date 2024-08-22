@@ -33,7 +33,7 @@ export default async function ProductDetail({
   const addToCartAction = async (
     quantity: number,
     options: {
-      size: string;
+      size?: string;
       color?: string;
     },
   ) => {
@@ -77,8 +77,8 @@ export default async function ProductDetail({
           })}
         </div>
         <SizeSelector
-          sizes={product.sizes}
-          availableSizes={product.availableSizes}
+          sizes={product.sizes ?? []}
+          availableSizes={product.availableSizes ?? []}
         />
         <ColorSelector
           colors={product.colors ?? []}

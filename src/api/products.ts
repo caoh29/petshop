@@ -68,8 +68,6 @@ const products: Product[] = [
         text: "This t-shirt is amazing! The elf design is so cool and the fit is perfect. I've gotten so many compliments on it.",
       },
     ],
-    sizes: [],
-    availableSizes: [],
     isOutOfStock: false,
   },
   {

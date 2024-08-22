@@ -39,7 +39,7 @@ export default function AddToCart({
       }}
       disabled={
         disabled ||
-        (!size && product.sizes.length > 0) ||
+        (!size && product.sizes && product.sizes.length > 0) ||
         (!color && product.colors && product.colors.length > 0)
       }
     >

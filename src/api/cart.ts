@@ -27,7 +27,7 @@ export const addToCart = async (productId: number, {
   options, 
 }: {
   quantity: number,
-  options: { size: string, color?: string }
+  options: { size?: string, color?: string }
 }): Promise<Cart> => {
   const product = await getProductById(productId);
   if (product) {
@@ -36,9 +36,9 @@ export const addToCart = async (productId: number, {
       id: product.id,
       image: product.image,
       price: product.price,
-      size: options.size,
-      color: options.color,
-      quantity
+      quantity,
+      size: options.size ?? '',
+      color: options.color ?? '',
     });
   }
   return cart;

@@ -32,7 +32,10 @@ export default function CartPopup({
                   key={index}
                   className='flex text-black w-full justify-between'
                 >
-                  <div className='font-bold'>{product.name}</div>
+                  <div className='font-bold'>
+                    {product.name}
+                    {product.color && `(${product.color})`}
+                  </div>
                   <div>{product.size}</div>
                   <div>{product.quantity}</div>
                   <div className=''>

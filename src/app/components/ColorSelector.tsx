@@ -2,18 +2,18 @@
 import { useRef } from 'react';
 
 import { useDispatch, useSelector, useStore } from 'react-redux';
-import { resetProductState, RootState, setSize } from '@/lib/store/store';
+import { resetProductState, RootState, setColor } from '@/lib/store/store';
 
 import { ToggleGroup, ToggleGroupItem } from '@/app/components/ui/toggle-group';
 
 interface Props {
-  sizes: string[];
-  availableSizes: string[];
+  colors: string[];
+  availableColors: string[];
 }
 
-export default function SizeSelector({
-  sizes,
-  availableSizes,
+export default function ColorSelector({
+  colors,
+  availableColors,
 }: Readonly<Props>) {
   const store = useStore<RootState>();
   const initialized = useRef(false);
@@ -22,30 +22,30 @@ export default function SizeSelector({
     initialized.current = true;
   }
 
-  const sizeState = useSelector(
-    (state: RootState) => state.selectedProduct.selectedProduct.size,
+  const colorState = useSelector(
+    (state: RootState) => state.selectedProduct.selectedProduct.color,
   );
   const dispatch = useDispatch();
 
-  if (sizes.length === 0) return null;
+  if (colors.length === 0) return null;
 
   return (
     <div className='my-4'>
-      <h3>Sizes</h3>
+      <h3>Colors</h3>
       <ToggleGroup
         type='single'
         className='flex flex-wrap justify-start'
-        value={sizeState}
-        onValueChange={(value) => dispatch(setSize(value))}
+        value={colorState}
+        onValueChange={(value) => dispatch(setColor(value))}
       >
-        {sizes.map((size) => (
+        {colors.map((color) => (
           <ToggleGroupItem
-            key={size}
-            value={size}
-            aria-label={`Toggle ${size}`}
-            disabled={!availableSizes.includes(size)}
+            key={color}
+            value={color}
+            aria-label={`Toggle ${color}`}
+            disabled={!availableColors.includes(color)}
           >
-            {size}
+            {color}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>

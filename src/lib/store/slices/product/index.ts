@@ -2,37 +2,37 @@ import { SelectedProduct } from "@/api/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface SelectedProductState {
-  product: SelectedProduct;
+  selectedProduct: SelectedProduct;
 }
 
 const initialState: SelectedProductState = {
-  product: {
+  selectedProduct: {
     size: '',
     color: '',
     quantity: 1
   },
 };
 
-export const productSlice = createSlice({
+export const selectedProductSlice = createSlice({
   name: "selectedProduct",
   initialState,
   reducers: {
     setSize: (state, action: PayloadAction<string>) => {
-      state.product.size = action.payload;
+      state.selectedProduct.size = action.payload;
     },
     setColor: (state, action: PayloadAction<string>) => {
-      state.product.color = action.payload;
+      state.selectedProduct.color = action.payload;
     },
     increaseQuantity: (state) => {
-      state.product.quantity = state.product.quantity + 1;
+      state.selectedProduct.quantity = state.selectedProduct.quantity + 1;
     },
     decreaseQuantity: (state) => {
-      if (state.product.quantity > 1) {
-        state.product.quantity = state.product.quantity - 1;
+      if (state.selectedProduct.quantity > 1) {
+        state.selectedProduct.quantity = state.selectedProduct.quantity - 1;
       }
     },
     resetProductState: (state) => {
-      state.product = initialState.product;
+      state.selectedProduct = initialState.selectedProduct;
     },
   },
 });

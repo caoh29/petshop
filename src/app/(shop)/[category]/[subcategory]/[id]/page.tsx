@@ -14,6 +14,7 @@ import { getProductById, getProducts, addReview } from '@/api/products';
 import { addToCart } from '@/api/cart';
 
 import { capitalizeString } from '@/lib/utils';
+import ColorSelector from '@/app/components/ColorSelector';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,9 +30,18 @@ export default async function ProductDetail({
     notFound();
   }
 
-  const addToCartAction = async (quantity: number, size: string) => {
+  const addToCartAction = async (
+    quantity: number,
+    options: {
+      size: string;
+      color?: string;
+    },
+  ) => {
     'use server';
-    return await addToCart(+id, { quantity, size });
+    return await addToCart(+id, {
+      quantity,
+      options,
+    });
   };
   const addReviewAction = async (text: string, rating: number) => {
     'use server';
@@ -70,6 +80,10 @@ export default async function ProductDetail({
           sizes={product.sizes}
           availableSizes={product.availableSizes}
         />
+        <ColorSelector
+          colors={product.colors ?? []}
+          availableColors={product.availableColors ?? []}
+        />
         <QuantitySelector />
         <div className='mt-1 text-sm leading-5 text-gray-300 font-light italic'>
           {product.description}
@@ -79,7 +93,7 @@ export default async function ProductDetail({
           <AddToCart
             addToCartAction={addToCartAction}
             disabled={product.isOutOfStock}
-            sizes={product.sizes}
+            product={product}
           />
         </div>
       </div>

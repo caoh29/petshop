@@ -22,6 +22,8 @@ const products: Product[] = [
     ],
     sizes: ["S", "M", "L", "XL"],
     availableSizes: ["S", "M", "L", "XL"],
+    colors: ["black", "blue", "green"],
+    availableColors: ["black", "blue"],
     isOutOfStock: false,
   },
   {

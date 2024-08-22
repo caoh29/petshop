@@ -24,10 +24,10 @@ export const getCart = async (): Promise<Cart> => {
 
 export const addToCart = async (productId: number, {
   quantity,
-  size, 
+  options, 
 }: {
-  size: string,
-  quantity: number
+  quantity: number,
+  options: { size: string, color?: string }
 }): Promise<Cart> => {
   const product = await getProductById(productId);
   if (product) {
@@ -36,7 +36,8 @@ export const addToCart = async (productId: number, {
       id: product.id,
       image: product.image,
       price: product.price,
-      size,
+      size: options.size,
+      color: options.color,
       quantity
     });
   }

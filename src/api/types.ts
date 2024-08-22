@@ -14,6 +14,8 @@ export interface Product {
   reviews: Review[];
   sizes: string[];
   availableSizes: string[];
+  colors?: string[];
+  availableColors?: string[];
   isOutOfStock: boolean;
 }
 
@@ -31,6 +33,7 @@ export interface Cart {
     price: number;
     size: string;
     quantity: number;
+    color?: string;
   }[];
 }
 

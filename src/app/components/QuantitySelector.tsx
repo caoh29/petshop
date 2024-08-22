@@ -20,7 +20,7 @@ export default function QuantitySelector() {
   }
   const dispatch = useDispatch();
   const quantity = useSelector(
-    (state: RootState) => state.product.product.quantity,
+    (state: RootState) => state.selectedProduct.selectedProduct.quantity,
   );
 
   return (

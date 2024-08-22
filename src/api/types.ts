@@ -18,7 +18,6 @@ export interface Product {
 }
 
 export interface SelectedProduct {
-  id: number;
   size: string;
   color?: string;
   quantity: number;

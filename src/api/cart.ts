@@ -23,8 +23,8 @@ export const getCart = async (): Promise<Cart> => {
 };
 
 export const addToCart = async (productId: number, {
-  size,
-  quantity 
+  quantity,
+  size, 
 }: {
   size: string,
   quantity: number

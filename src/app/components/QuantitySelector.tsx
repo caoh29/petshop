@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import {
-  setQuantity,
+  resetProductState,
   increaseQuantity,
   decreaseQuantity,
   RootState,
@@ -15,7 +15,7 @@ export default function QuantitySelector() {
   const store = useStore<RootState>();
   const initialized = useRef(false);
   if (!initialized.current) {
-    store.dispatch(setQuantity(1));
+    store.dispatch(resetProductState());
     initialized.current = true;
   }
   const dispatch = useDispatch();

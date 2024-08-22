@@ -7,12 +7,14 @@ import { Button } from './ui/button';
 export default function AddToCart({
   addToCartAction,
   disabled,
-}: {
-  addToCartAction: (size: string, quantity: number) => Promise<Cart>;
+  sizes,
+}: Readonly<{
+  addToCartAction: (quantity: number, size: string) => Promise<Cart>;
   disabled: boolean;
-}) {
+  sizes: string[];
+}>) {
   const dispatch = useDispatch();
-  const { size, quantity } = useSelector(
+  const { quantity, size, color } = useSelector(
     (state: RootState) => state.product.product,
   );
   return (
@@ -20,10 +22,10 @@ export default function AddToCart({
       className={`mt-6 text-lg font-bold`}
       onClick={async () => {
         if (disabled) return;
-        dispatch(setCart(await addToCartAction(size, quantity)));
+        dispatch(setCart(await addToCartAction(quantity, size)));
         dispatch(resetProductState());
       }}
-      disabled={disabled}
+      disabled={disabled || (!size && sizes.length > 0)}
     >
       {disabled ? 'Out of Stock' : 'Add to cart'}
     </Button>

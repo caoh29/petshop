@@ -12,7 +12,7 @@ export default async function Home() {
     <>
       <HeroSection />
       <GridSection title='featured-products' products={products} />
-      <CarouselSection products={products} />
+      <CarouselSection title='hot-deals!' products={products} />
       <GridSection title='shop-by-animal' categories={categories} />
     </>
   );

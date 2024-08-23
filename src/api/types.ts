@@ -6,6 +6,7 @@ export interface Review {
 export interface Product {
   id: number;
   image: string;
+  additionalImages?: string[];
   name: string;
   price: number;
   category: string;

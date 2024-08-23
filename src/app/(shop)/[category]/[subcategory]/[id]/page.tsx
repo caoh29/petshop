@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
@@ -15,6 +14,7 @@ import { addToCart } from '@/api/cart';
 
 import { capitalizeString } from '@/lib/utils';
 import ColorSelector from '@/app/components/ColorSelector';
+import ProductImageGallery from '@/app/components/ProductImageGallery';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,15 +52,12 @@ export default async function ProductDetail({
 
   return (
     <div className='flex flex-wrap'>
-      <div className='w-full md:w-1/2'>
-        <Image
-          className='aspect-[2/2] rounded-md object-cover'
-          src={product.image ?? ''}
-          alt={`${product.name} image`}
-          width={1024}
-          height={1024}
-        />
-      </div>
+      <ProductImageGallery
+        images={product.additionalImages ?? []}
+        productName={product.name}
+        productImage={product.image}
+      />
+
       <div className='w-full md:w-1/2 p-5'>
         <h1 className='text-3xl font-bold leading-10 text-black'>
           {product.name}

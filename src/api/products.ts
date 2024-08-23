@@ -4,6 +4,7 @@ const products: Product[] = [
   {
     id: 1,
     image: "/castle-t-shirt.jpg",
+    additionalImages: ["/elf-t-shirt.jpg", "/dragon-t-shirt.jpg"],
     name: "Castle T-Shirt",
     price: 25,
     category: "t-shirts",

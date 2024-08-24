@@ -26,7 +26,7 @@ export default function Reviews({
   const dispatch = useDispatch();
 
   return (
-    <>
+    <div className='w-full p-4'>
       {reviews?.map((review, index) => (
         <div key={index} className='p-5'>
           <div className='my-1 text-md leading-5 text-gray-300'>
@@ -73,6 +73,6 @@ export default function Reviews({
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 }

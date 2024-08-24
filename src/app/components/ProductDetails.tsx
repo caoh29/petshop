@@ -19,7 +19,7 @@ export default function ProductDetails({
   addToCartAction,
 }: Readonly<ProductDetailsProps>) {
   return (
-    <div className='w-full md:w-1/2 p-5'>
+    <div className='w-full md:w-1/2 p-4'>
       <h1 className='text-3xl font-bold leading-10 text-black'>
         {product.name}
       </h1>

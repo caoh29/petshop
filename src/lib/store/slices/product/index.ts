@@ -13,7 +13,12 @@ const initialState: SelectedProductState = {
     id: 0,
     name: "",
     image: "",
-    price: 0
+    price: 0,
+    category: "",
+    subcategory: "",
+    description: "",
+    reviews: [],
+    isOutOfStock: false
   },
 };
 
@@ -26,9 +31,6 @@ export const selectedProductSlice = createSlice({
     },
     setColor: (state, action: PayloadAction<string>) => {
       state.selectedProduct.color = action.payload;
-    },
-    setQuantity: (state, action: PayloadAction<number>) => {
-      state.selectedProduct.quantity = action.payload;
     },
     increaseQuantity: (state) => {
       state.selectedProduct.quantity = state.selectedProduct.quantity + 1;

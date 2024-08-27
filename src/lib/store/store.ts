@@ -17,7 +17,7 @@ export const makeStore = () =>
 export const { setCart, updateItemQuantity } = cartSlice.actions;
 export const { setReviews } = reviewsSlice.actions;
 export const { setHeaderVisibility } = headerSlice.actions;
-export const { setSize,  setColor, setQuantity, increaseQuantity, decreaseQuantity, resetProductState } = selectedProductSlice.actions;
+export const { setSize,  setColor, increaseQuantity, decreaseQuantity, resetProductState } = selectedProductSlice.actions;
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore["getState"]>;

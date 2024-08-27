@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-// import QuantitySelector from './QuantitySelector';
 import { useCart } from '@/lib/hooks';
 import CartQuantitySelector from './CartQuantitySelector';
 
@@ -37,7 +36,6 @@ export default function CartPage() {
                 </p>
               </div>
               <CartQuantitySelector quantity={item.quantity} id={item.id} />
-              {/* <QuantitySelector id={item.id} quantity={item.quantity} /> */}
               <button className='text-red-500'>Remove</button>
             </li>
           ))}

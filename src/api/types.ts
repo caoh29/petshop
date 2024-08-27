@@ -20,11 +20,7 @@ export interface Product {
   isOutOfStock: boolean;
 }
 
-export interface SelectedProduct {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
+export interface SelectedProduct extends Product {
   quantity: number;
   size?: string;
   color?: string;

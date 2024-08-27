@@ -9,6 +9,3 @@ export const useReviews = () =>
 
 export const useHeaderVisibility = () =>
   useSelector((state: RootState) => state.header.isVisible);
-
-export const useProduct = () =>
-  useSelector((state: RootState) => state.product.product);

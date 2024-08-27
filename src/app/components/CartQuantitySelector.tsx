@@ -8,11 +8,15 @@ import { Minus, Plus } from 'lucide-react';
 interface Props {
   quantity: number;
   id: number;
+  size?: string;
+  color?: string;
 }
 
 export default function CartQuantitySelector({
   id,
   quantity,
+  size,
+  color,
 }: Readonly<Props>) {
   const dispatch = useDispatch();
 
@@ -20,14 +24,17 @@ export default function CartQuantitySelector({
     <div className='my-4'>
       <h3>Quantity</h3>
       <button
-        onClick={() =>
+        onClick={() => {
+          if (quantity === 1) return;
           dispatch(
             updateItemQuantity({
               id,
               quantity: quantity - 1,
+              size,
+              color,
             }),
-          )
-        }
+          );
+        }}
       >
         <Minus />
       </button>
@@ -38,6 +45,8 @@ export default function CartQuantitySelector({
             updateItemQuantity({
               id,
               quantity: quantity + 1,
+              size,
+              color,
             }),
           )
         }

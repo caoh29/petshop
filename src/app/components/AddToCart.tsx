@@ -13,7 +13,7 @@ export default function AddToCart({
 }: Readonly<{
   addToCartAction: (
     quantity: number,
-    options: { size: string; color?: string },
+    options: { size?: string; color?: string },
   ) => Promise<Cart>;
   disabled: boolean;
   product: Product;

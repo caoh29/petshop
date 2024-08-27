@@ -11,5 +11,5 @@ export default async function CategoryPage({
   if (!VALID_ROUTES.has(`/${params.category}`)) return <NotFound />;
 
   const products = await getProductsByCategory(params.category);
-  return <GridSection title={params.category} products={products!} />;
+  return <GridSection title={params.category} products={products} />;
 }

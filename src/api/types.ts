@@ -21,21 +21,17 @@ export interface Product {
 }
 
 export interface SelectedProduct {
-  size: string;
-  color?: string;
+  id: number;
+  name: string;
+  image: string;
+  price: number;
   quantity: number;
+  size?: string;
+  color?: string;
 }
 
 export interface Cart {
-  products: {
-    id: number;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-    size?: string;
-    color?: string;
-  }[];
+  products: SelectedProduct[];
 }
 
 export interface Category {

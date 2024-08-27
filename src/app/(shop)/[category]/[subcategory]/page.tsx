@@ -15,5 +15,5 @@ export default async function SubCategoryPage({
     params.category,
     params.subcategory,
   );
-  return <GridSection title={params.subcategory} products={products!} />;
+  return <GridSection title={params.subcategory} products={products} />;
 }

@@ -14,7 +14,7 @@ export default function ProductImageGallery({
   images,
   productName,
   productImage,
-}: ProductImageGalleryProps) {
+}: Readonly<ProductImageGalleryProps>) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handlePrevImage = () => {
@@ -36,7 +36,7 @@ export default function ProductImageGallery({
           <div className='hidden md:block w-1/5 absolute left-0 top-0 p-4 h-full overflow-y-auto'>
             {images.map((img, index) => (
               <Image
-                key={index}
+                key={img}
                 src={img}
                 alt={`${productName} thumbnail ${index + 1}`}
                 width={100}

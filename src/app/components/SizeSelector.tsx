@@ -1,8 +1,7 @@
 'use client';
-import { useRef } from 'react';
 
-import { useDispatch, useSelector, useStore } from 'react-redux';
-import { resetProductState, RootState, setSize } from '@/lib/store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, setSize } from '@/lib/store/store';
 
 import { ToggleGroup, ToggleGroupItem } from '@/app/components/ui/toggle-group';
 
@@ -15,13 +14,6 @@ export default function SizeSelector({
   sizes,
   availableSizes,
 }: Readonly<Props>) {
-  const store = useStore<RootState>();
-  const initialized = useRef(false);
-  if (!initialized.current) {
-    store.dispatch(resetProductState());
-    initialized.current = true;
-  }
-
   const sizeState = useSelector(
     (state: RootState) => state.selectedProduct.selectedProduct.size,
   );

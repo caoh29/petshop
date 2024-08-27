@@ -9,7 +9,11 @@ const initialState: SelectedProductState = {
   selectedProduct: {
     size: '',
     color: '',
-    quantity: 1
+    quantity: 1,
+    id: 0,
+    name: "",
+    image: "",
+    price: 0
   },
 };
 
@@ -22,6 +26,9 @@ export const selectedProductSlice = createSlice({
     },
     setColor: (state, action: PayloadAction<string>) => {
       state.selectedProduct.color = action.payload;
+    },
+    setQuantity: (state, action: PayloadAction<number>) => {
+      state.selectedProduct.quantity = action.payload;
     },
     increaseQuantity: (state) => {
       state.selectedProduct.quantity = state.selectedProduct.quantity + 1;

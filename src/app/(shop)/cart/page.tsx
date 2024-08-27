@@ -1,3 +1,9 @@
+import CartList from '@/app/components/CartList';
+
 export default function CartPage() {
-  return <div>Cart Page</div>;
+  return (
+    <>
+      <CartList />
+    </>
+  );
 }

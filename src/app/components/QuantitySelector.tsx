@@ -1,9 +1,7 @@
 'use client';
 
-import { useRef } from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  resetProductState,
   increaseQuantity,
   decreaseQuantity,
   RootState,
@@ -12,12 +10,6 @@ import {
 import { Minus, Plus } from 'lucide-react';
 
 export default function QuantitySelector() {
-  const store = useStore<RootState>();
-  const initialized = useRef(false);
-  if (!initialized.current) {
-    store.dispatch(resetProductState());
-    initialized.current = true;
-  }
   const dispatch = useDispatch();
   const quantity = useSelector(
     (state: RootState) => state.selectedProduct.selectedProduct.quantity,
@@ -36,3 +28,43 @@ export default function QuantitySelector() {
     </div>
   );
 }
+
+// 'use client';
+
+// import { useDispatch } from 'react-redux';
+// import { Minus, Plus } from 'lucide-react';
+// import { updateItemQuantity } from '@/lib/store/store';
+
+// interface QuantitySelectorProps {
+//   id: number;
+//   quantity: number;
+// }
+
+// export default function QuantitySelector({
+//   id,
+//   quantity,
+// }: Readonly<QuantitySelectorProps>) {
+//   const dispatch = useDispatch();
+
+//   const handleIncrease = () => {
+//     dispatch(updateItemQuantity({ id, quantity: quantity + 1 }));
+//   };
+
+//   const handleDecrease = () => {
+//     if (quantity > 1) {
+//       dispatch(updateItemQuantity({ id, quantity: quantity - 1 }));
+//     }
+//   };
+
+//   return (
+//     <div className='my-4 flex items-center'>
+//       <button onClick={handleDecrease} className='p-2 border rounded-l'>
+//         <Minus className='w-4 h-4' />
+//       </button>
+//       <span className='mx-4 min-w-[2rem] text-center'>{quantity}</span>
+//       <button onClick={handleIncrease} className='p-2 border rounded-r'>
+//         <Plus className='w-4 h-4' />
+//       </button>
+//     </div>
+//   );
+// }

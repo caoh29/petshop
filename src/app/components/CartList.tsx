@@ -3,11 +3,32 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useDispatch } from 'react-redux';
+
 import { useCart } from '@/lib/hooks';
+import { Cart } from '@/api/types';
+import { setCart } from '@/lib/store/store';
+
 import CartQuantitySelector from './CartQuantitySelector';
 
-export default function CartList() {
+interface Props {
+  updateCartAction: (
+    id: number,
+    quantity: number,
+    options: { size?: string; color?: string },
+  ) => Promise<Cart>;
+  deleteCartAction: (
+    id: number,
+    options: { size?: string; color?: string },
+  ) => Promise<Cart>;
+}
+
+export default function CartList({
+  updateCartAction,
+  deleteCartAction,
+}: Readonly<Props>) {
   const cart = useCart();
+  const dispatch = useDispatch();
 
   return (
     <div className='container mx-auto p-4'>
@@ -45,8 +66,23 @@ export default function CartList() {
                 id={item.id}
                 size={item.size}
                 color={item.color}
+                updateCartAction={updateCartAction}
               />
-              <button className='text-red-500'>Remove</button>
+              <button
+                className='text-red-500'
+                onClick={async () =>
+                  dispatch(
+                    setCart(
+                      await deleteCartAction(item.id, {
+                        size: item.size,
+                        color: item.color,
+                      }),
+                    ),
+                  )
+                }
+              >
+                Remove
+              </button>
             </li>
           ))}
         </ul>

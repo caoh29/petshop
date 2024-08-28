@@ -33,6 +33,7 @@ export const addToCart = async (
   }
 ): Promise<Cart> => {
   const product = await getProductById(productId);
+  const cart = await getCart();
   if (product) {
     const existingItemIndex = cart.products.findIndex(
       item =>
@@ -65,8 +66,63 @@ export const addToCart = async (
   return cart;
 };
 
+export const updateCartItem = async (
+  productId: number,
+  {
+    quantity,
+    options,
+  }: {
+    quantity: number;
+    options: { size?: string; color?: string };
+  }
+) : Promise<Cart> => {
+  const cart = await getCart();
+
+  const existingItemIndex = cart.products.findIndex(
+    item =>
+      item.id === productId &&
+      item.size === (options.size ?? '') &&
+      item.color === (options.color ?? ''),
+  );
+  if (existingItemIndex !== -1) {
+    cart.products[existingItemIndex].quantity = quantity;
+  }
+  return cart;
+}
+
+export const deleteCartItem = async (
+  productId: number,
+  {
+    options,
+  }: {
+    options: { size?: string; color?: string };
+  }
+) : Promise<Cart> => {
+  const cart = await getCart();
+
+  const existingItemIndex = cart.products.findIndex(
+    item =>
+      item.id === productId &&
+      item.size === (options.size ?? '') &&
+      item.color === (options.color ?? ''),
+  );
+  if (existingItemIndex !== -1) {
+    cart.products.splice(existingItemIndex, 1);
+  }
+  // const res = await fetch(`XXXXXXXXXXXXXXXXXXXXXXXXXXX${productId}`, {
+  //   method: 'DELETE',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify({ size, color })
+  // });
+  // const data = await res.json();
+  // return data.body.cart;
+  return cart;
+}
 
 export const clearCart = async (): Promise<Cart> => {
+  const cart = await getCart();
   cart.products = [];
   return cart;
 };

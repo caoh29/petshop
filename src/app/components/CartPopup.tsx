@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { type Cart } from '@/api/types';
 import { setCart } from '../../lib/store/store';
 import { useCart } from '@/lib/hooks';
+import Link from 'next/link';
 
 export default function CartPopup({
   clearCartAction,
@@ -58,9 +59,12 @@ export default function CartPopup({
           >
             Clear Cart
           </button>
-          <button className='mt-6 px-4 py-2 text-lg font-bold text-white bg-blue-800 rounded-lg'>
+          <Link
+            className='mt-6 px-4 py-2 text-lg font-bold text-white bg-blue-800 rounded-lg'
+            href={'/cart'}
+          >
             Checkout
-          </button>
+          </Link>
         </div>
       </div>
     </div>

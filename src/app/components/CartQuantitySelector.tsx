@@ -1,15 +1,21 @@
 'use client';
 
 import { useDispatch } from 'react-redux';
-import { updateItemQuantity } from '@/lib/store/store';
 
 import { Minus, Plus } from 'lucide-react';
+import { setCart } from '@/lib/store/store';
+import { Cart } from '@/api/types';
 
 interface Props {
   quantity: number;
   id: number;
   size?: string;
   color?: string;
+  updateCartAction: (
+    id: number,
+    quantity: number,
+    options: { size?: string; color?: string },
+  ) => Promise<Cart>;
 }
 
 export default function CartQuantitySelector({
@@ -17,6 +23,7 @@ export default function CartQuantitySelector({
   quantity,
   size,
   color,
+  updateCartAction,
 }: Readonly<Props>) {
   const dispatch = useDispatch();
 
@@ -24,15 +31,16 @@ export default function CartQuantitySelector({
     <div className='my-4'>
       <h3>Quantity</h3>
       <button
-        onClick={() => {
+        onClick={async () => {
           if (quantity === 1) return;
+          quantity -= 1;
           dispatch(
-            updateItemQuantity({
-              id,
-              quantity: quantity - 1,
-              size,
-              color,
-            }),
+            setCart(
+              await updateCartAction(id, quantity, {
+                size,
+                color,
+              }),
+            ),
           );
         }}
       >
@@ -40,16 +48,17 @@ export default function CartQuantitySelector({
       </button>
       <span className='mx-4'>{quantity}</span>
       <button
-        onClick={() =>
+        onClick={async () => {
+          quantity += 1;
           dispatch(
-            updateItemQuantity({
-              id,
-              quantity: quantity + 1,
-              size,
-              color,
-            }),
-          )
-        }
+            setCart(
+              await updateCartAction(id, quantity, {
+                size,
+                color,
+              }),
+            ),
+          );
+        }}
       >
         <Plus />
       </button>

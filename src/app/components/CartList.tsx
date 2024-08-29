@@ -31,8 +31,8 @@ export default function CartList({
   const dispatch = useDispatch();
 
   return (
-    <div className='container mx-auto p-4'>
-      <h1 className='text-2xl font-bold mb-4'>Cart Page</h1>
+    <div className='container'>
+      <h1 className='text-2xl font-bold mb-4'>Bag</h1>
       {cart.products.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
@@ -87,17 +87,6 @@ export default function CartList({
           ))}
         </ul>
       )}
-      <div className='mt-4'>
-        <p className='text-xl font-bold'>
-          Total: ${cart.products.reduce((a, b) => a + b.price * b.quantity, 0)}
-        </p>
-      </div>
-      <Link
-        href='/'
-        className='mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded'
-      >
-        Continue Shopping
-      </Link>
     </div>
   );
 }

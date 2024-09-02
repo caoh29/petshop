@@ -18,6 +18,7 @@ export interface Product {
   colors?: string[];
   availableColors?: string[];
   isOutOfStock: boolean;
+  createdAt: string;
 }
 
 export interface SelectedProduct extends Product {
@@ -31,6 +32,11 @@ export interface Cart {
 }
 
 export interface Category {
+  name: string;
+  image: string;
+}
+
+export interface SubCategory {
   name: string;
   image: string;
 }

@@ -15,7 +15,8 @@ export default function CartSummary() {
 
   const subtotal = cart.products.reduce((a, b) => a + b.price * b.quantity, 0);
   const tax = subtotal * 0.13;
-  const shipping = subtotal > 75 ? 0 : 9.99;
+  const shipping = subtotal >= 75 || subtotal === 0 ? 0 : 9.99;
+
   const total = subtotal + tax + shipping;
 
   return (

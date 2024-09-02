@@ -11,9 +11,9 @@ export default async function Home() {
   return (
     <>
       <HeroSection />
-      <GridSection title='featured-products' products={products} />
+      <GridSection title='featured-products' items={products} />
       <CarouselSection title='hot-deals!' products={products} />
-      <GridSection title='shop-by-animal' categories={categories} />
+      <GridSection title='shop-by-animal' items={categories} />
     </>
   );
 }

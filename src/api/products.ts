@@ -227,7 +227,8 @@ export const getProductsByCategory = async (
 
   export const getProductsBySubCategory = async (
     category: string,
-    subcategory: string
+    subcategory: string,
+    searchParams: URLSearchParams
   ): Promise<Product[] | undefined> =>
     getProducts().then((products) => products.filter((p) => p.category === category && p.subcategory === subcategory));
 

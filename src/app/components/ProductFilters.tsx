@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
@@ -82,6 +81,10 @@ export function ProductFilters() {
         newFilters[groupName] = [...currentFilters, optionId];
       }
 
+      if (newFilters[groupName].length === 0) {
+        delete newFilters[groupName];
+      }
+
       updateFilters(newFilters);
       return newFilters;
     });
@@ -90,11 +93,9 @@ export function ProductFilters() {
   useEffect(() => {
     const initialSelectedFilters: Record<string, string[]> = {};
     filterGroups.forEach((group) => {
-      const groupFilters = Object.fromEntries(searchParams)[group.name];
-      if (groupFilters) {
-        initialSelectedFilters[group.name] = Array.isArray(groupFilters)
-          ? groupFilters
-          : [groupFilters];
+      const groupFilters = searchParams.getAll(group.name);
+      if (groupFilters.length > 0) {
+        initialSelectedFilters[group.name] = groupFilters;
       }
     });
     setSelectedFilters(initialSelectedFilters);

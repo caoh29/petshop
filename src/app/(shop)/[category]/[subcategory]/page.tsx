@@ -19,6 +19,7 @@ export default async function SubCategoryPage({
   const products = await getProductsBySubCategory(
     params.category,
     params.subcategory,
+    searchParams,
   );
 
   return (

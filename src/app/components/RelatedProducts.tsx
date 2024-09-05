@@ -30,7 +30,7 @@ export default async function RelatedProducts({ productId }: Readonly<Props>) {
       >
         <CarouselContent>
           {products
-            .filter((p) => p.id !== +productId)
+            .filter((p) => p.id !== productId)
             .map((product) => (
               <CarouselItem
                 key={product.name}

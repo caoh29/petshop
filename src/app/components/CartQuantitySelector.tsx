@@ -8,11 +8,11 @@ import { Cart } from '@/api/types';
 
 interface Props {
   quantity: number;
-  id: number;
+  id: string;
   size?: string;
   color?: string;
   updateCartAction: (
-    id: number,
+    id: string,
     quantity: number,
     options: { size?: string; color?: string },
   ) => Promise<Cart>;

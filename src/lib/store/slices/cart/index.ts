@@ -7,6 +7,8 @@ export interface CartState {
 
 const initialState: CartState = {
   cart: {
+    id: "",
+    userId: "",
     products: [],
   },
 };

@@ -16,7 +16,7 @@ export default async function ProductDetail({
 }: Readonly<{
   params: { id: string; category: string; subcategory: string };
 }>) {
-  const product = await getProductById(+id);
+  const product = await getProductById(id);
 
   if (!product) {
     notFound();
@@ -30,14 +30,18 @@ export default async function ProductDetail({
     },
   ) => {
     'use server';
-    return await addToCart(+id, {
+    return await addToCart(id, {
       quantity,
       options,
     });
   };
-  const addReviewAction = async (text: string, rating: number) => {
+  const addReviewAction = async (
+    text: string,
+    rating: number,
+    userId: string,
+  ) => {
     'use server';
-    const reviews = await addReview(+id, { text, rating });
+    const reviews = await addReview(id, { text, rating, userId });
     revalidatePath(`/${category}/${subcategory}/${id}`);
     return reviews || [];
   };

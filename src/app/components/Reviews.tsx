@@ -11,7 +11,11 @@ export default function Reviews({
   addReviewAction,
 }: {
   reviews: Review[];
-  addReviewAction: (text: string, rating: number) => Promise<Review[]>;
+  addReviewAction: (
+    text: string,
+    rating: number,
+    userId: string,
+  ) => Promise<Review[]>;
 }) {
   const store = useStore<RootState>();
   const initialized = useRef(false);
@@ -40,7 +44,10 @@ export default function Reviews({
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          dispatch(setReviews(await addReviewAction(reviewText, reviewRating)));
+          // Here i need to do some logicto retrive the user id from cookies
+          dispatch(
+            setReviews(await addReviewAction(reviewText, reviewRating, '')),
+          );
           setReviewText('');
           setReviewRating(5);
         }}

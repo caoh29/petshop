@@ -13,8 +13,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
+  password   String
+  createdAt  DateTime  @default(now())
+  firstName  String
+  lastName   String
+  address    String
+  address2   String?
+  city       String
+  state      String
+  zip        String
+  country    String
+  phone      String
+  isAdmin    Boolean   @default(false)
+  isVerified Boolean   @default(false)
+  orders     Order[]
+  reviews    Review[]
+  cart       Cart?
+  wishlist   Product[] @relation("UserWishlist")
+}
+
+model Order {
+  id              String            @id @default(uuid())
+  userId          String
+  user            User              @relation(fields: [userId], references: [id])
+  products        SelectedProduct[]
+  total           Float
+  createdAt       DateTime          @default(now())
+  status          String
+  shippingAddress String
+  billingAddress  String
+  paymentMethod   String
+  shippingMethod  String
+  trackingNumber  String
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Float
+  text      String
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
 model Product {
-  id               Int               @id @default(autoincrement())
+  id               String            @id @default(uuid())
+  sku              String
   image            String
   additionalImages String[]
   name             String
@@ -29,41 +79,38 @@ model Product {
   availableColors  String[]
   isOutOfStock     Boolean
   createdAt        DateTime          @default(now())
-  SelectedProduct  SelectedProduct[]
-}
-
-model Review {
-  id        Int     @id @default(autoincrement())
-  rating    Float
-  text      String
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
-}
-
-model Cart {
-  id       Int               @id @default(autoincrement())
-  products SelectedProduct[]
+  wishedBy         User[]            @relation("UserWishlist")
+  selectedProducts SelectedProduct[]
 }
 
 model SelectedProduct {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(uuid())
   quantity  Int
   size      String?
   color     String?
+  productId String
   product   Product @relation(fields: [productId], references: [id])
-  productId Int
-  cart      Cart    @relation(fields: [cartId], references: [id])
-  cartId    Int
+  orderId   String?
+  order     Order?  @relation(fields: [orderId], references: [id])
+  cartId    String?
+  cart      Cart?   @relation(fields: [cartId], references: [id])
+}
+
+model Cart {
+  id       String            @id @default(uuid())
+  userId   String            @unique
+  user     User              @relation(fields: [userId], references: [id])
+  products SelectedProduct[]
 }
 
 model Category {
-  id    Int    @id @default(autoincrement())
+  id    String @id @default(uuid())
   name  String
   image String
 }
 
 model SubCategory {
-  id    Int    @id @default(autoincrement())
+  id    String @id @default(uuid())
   name  String
   image String
 }

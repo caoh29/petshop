@@ -1,8 +1,10 @@
+import { getPaginatedProducts } from "@/lib/actions";
 import { Product, Review } from "./types";
 
 const products: Product[] = [
   {
-    id: 11,
+    id: "1",
+    sku: "ABC123",
     image: "/castle-t-shirt.jpg",
     additionalImages: ["/elf-t-shirt.jpg", "/dragon-t-shirt.jpg"],
     name: "Castle T-Shirt",
@@ -13,12 +15,18 @@ const products: Product[] = [
       "Beware the castle of the blue wizard of Bazmagar! It is said that he has a dragon!",
     reviews: [
       {
+        id: "1",
         rating: 5,
         text: "This is the best t-shirt I've ever owned! The design is amazing and the quality is top-notch.",
+        createdAt: "2024-09-01T12:00:00Z",
+        userId: "XXXXX",
       },
       {
+        id: "2",
         rating: 4,
         text: "I really like this t-shirt, the design is cool and it's comfortable to wear. The only downside is that it shrunk a bit after washing.",
+        createdAt: "2024-09-01T12:00:00Z",
+        userId: "XXXXX",
       },
     ],
     sizes: ["S", "M", "L", "XL"],
@@ -29,7 +37,8 @@ const products: Product[] = [
     createdAt: "2024-09-01T12:00:00Z",
   },
   {
-    id: 1,
+    id: "2",
+    sku: "ABC123",
     image: "/barbarian-t-shirt.jpg",
     name: "Organic Raw Dog Food",
     price: 45,
@@ -37,8 +46,6 @@ const products: Product[] = [
     subcategory: "raw-food",
     description: "High-protein, organic raw food for dogs, packed with essential nutrients.",
     reviews: [
-      { rating: 5, text: "My dog loves this! Great quality and very healthy." },
-      { rating: 4, text: "A bit pricey, but worth it for the quality." },
     ],
     sizes: ["1kg", "2kg", "5kg"],
     availableSizes: ["1kg", "5kg"],
@@ -46,7 +53,8 @@ const products: Product[] = [
     createdAt: "2024-09-01T12:00:00Z",
   },
   {
-    id: 2,
+    id: "3",
+    sku: "ABC123",
     image: "/dragon-t-shirt.jpg",
     name: "Grain-Free Wet Dog Food",
     price: 30,
@@ -54,8 +62,6 @@ const products: Product[] = [
     subcategory: "wet-food",
     description: "Delicious grain-free wet food for dogs, perfect for sensitive stomachs.",
     reviews: [
-      { rating: 5, text: "My dog can’t get enough of this food!" },
-      { rating: 3, text: "Good quality, but my dog prefers dry food." },
     ],
     sizes: ["400g", "800g"],
     availableSizes: ["400g", "800g"],
@@ -63,7 +69,8 @@ const products: Product[] = [
     createdAt: "2024-08-25T10:30:00Z",
   },
   {
-    id: 3,
+    id: "4",
+    sku: "ABC123",
     image: "/elf-t-shirt.jpg",
     name: "Durable Dog Ball Toy",
     price: 12,
@@ -71,8 +78,6 @@ const products: Product[] = [
     subcategory: "toys",
     description: "A durable ball toy for dogs, great for fetch and chew sessions.",
     reviews: [
-      { rating: 4, text: "Very sturdy, even my heavy chewer hasn’t destroyed it." },
-      { rating: 5, text: "Perfect size and bounce, my dog loves it!" },
     ],
     colors: ["red", "blue", "green"],
     availableColors: ["red", "green"],
@@ -80,7 +85,8 @@ const products: Product[] = [
     createdAt: "2024-08-20T08:15:00Z",
   },
   {
-    id: 4,
+    id: "5",
+    sku: "ABC123",
     image: "/wizard-t-shirt.jpg",
     name: "Grain-Free Dry Cat Food",
     price: 40,
@@ -88,8 +94,6 @@ const products: Product[] = [
     subcategory: "dry-food",
     description: "A nutritious grain-free dry food for cats, supporting overall health.",
     reviews: [
-      { rating: 5, text: "My cat’s coat looks so shiny since we switched to this food." },
-      { rating: 4, text: "Great product, but my cat took some time to adjust." },
     ],
     sizes: ["2kg", "4kg"],
     availableSizes: ["2kg", "4kg"],
@@ -97,7 +101,8 @@ const products: Product[] = [
     createdAt: "2024-08-18T14:45:00Z",
   },
   {
-    id: 5,
+    id: "6",
+    sku: "ABC123",
     image: "/wizard-t-shirt-2.jpg",
     name: "Cozy Cat Bed",
     price: 50,
@@ -105,8 +110,6 @@ const products: Product[] = [
     subcategory: "beds",
     description: "A plush, cozy bed for cats, ensuring comfort and warmth.",
     reviews: [
-      { rating: 5, text: "My cat never wants to leave this bed!" },
-      { rating: 4, text: "Super soft, but a bit smaller than expected." },
     ],
     colors: ["grey", "brown", "white"],
     availableColors: ["grey", "white"],
@@ -114,7 +117,8 @@ const products: Product[] = [
     createdAt: "2024-08-15T09:00:00Z",
   },
   {
-    id: 6,
+    id: "7",
+    sku: "ABC123",
     image: "/pets.jpeg",
     name: "Premium Bird Seed Mix",
     price: 15,
@@ -122,8 +126,6 @@ const products: Product[] = [
     subcategory: "food",
     description: "A premium mix of seeds for a healthy and happy bird.",
     reviews: [
-      { rating: 5, text: "My parrot loves this seed mix, and it's very fresh." },
-      { rating: 4, text: "Good quality, but a bit dusty." },
     ],
     sizes: ["500g", "1kg"],
     availableSizes: ["500g", "1kg"],
@@ -131,7 +133,8 @@ const products: Product[] = [
     createdAt: "2024-08-10T07:30:00Z",
   },
   {
-    id: 7,
+    id: "8",
+    sku: "ABC123",
     image: "/not-found.png",
     name: "Glass Fish Tank",
     price: 120,
@@ -139,8 +142,6 @@ const products: Product[] = [
     subcategory: "tanks",
     description: "A crystal-clear glass tank for fish, with a sleek design.",
     reviews: [
-      { rating: 5, text: "Looks amazing, and the fish seem very happy!" },
-      { rating: 3, text: "Nice tank, but the lid doesn’t fit perfectly." },
     ],
     sizes: ["20L", "40L", "60L"],
     availableSizes: ["20L", "40L"],
@@ -148,7 +149,8 @@ const products: Product[] = [
     createdAt: "2024-08-05T16:00:00Z",
   },
   {
-    id: 8,
+    id: "9",
+    sku: "ABC123",
     image: "/arbol.jpg",
     name: "Reptile Terrarium",
     price: 150,
@@ -156,8 +158,6 @@ const products: Product[] = [
     subcategory: "terrariums",
     description: "A spacious terrarium for reptiles, with ample ventilation and space.",
     reviews: [
-      { rating: 5, text: "My lizard loves its new home, and it looks great!" },
-      { rating: 4, text: "Good size, but a bit tricky to set up." },
     ],
     sizes: ["Medium", "Large"],
     availableSizes: ["Medium", "Large"],
@@ -165,7 +165,8 @@ const products: Product[] = [
     createdAt: "2024-07-30T11:15:00Z",
   },
   {
-    id: 9,
+    id: "10",
+    sku: "ABC123",
     image: "/dados.png",
     name: "Reflective Dog Leash",
     price: 20,
@@ -173,8 +174,6 @@ const products: Product[] = [
     subcategory: "leashes",
     description: "A durable, reflective leash for dogs, perfect for evening walks.",
     reviews: [
-      { rating: 5, text: "Great for nighttime, very reflective and strong." },
-      { rating: 4, text: "Good leash, but the handle could be more comfortable." },
     ],
     colors: ["black", "yellow"],
     availableColors: ["black"],
@@ -182,7 +181,8 @@ const products: Product[] = [
     createdAt: "2024-07-25T12:45:00Z",
   },
   {
-    id: 10,
+    id: "11",
+    sku: "ABC123",
     image: "/doggies.jpg",
     name: "Quiet Hamster Wheel",
     price: 18,
@@ -190,8 +190,6 @@ const products: Product[] = [
     subcategory: "hamster",
     description: "A silent spinning wheel for hamsters, ensuring hours of quiet exercise.",
     reviews: [
-      { rating: 5, text: "My hamster loves it, and it’s so quiet!" },
-      { rating: 3, text: "Works well, but the plastic feels a bit cheap." },
     ],
     sizes: ["Small", "Medium"],
     availableSizes: ["Small", "Medium"],
@@ -200,11 +198,12 @@ const products: Product[] = [
   },
 ];
 
-export const getProducts = async (): Promise<Product[]> => products;
+// export const getProducts = async (): Promise<Product[]> => products;
+export const getProducts = async (): Promise<Product[]> => getPaginatedProducts();
 
 
 export const getProductById = async (
-  id: number
+  id: string
 ): Promise<Product | undefined> =>
   getProducts().then((products) => products.find((p) => p.id === id));
 
@@ -216,6 +215,7 @@ export const getProductsByCategory = async (
   ): Promise<Product[] | undefined> => 
     getProducts().then((products) => products.filter((p) => p.category === category)).then(
       (products) => {
+        // Needs improvement
         const size = searchParams["Size"];
         if (size) {
           return products.filter((p) => p.availableSizes?.includes(size));
@@ -233,15 +233,19 @@ export const getProductsByCategory = async (
     getProducts().then((products) => products.filter((p) => p.category === category && p.subcategory === subcategory));
 
 export const addReview = async (
-  id: number,
-  review: {
-    rating: number;
-    text: string;
-  }
+  id: string,
+  review: { rating: number; text: string; userId: string}
 ): Promise<Review[] | undefined> => {
   const product = await getProductById(id);
   if (product) {
-    product.reviews.push(review);
+    product.reviews.push({
+      rating: review.rating,
+      text: review.text,
+      userId: review.userId,
+      createdAt: new Date().toISOString(),
+      // Needs improvement
+      id: ""
+    });
   }
   return product?.reviews;
 };

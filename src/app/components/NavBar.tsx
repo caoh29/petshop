@@ -6,7 +6,6 @@ import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 
 import { useHeaderVisibility } from '@/lib/hooks';
-import { useDispatch } from 'react-redux';
 
 // export function NavBar({
 //   className,

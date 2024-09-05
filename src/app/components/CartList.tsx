@@ -13,12 +13,12 @@ import CartQuantitySelector from './CartQuantitySelector';
 
 interface Props {
   updateCartAction: (
-    id: number,
+    id: string,
     quantity: number,
     options: { size?: string; color?: string },
   ) => Promise<Cart>;
   deleteCartAction: (
-    id: number,
+    id: string,
     options: { size?: string; color?: string },
   ) => Promise<Cart>;
 }

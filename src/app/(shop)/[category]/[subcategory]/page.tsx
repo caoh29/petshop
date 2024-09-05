@@ -11,7 +11,7 @@ export default async function SubCategoryPage({
   searchParams,
 }: Readonly<{
   params: { category: string; subcategory: string };
-  searchParams: URLSearchParams;
+  searchParams: { [key: string]: string | string[] | undefined };
 }>) {
   if (!VALID_ROUTES.has(`/${params.category}/${params.subcategory}`))
     return <NotFound />;

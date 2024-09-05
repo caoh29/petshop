@@ -11,7 +11,7 @@ export default async function CategoryPage({
   searchParams,
 }: Readonly<{
   params: { category: string };
-  searchParams: URLSearchParams;
+  searchParams: { [key: string]: string | string[] | undefined };
 }>) {
   if (!VALID_ROUTES.has(`/${params.category}`)) return <NotFound />;
 

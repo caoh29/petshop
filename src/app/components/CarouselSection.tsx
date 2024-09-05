@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { Card, CardContent } from './ui/card';
@@ -13,11 +12,11 @@ import {
 import { Product } from '@/api/types';
 import { capitalizeString } from '@/lib/utils';
 
-type Props = {
+interface Props {
   title: string;
   products: Product[];
   className?: string;
-};
+}
 
 export function CarouselSection({
   title,

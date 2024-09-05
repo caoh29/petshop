@@ -16,6 +16,7 @@ import {
 import Data from '../../mocks/MOCK_DATA.json';
 import Link from 'next/link';
 
+// needs improvement
 type Post = {
   id: number;
   product_name: string;

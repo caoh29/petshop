@@ -1,10 +1,20 @@
 import prisma from "./db";
 
 async function main() {
+  await prisma.cart.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.order.deleteMany();
   await prisma.product.deleteMany();
+  await prisma.review.deleteMany();
+  await prisma.selectedProduct.deleteMany();
+  await prisma.subCategory.deleteMany();
+  await prisma.user.deleteMany();
+  
+
   const data = await prisma.product.createMany({
     data: [
       {
+        sku: "ABC123",
         image: "/castle-t-shirt.jpg",
         additionalImages: ["/elf-t-shirt.jpg", "/dragon-t-shirt.jpg"],
         name: "Castle T-Shirt",
@@ -18,9 +28,9 @@ async function main() {
         colors: ["black", "blue", "green"],
         availableColors: ["black", "blue"],
         isOutOfStock: false,
-        createdAt: "2024-09-01T12:00:00Z",
       },
       {
+        sku: "DEF456",
         image: "/barbarian-t-shirt.jpg",
         name: "Organic Raw Dog Food",
         price: 45,
@@ -33,6 +43,7 @@ async function main() {
         createdAt: "2024-09-01T12:00:00Z",
       },
       {
+        sku: "GHI789",
         image: "/dragon-t-shirt.jpg",
         name: "Grain-Free Wet Dog Food",
         price: 30,
@@ -45,6 +56,7 @@ async function main() {
         createdAt: "2024-08-25T10:30:00Z",
       },
       {
+        sku: "JKL012",
         image: "/elf-t-shirt.jpg",
         name: "Durable Dog Ball Toy",
         price: 12,
@@ -57,6 +69,7 @@ async function main() {
         createdAt: "2024-08-20T08:15:00Z",
       },
       {
+        sku: "MNO345",
         image: "/wizard-t-shirt.jpg",
         name: "Grain-Free Dry Cat Food",
         price: 40,
@@ -69,6 +82,7 @@ async function main() {
         createdAt: "2024-08-18T14:45:00Z",
       },
       {
+        sku: "PQR678",
         image: "/wizard-t-shirt-2.jpg",
         name: "Cozy Cat Bed",
         price: 50,
@@ -81,6 +95,7 @@ async function main() {
         createdAt: "2024-08-15T09:00:00Z",
       },
       {
+        sku: "STU901",
         image: "/pets.jpeg",
         name: "Premium Bird Seed Mix",
         price: 15,
@@ -93,6 +108,7 @@ async function main() {
         createdAt: "2024-08-10T07:30:00Z",
       },
       {
+        sku: "VWX234",
         image: "/not-found.png",
         name: "Glass Fish Tank",
         price: 120,
@@ -105,6 +121,7 @@ async function main() {
         createdAt: "2024-08-05T16:00:00Z",
       },
       {
+        sku: "YZA567",
         image: "/arbol.jpg",
         name: "Reptile Terrarium",
         price: 150,
@@ -117,6 +134,7 @@ async function main() {
         createdAt: "2024-07-30T11:15:00Z",
       },
       {
+        sku: "BCD890",
         image: "/dados.png",
         name: "Reflective Dog Leash",
         price: 20,
@@ -129,6 +147,7 @@ async function main() {
         createdAt: "2024-07-25T12:45:00Z",
       },
       {
+        sku: "EFG123",
         image: "/doggies.jpg",
         name: "Quiet Hamster Wheel",
         price: 18,

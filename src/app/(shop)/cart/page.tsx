@@ -3,7 +3,7 @@ import CartList from '@/app/components/CartList';
 import CartSummary from '@/app/components/CartSummary';
 
 const updateCartAction = async (
-  id: number,
+  id: string,
   quantity: number,
   options: {
     size?: string;
@@ -18,7 +18,7 @@ const updateCartAction = async (
 };
 
 const deleteCartAction = async (
-  id: number,
+  id: string,
   options: {
     size?: string;
     color?: string;

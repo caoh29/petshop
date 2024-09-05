@@ -2,6 +2,8 @@ import { getProductById } from "./products";
 import { Cart } from "./types";
 
 const cart: Cart = {
+  id: "",
+  userId: "",
   products: [
     // {
     //   id: 1,
@@ -23,7 +25,7 @@ export const getCart = async (): Promise<Cart> => {
 };
 
 export const addToCart = async (
-  productId: number,
+  productId: string,
   {
     quantity,
     options,
@@ -57,6 +59,8 @@ export const addToCart = async (
         description: product.description,
         reviews: product.reviews,
         isOutOfStock: product.isOutOfStock,
+        sku: product.sku,
+        createdAt: product.createdAt,
         quantity,
         size: options.size ?? '',
         color: options.color ?? '',
@@ -67,7 +71,7 @@ export const addToCart = async (
 };
 
 export const updateCartItem = async (
-  productId: number,
+  productId: string,
   {
     quantity,
     options,
@@ -91,7 +95,7 @@ export const updateCartItem = async (
 }
 
 export const deleteCartItem = async (
-  productId: number,
+  productId: string,
   {
     options,
   }: {

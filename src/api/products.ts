@@ -20,7 +20,10 @@ const products: Product[] = [
         text: "This is the best t-shirt I've ever owned! The design is amazing and the quality is top-notch.",
         createdAt: "2024-09-01T12:00:00Z",
         userId: "XXXXX",
+<<<<<<< HEAD
         productId: "a1s41v6d16v1"
+=======
+>>>>>>> 1f794393a9c5be68e81f81ae407b3516c008c7bf
       },
       {
         id: "2",
@@ -28,7 +31,10 @@ const products: Product[] = [
         text: "I really like this t-shirt, the design is cool and it's comfortable to wear. The only downside is that it shrunk a bit after washing.",
         createdAt: "2024-09-01T12:00:00Z",
         userId: "XXXXX",
+<<<<<<< HEAD
         productId: "adfv8626ad5v1"
+=======
+>>>>>>> 1f794393a9c5be68e81f81ae407b3516c008c7bf
       },
     ],
     sizes: ["S", "M", "L", "XL"],
@@ -251,8 +257,12 @@ export const addReview = async (
       userId: review.userId,
       createdAt: new Date().toISOString(),
       // Needs improvement
+<<<<<<< HEAD
       id: "",
       productId: ""
+=======
+      id: ""
+>>>>>>> 1f794393a9c5be68e81f81ae407b3516c008c7bf
     });
   }
   return product?.reviews;

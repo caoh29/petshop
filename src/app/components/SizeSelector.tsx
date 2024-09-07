@@ -1,7 +1,7 @@
 'use client';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setSize } from '@/lib/store/store';
+import { RootState, setSize } from '../../store/store';
 
 import { ToggleGroup, ToggleGroupItem } from '@/app/components/ui/toggle-group';
 

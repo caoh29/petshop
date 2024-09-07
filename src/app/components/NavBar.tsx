@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 
-import { useHeaderVisibility } from '@/lib/hooks';
+import { useHeaderVisibility } from '../../hooks';
 
 // export function NavBar({
 //   className,

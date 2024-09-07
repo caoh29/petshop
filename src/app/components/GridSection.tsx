@@ -32,7 +32,7 @@ export function GridSection({ items, title }: Readonly<Props>) {
         <ul className='grid justify-items-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
           {items &&
             renderItems(items, (item) => {
-              if (item.id) {
+              if (item.category) {
                 return `${item.category}/${item.subcategory}/${item.id}`;
               }
               return `${item.name}`;

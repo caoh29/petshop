@@ -3,7 +3,7 @@
 import { useDispatch } from 'react-redux';
 
 import { Minus, Plus } from 'lucide-react';
-import { setCart } from '@/lib/store/store';
+import { setCart } from '../../store/store';
 import { Cart } from '@/api/types';
 
 interface Props {

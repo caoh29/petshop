@@ -1,8 +1,8 @@
 'use client';
 import { useDispatch } from 'react-redux';
 import { type Cart } from '@/api/types';
-import { setCart } from '../../lib/store/store';
-import { useCart } from '@/lib/hooks';
+import { setCart } from '../../store/store';
+import { useCart } from '../../hooks';
 import Link from 'next/link';
 
 export default function CartPopup({

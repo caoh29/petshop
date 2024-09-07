@@ -2,16 +2,22 @@
 import { useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 
+import { revalidatePath } from 'next/cache';
+import { useParams } from 'next/navigation';
+
 import { Review } from '@/api/types';
-import { setReviews, RootState } from '@/lib/store/store';
-import { useReviews } from '@/lib/hooks';
+import { setReviews, RootState } from '../../store/store';
+import { useReviews } from '../../hooks';
 
 export default function Reviews({
   reviews: initialReviews,
   addReviewAction,
+  productId: id,
 }: {
+  productId: string;
   reviews: Review[];
   addReviewAction: (
+    id: string,
     text: string,
     rating: number,
     userId: string,
@@ -28,6 +34,9 @@ export default function Reviews({
   const [reviewRating, setReviewRating] = useState(5);
 
   const dispatch = useDispatch();
+
+  const params = useParams();
+  const { category, subcategory } = params;
 
   return (
     <div className='w-full p-4'>
@@ -46,8 +55,9 @@ export default function Reviews({
           e.preventDefault();
           // Here i need to do some logicto retrive the user id from cookies
           dispatch(
-            setReviews(await addReviewAction(reviewText, reviewRating, '')),
+            setReviews(await addReviewAction(id, reviewText, reviewRating, '')),
           );
+          revalidatePath(`/${category}/${subcategory}/${id}`);
           setReviewText('');
           setReviewRating(5);
         }}

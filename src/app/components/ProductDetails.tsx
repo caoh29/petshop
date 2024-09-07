@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { useStore } from 'react-redux';
-import { resetProductState, RootState } from '@/lib/store/store';
+import { resetProductState, RootState } from '../../store/store';
 
 import AverageRating from '@/app/components/AverageRating';
 import QuantitySelector from '@/app/components/QuantitySelector';
@@ -15,6 +15,7 @@ import { Cart, Product } from '@/api/types';
 interface ProductDetailsProps {
   product: Product;
   addToCartAction: (
+    id: string,
     quantity: number,
     options: { size?: string; color?: string },
   ) => Promise<Cart>;

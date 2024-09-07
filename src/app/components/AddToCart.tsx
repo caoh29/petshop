@@ -1,6 +1,6 @@
 'use client';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setCart, resetProductState } from '@/lib/store/store';
+import { RootState, setCart, resetProductState } from '../../store/store';
 
 import { Product, type Cart } from '@/api/types';
 
@@ -12,6 +12,7 @@ export default function AddToCart({
   product,
 }: Readonly<{
   addToCartAction: (
+    id: string,
     quantity: number,
     options: { size?: string; color?: string },
   ) => Promise<Cart>;
@@ -29,7 +30,7 @@ export default function AddToCart({
         if (disabled) return;
         dispatch(
           setCart(
-            await addToCartAction(quantity, {
+            await addToCartAction(product.id, quantity, {
               size,
               color,
             }),

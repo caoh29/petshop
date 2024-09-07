@@ -5,7 +5,7 @@ import {
   increaseQuantity,
   decreaseQuantity,
   RootState,
-} from '@/lib/store/store';
+} from '../../store/store';
 
 import { Minus, Plus } from 'lucide-react';
 

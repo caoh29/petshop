@@ -3,8 +3,8 @@ import { useStore } from 'react-redux';
 import { useRef } from 'react';
 
 import { Review } from '@/api/types';
-import { setReviews, RootState } from '@/lib/store/store';
-import { useReviews } from '@/lib/hooks';
+import { setReviews, RootState } from '../../store/store';
+import { useReviews } from '../../hooks';
 
 export default function AverageRating({
   reviews: initialReviews,

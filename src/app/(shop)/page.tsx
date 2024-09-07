@@ -4,7 +4,7 @@ import { getCategories } from '@/api/categories';
 import { HeroSection } from '../components/HeroSection';
 import { GridSection } from '../components/GridSection';
 import { CarouselSection } from '../components/CarouselSection';
-import { getPaginatedProducts } from '@/lib/actions';
+import { getPaginatedProducts } from '../actions';
 
 export default async function Home() {
   // const products = await getProducts();

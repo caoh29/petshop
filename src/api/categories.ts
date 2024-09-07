@@ -1,6 +1,6 @@
 import { Category } from "./types";
 
-const categories = [
+const categories: Category[] = [
   {
     id: "A5V34FGJ15",
     name: "dogs",

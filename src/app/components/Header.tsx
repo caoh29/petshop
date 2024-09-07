@@ -5,9 +5,9 @@ import { ShoppingCart } from 'lucide-react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 import { useDispatch } from 'react-redux';
-import { setHeaderVisibility } from '@/lib/store/store';
+import { setHeaderVisibility } from '../../store/store';
 
-import { useCart, useHeaderVisibility } from '../../lib/hooks';
+import { useCart, useHeaderVisibility } from '../../hooks';
 
 import CartPopup from './CartPopup';
 import { type Cart } from '@/api/types';

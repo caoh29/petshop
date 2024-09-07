@@ -1,10 +1,11 @@
 import './globals.css';
 import type { Metadata } from 'next';
 
-import StoreProvider from '../lib/store/StoreProvider';
+import StoreProvider from './StoreProvider';
 import Header from './components/Header';
 
-import { getCart, clearCart } from '@/api/cart';
+import { getCart } from '@/api/cart';
+import { clearCartAction } from './actions/cart';
 
 import { ClerkProvider } from '@clerk/nextjs';
 import { Footer } from './components/Footer';
@@ -22,11 +23,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cart = await getCart();
-
-  const clearCartAction = async () => {
-    'use server';
-    return await clearCart();
-  };
 
   return (
     <ClerkProvider>

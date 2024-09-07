@@ -5,9 +5,9 @@ import Link from 'next/link';
 
 import { useDispatch } from 'react-redux';
 
-import { useCart } from '@/lib/hooks';
+import { useCart } from '../../hooks';
 import { Cart } from '@/api/types';
-import { setCart } from '@/lib/store/store';
+import { setCart } from '../../store/store';
 
 import CartQuantitySelector from './CartQuantitySelector';
 

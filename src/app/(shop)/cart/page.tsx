@@ -1,34 +1,6 @@
-import { deleteCartItem, updateCartItem } from '@/api/cart';
+import { updateCartAction, deleteCartAction } from '@/app/actions';
 import CartList from '@/app/components/CartList';
 import CartSummary from '@/app/components/CartSummary';
-
-const updateCartAction = async (
-  id: string,
-  quantity: number,
-  options: {
-    size?: string;
-    color?: string;
-  },
-) => {
-  'use server';
-  return await updateCartItem(id, {
-    quantity,
-    options,
-  });
-};
-
-const deleteCartAction = async (
-  id: string,
-  options: {
-    size?: string;
-    color?: string;
-  },
-) => {
-  'use server';
-  return await deleteCartItem(id, {
-    options,
-  });
-};
 
 export default function CartPage() {
   return (

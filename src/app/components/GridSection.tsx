@@ -3,18 +3,20 @@ import PetCard from '../components/PetCard';
 import { Category, Product, SubCategory } from '@/api/types';
 import { capitalizeString } from '@/lib/utils';
 
-type ProductOrCategoryOrSubCategory = Product | Category | SubCategory;
+type Item = Product | Category | SubCategory;
 
 interface Props {
   title?: string;
-  items: ProductOrCategoryOrSubCategory[];
+  items: Item[];
+}
+
+// Type guard to check if the item is a Product
+function isProduct(item: Item): item is Product {
+  return (item as Product).category !== undefined;
 }
 
 // Unified function to render either products or categories
-const renderItems = (
-  items: ProductOrCategoryOrSubCategory[],
-  getPath: (item: ProductOrCategoryOrSubCategory) => string,
-) => {
+const renderItems = (items: Item[], getPath: (item: Item) => string) => {
   return items.map((item) => (
     <li key={item.name}>
       <Link href={getPath(item)}>
@@ -32,9 +34,11 @@ export function GridSection({ items, title }: Readonly<Props>) {
         <ul className='grid justify-items-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
           {items &&
             renderItems(items, (item) => {
-              if (item.category) {
+              if (isProduct(item)) {
+                // Safely access Product-specific properties
                 return `${item.category}/${item.subcategory}/${item.id}`;
               }
+              // Default for Category or SubCategory
               return `${item.name}`;
             })}
         </ul>

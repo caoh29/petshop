@@ -1,4 +1,4 @@
-import { getPaginatedProducts } from "../app/actions";
+import { getPaginatedProductsAction } from "../app/actions";
 import { Product } from "./types";
 
 const products: Product[] = [
@@ -201,7 +201,7 @@ const products: Product[] = [
 ];
 
 // export const getProducts = async (): Promise<Product[]> => products;
-export const getProducts = async (): Promise<Product[]> => getPaginatedProducts();
+export const getProducts = async (): Promise<Product[]> => getPaginatedProductsAction();
 
 
 export const getProductById = async (

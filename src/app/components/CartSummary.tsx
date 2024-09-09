@@ -6,7 +6,7 @@ import Shipping from './Shipping';
 import Subtotal from './Subtotal';
 import { Button } from './ui/button';
 
-import { useCart } from '@/lib/hooks';
+import { useCart } from '../../hooks';
 import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import Link from 'next/link';
 

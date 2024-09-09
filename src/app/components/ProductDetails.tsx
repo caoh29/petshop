@@ -1,8 +1,8 @@
-'use client';
+// 'use client';
 
-import { useRef } from 'react';
-import { useStore } from 'react-redux';
-import { resetProductState, RootState } from '../../store/store';
+// import { useRef } from 'react';
+// import { useStore } from 'react-redux';
+// import { resetProductState, RootState } from '../../store/store';
 
 import AverageRating from '@/app/components/AverageRating';
 import QuantitySelector from '@/app/components/QuantitySelector';
@@ -25,12 +25,12 @@ export default function ProductDetails({
   product,
   addToCartAction,
 }: Readonly<ProductDetailsProps>) {
-  const store = useStore<RootState>();
-  const initialized = useRef(false);
-  if (!initialized.current) {
-    store.dispatch(resetProductState());
-    initialized.current = true;
-  }
+  // const store = useStore<RootState>();
+  // const initialized = useRef(false);
+  // if (!initialized.current) {
+  //   store.dispatch(resetProductState());
+  //   initialized.current = true;
+  // }
   return (
     <div className='w-full md:w-1/2 p-4'>
       <h1 className='text-3xl font-bold leading-10 text-black'>

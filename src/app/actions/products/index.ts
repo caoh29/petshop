@@ -3,7 +3,7 @@
 import { Product } from "@/api/types";
 import prisma from "../../../../prisma/db";
 
-export const getPaginatedProducts = async (): Promise<Product[]> => {
+export const getPaginatedProductsAction = async (): Promise<Product[]> => {
   try {
     const products = await prisma.product.findMany({
       take: 10,

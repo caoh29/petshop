@@ -1,9 +1,10 @@
 'use client';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setColor } from '../../store/store';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { RootState, setColor } from '../../store/store';
 
 import { ToggleGroup, ToggleGroupItem } from '@/app/components/ui/toggle-group';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 interface Props {
   colors: string[];
@@ -14,12 +15,31 @@ export default function ColorSelector({
   colors,
   availableColors,
 }: Readonly<Props>) {
-  const colorState = useSelector(
-    (state: RootState) => state.selectedProduct.selectedProduct.color,
-  );
-  const dispatch = useDispatch();
+  // const colorState = useSelector(
+  //   (state: RootState) => state.selectedProduct.selectedProduct.color,
+  // );
+  // const dispatch = useDispatch();
+
+  // if (colors.length === 0) return null;
+
+  const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const color = searchParams.get('Color');
 
   if (colors.length === 0) return null;
+
+  const updateSearchParams = (color: string) => {
+    if (color === '') return;
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('Color');
+    newParams.append('Color', color);
+    router.push(
+      `/${params.category}/${params.subcategory}/${
+        params.id
+      }?${newParams.toString()}`,
+    );
+  };
 
   return (
     <div className='my-4'>
@@ -27,8 +47,10 @@ export default function ColorSelector({
       <ToggleGroup
         type='single'
         className='flex flex-wrap justify-start'
-        value={colorState}
-        onValueChange={(value) => dispatch(setColor(value))}
+        // value={colorState}
+        // onValueChange={(value) => dispatch(setColor(value))}
+        value={color ?? ''}
+        onValueChange={(value) => updateSearchParams(value)}
       >
         {colors.map((color) => (
           <ToggleGroupItem

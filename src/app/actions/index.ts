@@ -1,5 +1,5 @@
-export * from './products';
+export { getPaginatedProductsAction } from './products';
 
-export * from './cart';
+export { clearCartAction, updateCartAction, deleteCartAction, addToCartAction } from './cart';
 
-export * from './reviews';
+export { addReviewAction } from './reviews';

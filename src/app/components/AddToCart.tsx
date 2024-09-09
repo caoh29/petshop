@@ -10,9 +10,9 @@ import { Button } from './ui/button';
 export default function AddToCart({
   addToCartAction,
   disabled,
-  productId: id,
-  productSizes: sizes,
-  productColors: colors,
+  productId,
+  sizes,
+  colors,
 }: Readonly<{
   addToCartAction: (
     id: string,
@@ -21,8 +21,8 @@ export default function AddToCart({
   ) => Promise<Cart>;
   disabled: boolean;
   productId: string;
-  productSizes?: string[];
-  productColors?: string[];
+  sizes?: string[];
+  colors?: string[];
 }>) {
   const dispatch = useDispatch();
   // const { quantity, size, color } = useSelector(
@@ -48,7 +48,7 @@ export default function AddToCart({
     if (quantity === 0) {
       dispatch(
         setCart(
-          await addToCartAction(id, 1, {
+          await addToCartAction(productId, 1, {
             size,
             color,
           }),
@@ -57,7 +57,7 @@ export default function AddToCart({
     } else {
       dispatch(
         setCart(
-          await addToCartAction(id, quantity, {
+          await addToCartAction(productId, quantity, {
             size,
             color,
           }),

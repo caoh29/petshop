@@ -72,8 +72,8 @@ export default function ProductDetails({
           addToCartAction={addToCartAction}
           disabled={product.isOutOfStock}
           productId={product.id}
-          productSizes={product.sizes ?? []}
-          productColors={product.colors ?? []}
+          sizes={product.sizes ?? []}
+          colors={product.colors ?? []}
         />
       </div>
     </div>

@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, setCart, resetProductState } from '../../store/store';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
-import { Product, type Cart } from '@/api/types';
+import { type Cart } from '@/api/types';
 
 import { Button } from './ui/button';
 
 export default function AddToCart({
   addToCartAction,
   disabled,
-  product,
+  productId: id,
+  productSizes: sizes,
+  productColors: colors,
 }: Readonly<{
   addToCartAction: (
     id: string,
@@ -18,7 +20,9 @@ export default function AddToCart({
     options: { size?: string; color?: string },
   ) => Promise<Cart>;
   disabled: boolean;
-  product: Product;
+  productId: string;
+  productSizes?: string[];
+  productColors?: string[];
 }>) {
   const dispatch = useDispatch();
   // const { quantity, size, color } = useSelector(
@@ -39,39 +43,41 @@ export default function AddToCart({
     router.push(`/${params.category}/${params.subcategory}/${params.id}`);
   };
 
+  const handleClick = async () => {
+    if (disabled) return;
+    if (quantity === 0) {
+      dispatch(
+        setCart(
+          await addToCartAction(id, 1, {
+            size,
+            color,
+          }),
+        ),
+      );
+    } else {
+      dispatch(
+        setCart(
+          await addToCartAction(id, quantity, {
+            size,
+            color,
+          }),
+        ),
+      );
+    }
+    updateSearchParams();
+  };
+
   return (
     <Button
       className={`mt-6 text-lg font-bold`}
-      onClick={async () => {
-        if (disabled) return;
-        if (quantity === 0) {
-          dispatch(
-            setCart(
-              await addToCartAction(product.id, 1, {
-                size,
-                color,
-              }),
-            ),
-          );
-        } else {
-          dispatch(
-            setCart(
-              await addToCartAction(product.id, quantity, {
-                size,
-                color,
-              }),
-            ),
-          );
-        }
-        updateSearchParams();
-      }}
+      onClick={() => handleClick()}
       disabled={
         disabled ||
-        (!size && product.sizes && product.sizes.length > 0) ||
-        (!color && product.colors && product.colors.length > 0)
+        (!size && sizes && sizes.length > 0) ||
+        (!color && colors && colors.length > 0)
       }
     >
-      {disabled ? 'Out of Stock' : 'Add to cart'}
+      {disabled ? 'Unavailable' : 'Add to cart'}
     </Button>
   );
 }

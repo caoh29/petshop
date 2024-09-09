@@ -9,7 +9,9 @@ import { Button } from './ui/button';
 export default function AddToCart({
   addToCartAction,
   disabled,
-  product,
+  productId,
+  sizes,
+  colors,
 }: Readonly<{
   addToCartAction: (
     id: string,
@@ -17,34 +19,39 @@ export default function AddToCart({
     options: { size?: string; color?: string },
   ) => Promise<Cart>;
   disabled: boolean;
-  product: Product;
+  productId: string;
+  sizes?: string[];
+  colors?: string[];
 }>) {
   const dispatch = useDispatch();
   const { quantity, size, color } = useSelector(
     (state: RootState) => state.selectedProduct.selectedProduct,
   );
+
+  const handleClick = async () => {
+    if (disabled) return;
+    dispatch(
+      setCart(
+        await addToCartAction(productId, quantity, {
+          size,
+          color,
+        }),
+      ),
+    );
+    dispatch(resetProductState());
+  };
+
   return (
     <Button
       className={`mt-6 text-lg font-bold`}
-      onClick={async () => {
-        if (disabled) return;
-        dispatch(
-          setCart(
-            await addToCartAction(product.id, quantity, {
-              size,
-              color,
-            }),
-          ),
-        );
-        dispatch(resetProductState());
-      }}
+      onClick={handleClick}
       disabled={
         disabled ||
-        (!size && product.sizes && product.sizes.length > 0) ||
-        (!color && product.colors && product.colors.length > 0)
+        (!size && sizes && sizes.length > 0) ||
+        (!color && colors && colors.length > 0)
       }
     >
-      {disabled ? 'Out of Stock' : 'Add to cart'}
+      {disabled ? 'Unavailable' : 'Add to cart'}
     </Button>
   );
 }

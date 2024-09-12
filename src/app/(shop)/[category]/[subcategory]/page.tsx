@@ -6,6 +6,9 @@ import { SortDropdown } from '@/app/components/SortDropdown';
 import NotFound from '@/app/components/PageNotFound';
 import { capitalizeString } from '@/lib/utils';
 
+import { getPaginatedProductsAction } from '../../../actions';
+import { Pagination } from '@/app/components/Pagination';
+
 export default async function SubCategoryPage({
   params,
   searchParams,
@@ -16,11 +19,17 @@ export default async function SubCategoryPage({
   if (!VALID_ROUTES.has(`/${params.category}/${params.subcategory}`))
     return <NotFound />;
 
-  const products = await getProductsBySubCategory(
-    params.category,
-    params.subcategory,
+  // const products = await getProductsBySubCategory(
+  //   params.category,
+  //   params.subcategory,
+  //   searchParams,
+  // );
+
+  const { products, pages, currentPage } = await getPaginatedProductsAction({
+    category: params.category,
+    subcategory: params.subcategory,
     searchParams,
-  );
+  });
 
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -41,6 +50,7 @@ export default async function SubCategoryPage({
             <SortDropdown />
           </div>
           <GridSection items={products ?? []} />
+          <Pagination totalPages={pages} currentPage={currentPage} />
         </div>
       </div>
     </div>

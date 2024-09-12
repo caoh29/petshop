@@ -6,16 +6,27 @@ import { GridSection } from '@/app/components/GridSection';
 import NotFound from '@/app/components/PageNotFound';
 import { capitalizeString } from '@/lib/utils';
 
+import { getPaginatedProductsAction } from '../../actions';
+import { Pagination } from '@/app/components/Pagination';
+
+interface Props {
+  params: { category: string };
+  searchParams: {
+    [key: string]: string | string[] | undefined;
+  };
+}
+
 export default async function CategoryPage({
   params,
   searchParams,
-}: Readonly<{
-  params: { category: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}>) {
+}: Readonly<Props>) {
   if (!VALID_ROUTES.has(`/${params.category}`)) return <NotFound />;
+  // const products = await getProductsByCategory(params.category, searchParams);
 
-  const products = await getProductsByCategory(params.category, searchParams);
+  const { products, pages, currentPage } = await getPaginatedProductsAction({
+    category: params.category,
+    searchParams,
+  });
 
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -36,6 +47,7 @@ export default async function CategoryPage({
             <SortDropdown />
           </div>
           <GridSection items={products ?? []} />
+          <Pagination totalPages={pages} currentPage={currentPage} />
         </div>
       </div>
     </div>

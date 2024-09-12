@@ -1,4 +1,4 @@
-import { getPaginatedProductsAction } from "../app/actions";
+import { getPaginatedProductsAction } from "@/app/actions";
 import { Product } from "./types";
 
 const products: Product[] = [
@@ -201,7 +201,10 @@ const products: Product[] = [
 ];
 
 // export const getProducts = async (): Promise<Product[]> => products;
-export const getProducts = async (): Promise<Product[]> => getPaginatedProductsAction();
+export const getProducts = async (): Promise<Product[]> => {
+  const { products } = await getPaginatedProductsAction({});
+  return products;
+};
 
 
 export const getProductById = async (
@@ -211,31 +214,31 @@ export const getProductById = async (
 
 
 export const getProductsByCategory = async (
-    category: string,
-    // searchParams: { [key: string]: string | string[] | undefined }
-    searchParams: { [key: string]: string | string[] | undefined }
-  ): Promise<Product[] | undefined> => 
-    getProducts().then((products) => products.filter((p) => p.category === category)).then(
-      (products) => {
-        // Needs improvement
-        const size = searchParams["Size"];
-        if (size) {
-          return products.filter((p) => {
-            if(size instanceof Array) {
-              return size.some((s) => p.availableSizes?.includes(s));
-            }
-            return p.availableSizes?.includes(size);
-          });
-        }
-        return products;
+  category: string,
+  // searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<Product[] | undefined> =>
+  getProducts().then((products) => products.filter((p) => p.category === category)).then(
+    (products) => {
+      // Needs improvement
+      const size = searchParams["Size"];
+      if (size) {
+        return products.filter((p) => {
+          if (size instanceof Array) {
+            return size.some((s) => p.availableSizes?.includes(s));
+          }
+          return p.availableSizes?.includes(size);
+        });
       }
-    );
+      return products;
+    }
+  );
 
 
-  export const getProductsBySubCategory = async (
-    category: string,
-    subcategory: string,
-    searchParams: { [key: string]: string | string[] | undefined }
-  ): Promise<Product[] | undefined> =>
-    getProducts().then((products) => products.filter((p) => p.category === category && p.subcategory === subcategory));
+export const getProductsBySubCategory = async (
+  category: string,
+  subcategory: string,
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<Product[] | undefined> =>
+  getProducts().then((products) => products.filter((p) => p.category === category && p.subcategory === subcategory));
 

@@ -60,6 +60,9 @@ export default function CartList({
                     Size: {item.size}, Color: {item.color}
                   </p>
                 )}
+                {!item.size && item.color && (
+                  <p className='text-sm text-gray-500'>Color: {item.color}</p>
+                )}
               </div>
               <CartQuantitySelector
                 quantity={item.quantity}

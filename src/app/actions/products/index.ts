@@ -26,7 +26,7 @@ interface GetProducts {
 
 export const getPaginatedProductsAction = async ({ category, subcategory, searchParams }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
   try {
-    const page = Number(searchParams?.page) || 1;
+    const page = Number(searchParams?.page) ?? 1;
 
     const { skip, take } = getPagination({ page });
 
@@ -37,8 +37,8 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
       skip,
       include: { reviews: true }, // Include reviews in the initial query
       where: {
-        category: category || undefined,
-        subcategory: subcategory || undefined,
+        category: category ?? undefined,
+        subcategory: subcategory ?? undefined,
         // sizes: {
         //   has: searchParams?.Size ? searchParams.Size as string : undefined,
         // },
@@ -51,8 +51,13 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
     });
 
     return {
-      pages: Math.ceil((await prisma.product.count()) / take), // Total number of pages
-      currentPage: page || 1, // Current page number
+      pages: Math.ceil((await prisma.product.count({
+        where: {
+          category: category ?? undefined,
+          subcategory: subcategory ?? undefined,
+        }
+      })) / take), // Total number of pages
+      currentPage: page ?? 1, // Current page number
       products: products.map(product => ({
         ...product,
         createdAt: product.createdAt.toISOString(), // Convert Date to string

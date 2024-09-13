@@ -23,10 +23,10 @@ export default function Header({
 }>) {
   const cart = useCart();
   const [showCart, setShowCart] = useState(false);
-
+  // const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const dispatch = useDispatch();
   const headerVisibility = useHeaderVisibility();
-  // const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+
   const prevScrollPos = useRef(0);
 
   useEffect(() => {
@@ -38,7 +38,6 @@ export default function Header({
       //   setIsHeaderVisible(!isScrollingDown);
       // }
       if (isScrollingDown !== !headerVisibility && currentScrollPos > 150) {
-        // setIsHeaderVisible(!isScrollingDown);
         dispatch(setHeaderVisibility({ isVisible: !isScrollingDown }));
       }
 

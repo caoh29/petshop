@@ -1,4 +1,4 @@
-import { getProductsBySubCategory } from '@/api/products';
+// import { getProductsBySubCategory } from '@/api/products';
 import { VALID_ROUTES } from '@/api/routes';
 import { GridSection } from '@/app/components/GridSection';
 import { ProductFilters } from '@/app/components/ProductFilters';
@@ -50,7 +50,9 @@ export default async function SubCategoryPage({
             <SortDropdown />
           </div>
           <GridSection items={products ?? []} />
-          <Pagination totalPages={pages} currentPage={currentPage} />
+          {pages > 1 && (
+            <Pagination totalPages={pages} currentPage={currentPage} />
+          )}
         </div>
       </div>
     </div>

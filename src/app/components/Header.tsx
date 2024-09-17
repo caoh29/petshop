@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+// import Link from 'next/link';
 
 import { ShoppingCart } from 'lucide-react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
@@ -10,18 +11,15 @@ import { setHeaderVisibility } from '../../store/store';
 import { useCart, useHeaderVisibility } from '../../hooks';
 
 import CartPopup from './CartPopup';
-import { type Cart } from '@/api/types';
+// import { type Cart } from '@/api/types';
 
 import { SearchBar } from './SearchBar';
 import { NavBar } from './NavBar';
 import { SideNavBar } from './SideNavBar';
 
-export default function Header({
-  clearCartAction,
-}: Readonly<{
-  clearCartAction: () => Promise<Cart>;
-}>) {
+export default function Header() {
   const cart = useCart();
+  // ShowCart should go, instead it should redirect to checkout page
   const [showCart, setShowCart] = useState(false);
   // const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const dispatch = useDispatch();
@@ -68,6 +66,12 @@ export default function Header({
         // isVisible={isHeaderVisible}
       />
       <SearchBar className='order-3' />
+      {/* <Link href='/checkout' className='order-4 lg:hidden'>
+        <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
+          {cart.products.length}
+        </span>
+        <ShoppingCart color='#ffffff' />
+      </Link> */}
       <button
         className='relative order-4'
         onClick={() => {
@@ -77,7 +81,7 @@ export default function Header({
         <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
           {cart.products.length}
         </span>
-        {showCart && <CartPopup clearCartAction={clearCartAction} />}
+        {showCart && <CartPopup setShowCart={setShowCart} />}
         <ShoppingCart color='#ffffff' />
       </button>
       <div className='order-5 text-white'>

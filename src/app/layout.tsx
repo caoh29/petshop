@@ -5,7 +5,6 @@ import StoreProvider from './StoreProvider';
 import Header from './components/Header';
 
 import { getCart } from '@/api/cart';
-import { clearCartAction } from './actions/cart';
 
 import { ClerkProvider } from '@clerk/nextjs';
 import { Footer } from './components/Footer';
@@ -29,7 +28,8 @@ export default async function RootLayout({
       <html lang='en'>
         <body>
           <StoreProvider cart={cart}>
-            <Header clearCartAction={clearCartAction} />
+            {/* Header should not have action just redirect to checkoutpage */}
+            <Header />
             <main className=''>{children}</main>
             <Footer />
           </StoreProvider>

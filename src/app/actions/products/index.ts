@@ -73,6 +73,6 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
       products: [], // Return an empty array in case of error
       pages: 0, // Return 0 pages in case of error
       currentPage: 1 // Return 1 as the current page in case of error
-    }; // Return an empty array in case of error
+    };
   }
 };

@@ -28,7 +28,6 @@ export default async function RootLayout({
       <html lang='en'>
         <body>
           <StoreProvider cart={cart}>
-            {/* Header should not have action just redirect to checkoutpage */}
             <Header />
             <main className=''>{children}</main>
             <Footer />

@@ -19,8 +19,7 @@ import { SideNavBar } from './SideNavBar';
 
 export default function Header() {
   const cart = useCart();
-  // ShowCart should go, instead it should redirect to checkout page
-  const [showCart, setShowCart] = useState(false);
+  const [showCartPopup, setShowCartPopup] = useState(false);
   // const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const dispatch = useDispatch();
   const headerVisibility = useHeaderVisibility();
@@ -75,13 +74,13 @@ export default function Header() {
       <button
         className='relative order-4'
         onClick={() => {
-          setShowCart(!showCart);
+          setShowCartPopup(!showCartPopup);
         }}
       >
         <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
           {cart.products.length}
         </span>
-        {showCart && <CartPopup setShowCart={setShowCart} />}
+        {showCartPopup && <CartPopup setShowCartPopup={setShowCartPopup} />}
         <ShoppingCart color='#ffffff' />
       </button>
       <div className='order-5 text-white'>

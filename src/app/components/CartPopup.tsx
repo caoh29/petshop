@@ -5,9 +5,9 @@ import { useCart } from '../../hooks';
 import Link from 'next/link';
 
 export default function CartPopup({
-  setShowCart,
+  setShowCartPopup,
 }: {
-  setShowCart: Dispatch<SetStateAction<boolean>>;
+  setShowCartPopup: Dispatch<SetStateAction<boolean>>;
 }) {
   const cart = useCart();
 
@@ -51,9 +51,7 @@ export default function CartPopup({
         <div className='flex justify-between w-full'>
           <button
             className='mt-6 px-4 py-2 text-lg font-bold text-white bg-green-800 rounded-lg'
-            onClick={() => {
-              setShowCart(false);
-            }}
+            onClick={() => setShowCartPopup(false)}
           >
             Continue Shopping
           </button>

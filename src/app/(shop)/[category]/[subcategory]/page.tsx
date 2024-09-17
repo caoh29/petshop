@@ -51,7 +51,7 @@ export default async function SubCategoryPage({
           </div>
           <GridSection items={products ?? []} />
           {pages > 1 && (
-            <Pagination totalPages={pages} currentPage={currentPage} />
+            <Pagination totalPages={pages} currentPage={currentPage || 1} />
           )}
         </div>
       </div>

@@ -76,3 +76,34 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
     };
   }
 };
+
+export const getProductByIdAction = async ({
+  id
+}: {
+  id: string;
+}) => {
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        reviews: true,
+      }
+    });
+
+    if (!product) return null;
+
+    return {
+      ...product,
+      createdAt: product.createdAt.toISOString(),
+      reviews: product.reviews.map(review => ({
+        ...review,
+        createdAt: review.createdAt.toISOString()
+      }))
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};

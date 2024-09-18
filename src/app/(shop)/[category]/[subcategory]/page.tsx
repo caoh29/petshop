@@ -49,7 +49,10 @@ export default async function SubCategoryPage({
             )}
             <SortDropdown />
           </div>
-          <GridSection items={products ?? []} />
+          <GridSection
+            items={products ?? []}
+            basePath={`/${params.category}/${params.subcategory}`}
+          />
           {pages > 1 && (
             <Pagination totalPages={pages} currentPage={currentPage || 1} />
           )}

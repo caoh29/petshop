@@ -1,4 +1,4 @@
-import { getPaginatedProductsAction } from "@/app/actions";
+import { getPaginatedProductsAction, getProductByIdAction } from "@/app/actions";
 import { Product } from "./types";
 
 const products: Product[] = [
@@ -210,8 +210,12 @@ export const getProducts = async (): Promise<Product[]> => {
 export const getProductById = async (
   id: string
 ): Promise<Product | undefined> =>
-  getProducts().then((products) => products.find((p) => p.id === id));
-
+// getProducts().then((products) => products.find((p) => p.id === id));
+{
+  const product = await getProductByIdAction({ id });
+  if (!product) return undefined;
+  return product;
+};
 
 export const getProductsByCategory = async (
   category: string,

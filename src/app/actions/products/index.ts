@@ -39,15 +39,12 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
       where: {
         category: category ?? undefined,
         subcategory: subcategory ?? undefined,
-        // sizes: {
-        //   has: searchParams?.Size ? searchParams.Size as string : undefined,
-        // },
-        // colors: {
-        //   has: searchParams?.Color ? searchParams.Color as string : undefined,
-        // },
-
+        sizes: searchParams?.Size ? { has: searchParams.Size as string } : undefined,
+        colors: searchParams?.Color ? { has: searchParams.Color as string } : undefined,
+        // sizes: searchParams?.Size ? { hasSome: searchParams.Size as string[] } : undefined,
+        // colors: searchParams?.Color ? { hasSome: searchParams.Color as string[] } : undefined,
       },
-      // orderBy: sortBy ? { price: sortBy as "asc" | "desc" } : undefined,
+      // orderBy: sortBy ? { price: sortBy as "asc" | "desc", createdAt: sortBy === 'newest' ? 'desc' : 'asc', } : undefined,
     });
 
     return {

@@ -29,9 +29,10 @@ const filterGroups: FilterGroup[] = [
   {
     name: 'Size',
     options: [
-      { id: 'small', label: 'Small' },
-      { id: 'medium', label: 'Medium' },
-      { id: 'large', label: 'Large' },
+      { id: 'S', label: 'Small' },
+      { id: 'M', label: 'Medium' },
+      { id: 'L', label: 'Large' },
+      { id: 'XL', label: 'Extra Large' },
     ],
   },
 ];

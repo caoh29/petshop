@@ -62,7 +62,13 @@ export function ProductFilters() {
       values.forEach((value) => newParams.append(key, value));
     });
 
-    router.push(`/${params.category}?${newParams.toString()}`);
+    if (params.subcategory) {
+      router.push(
+        `/${params.category}/${params.subcategory}?${newParams.toString()}`,
+      );
+    } else {
+      router.push(`/${params.category}?${newParams.toString()}`);
+    }
   };
 
   const toggleGroup = (groupName: string) => {

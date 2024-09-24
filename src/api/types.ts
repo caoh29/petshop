@@ -60,6 +60,7 @@ export interface Product {
   availableSizes?: string[];
   colors?: string[];
   availableColors?: string[];
+  stock: number;
   isOutOfStock: boolean;
   createdAt: Date | string;
 }

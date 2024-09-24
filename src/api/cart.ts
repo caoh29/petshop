@@ -58,6 +58,7 @@ export const addToCart = async (
         subcategory: product.subcategory,
         description: product.description,
         reviews: product.reviews,
+        stock: product.stock,
         isOutOfStock: product.isOutOfStock,
         sku: product.sku,
         createdAt: product.createdAt,
@@ -79,7 +80,7 @@ export const updateCartItem = async (
     quantity: number;
     options: { size?: string; color?: string };
   }
-) : Promise<Cart> => {
+): Promise<Cart> => {
   const cart = await getCart();
 
   const existingItemIndex = cart.products.findIndex(
@@ -101,7 +102,7 @@ export const deleteCartItem = async (
   }: {
     options: { size?: string; color?: string };
   }
-) : Promise<Cart> => {
+): Promise<Cart> => {
   const cart = await getCart();
 
   const existingItemIndex = cart.products.findIndex(

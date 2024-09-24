@@ -20,6 +20,7 @@ const initialState: SelectedProductState = {
     subcategory: "",
     description: "",
     reviews: [],
+    stock: 0,
     isOutOfStock: false
   },
 };

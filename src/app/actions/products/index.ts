@@ -34,29 +34,29 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
     const colors = checkSearchParam(searchParams?.Color);
     const sortBy = checkSorting(searchParams?.sort as string);
 
+    // Create the where clause for the product count query
+    const countWhereClause = {
+      category: category ?? undefined,
+      subcategory: subcategory ?? undefined,
+      sizes: sizes ? { hasSome: sizes } : undefined,
+      colors: colors ? { hasSome: colors } : undefined,
+    };
+
+    // Get the total count of products based on the filters
+    const totalCount = await prisma.product.count({
+      where: countWhereClause
+    });
+
     const products = await prisma.product.findMany({
       take,
       skip,
       include: { reviews: true }, // Include reviews in the initial query
-      where: {
-        category: category ?? undefined,
-        subcategory: subcategory ?? undefined,
-        sizes: sizes ? { hasSome: sizes } : undefined,
-        colors: colors ? { hasSome: colors } : undefined,
-        // colors: searchParams?.Color ? { has: searchParams.Color as string } : undefined,
-        // colors: searchParams?.Color ? { hasSome: searchParams.Color as string[] } : undefined,
-      },
-      // orderBy: sortBy ? { price: sortBy as "asc" | "desc", createdAt: sortBy === 'newest' ? 'desc' : 'asc', } : undefined,
+      where: countWhereClause,
       orderBy: sortBy ?? undefined,
     });
 
     return {
-      pages: Math.ceil((await prisma.product.count({
-        where: {
-          category: category ?? undefined,
-          subcategory: subcategory ?? undefined,
-        }
-      })) / take), // Total number of pages
+      pages: Math.ceil(totalCount / take), // Total number of pages
       currentPage: page ?? 1, // Current page number
       products: products.map(product => ({
         ...product,

@@ -30,7 +30,9 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
 
     const { skip, take } = getPagination({ page });
 
-    const sortBy = searchParams?.sort;
+    const sizes = checkSearchParam(searchParams?.Size);
+    const colors = checkSearchParam(searchParams?.Color);
+    const sortBy = checkSorting(searchParams?.sort as string);
 
     const products = await prisma.product.findMany({
       take,
@@ -39,12 +41,13 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
       where: {
         category: category ?? undefined,
         subcategory: subcategory ?? undefined,
-        sizes: searchParams?.Size ? { has: searchParams.Size as string } : undefined,
-        colors: searchParams?.Color ? { has: searchParams.Color as string } : undefined,
-        // sizes: searchParams?.Size ? { hasSome: searchParams.Size as string[] } : undefined,
+        sizes: sizes ? { hasSome: sizes } : undefined,
+        colors: colors ? { hasSome: colors } : undefined,
+        // colors: searchParams?.Color ? { has: searchParams.Color as string } : undefined,
         // colors: searchParams?.Color ? { hasSome: searchParams.Color as string[] } : undefined,
       },
       // orderBy: sortBy ? { price: sortBy as "asc" | "desc", createdAt: sortBy === 'newest' ? 'desc' : 'asc', } : undefined,
+      orderBy: sortBy ?? undefined,
     });
 
     return {
@@ -104,3 +107,27 @@ export const getProductByIdAction = async ({
     return null;
   }
 };
+
+
+const checkSearchParam = (param: string | string[] | undefined): string[] | undefined => {
+  if (Array.isArray(param)) {
+    return param;
+  } else if (typeof param === 'string') {
+    return [param];
+  }
+  return undefined;
+}
+
+const checkSorting = (sortBy: string | undefined): { price: "asc" | "desc" } | { createdAt: "asc" | "desc" } | undefined => {
+  if (sortBy === 'price_asc') {
+    return { price: "asc" };
+  } else if (sortBy === 'price_desc') {
+    return { price: "desc" };
+  } else if (sortBy === 'newest') {
+    return { createdAt: "desc" };
+  } else if (sortBy === 'featured') {
+    return { createdAt: "asc" };
+  } else {
+    return undefined;
+  }
+}

@@ -88,3 +88,13 @@ export interface SubCategory {
   name: string;
   image: string;
 }
+
+export interface FilterOption {
+  id: string;
+  label: string;
+}
+
+export interface FilterGroup {
+  name: string;
+  options: FilterOption[];
+}

@@ -6,41 +6,50 @@ import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { getFiltersAction } from '../actions';
+import { FilterGroup } from '@/api/types';
 
-interface FilterOption {
-  id: string;
-  label: string;
-}
-
-interface FilterGroup {
-  name: string;
-  options: FilterOption[];
-}
-
-const filterGroups: FilterGroup[] = [
-  {
-    name: 'Type',
-    options: [
-      { id: 'type_1', label: 'Type 1' },
-      { id: 'type_2', label: 'Type 2' },
-      { id: 'type_3', label: 'Type 3' },
-    ],
-  },
-  {
-    name: 'Size',
-    options: [
-      { id: 'S', label: 'Small' },
-      { id: 'M', label: 'Medium' },
-      { id: 'L', label: 'Large' },
-      { id: 'XL', label: 'Extra Large' },
-    ],
-  },
-];
+// const filterGroups: FilterGroup[] = [
+//   {
+//     name: 'Size',
+//     options: [
+//       { id: 'S', label: 'Small' },
+//       { id: 'M', label: 'Medium' },
+//       { id: 'L', label: 'Large' },
+//       { id: 'XL', label: 'Extra Large' },
+//     ],
+//   },
+//   {
+//     name: 'Color',
+//     options: [
+//       { id: 'blue', label: 'Blue' },
+//       { id: 'red', label: 'Red' },
+//       { id: 'black', label: 'Black' },
+//       { id: 'white', label: 'White' },
+//     ],
+//   },
+// ];
 
 export function ProductFilters() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
+
+  const [filterGroups, setFilterGroups] = useState<FilterGroup[]>([]);
+
+  useEffect(() => {
+    const getFilters = async () => {
+      const { filters } = await getFiltersAction({
+        category: params.category as string,
+        subcategory: params.subcategory as string,
+      });
+      return filters;
+    };
+
+    getFilters().then((filters) => {
+      setFilterGroups(filters);
+    });
+  }, [params]);
 
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
     {},

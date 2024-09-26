@@ -1,7 +1,15 @@
 'use server';
 
-import { Product } from "@/api/types";
+import { FilterGroup, Product } from "@/api/types";
 import prisma from "../../../../prisma/db";
+
+interface GetProducts {
+  category?: string;
+  subcategory?: string;
+  searchParams?: {
+    [key: string]: string | string[] | undefined;
+  }
+}
 
 interface Pagination {
   page?: number;
@@ -16,13 +24,29 @@ const getPagination = ({ page = 1, take = 9 }: Pagination) => {
   return { skip, take };
 };
 
-interface GetProducts {
-  category?: string;
-  subcategory?: string;
-  searchParams?: {
-    [key: string]: string | string[] | undefined;
+const checkSearchParam = (searchParam: string | string[] | undefined): string[] | undefined => {
+  if (Array.isArray(searchParam)) {
+    return searchParam;
+  } else if (typeof searchParam === 'string') {
+    return [searchParam];
+  }
+  return undefined;
+}
+
+const checkSorting = (sortBy: string | undefined): { price: "asc" | "desc" } | { createdAt: "asc" | "desc" } | undefined => {
+  if (sortBy === 'price_asc') {
+    return { price: "asc" };
+  } else if (sortBy === 'price_desc') {
+    return { price: "desc" };
+  } else if (sortBy === 'newest') {
+    return { createdAt: "desc" };
+  } else if (sortBy === 'featured') {
+    return { createdAt: "asc" };
+  } else {
+    return undefined;
   }
 }
+
 
 export const getPaginatedProductsAction = async ({ category, subcategory, searchParams }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
   try {
@@ -109,25 +133,42 @@ export const getProductByIdAction = async ({
 };
 
 
-const checkSearchParam = (param: string | string[] | undefined): string[] | undefined => {
-  if (Array.isArray(param)) {
-    return param;
-  } else if (typeof param === 'string') {
-    return [param];
+
+export const getFiltersAction = async ({ category, subcategory, searchParams }: GetProducts): Promise<{ filters: FilterGroup[] }> => {
+  try {
+    const filters = await prisma.product.findMany({
+      where: {
+        category: category ?? undefined,
+        subcategory: subcategory ?? undefined,
+      },
+      select: {
+        sizes: true,
+        colors: true,
+      },
+    });
+
+    const sizes = Array.from(new Set(filters.flatMap(filter => filter.sizes))).sort();
+    const colors = Array.from(new Set(filters.flatMap(filter => filter.colors))).sort();
+
+
+    const filterGroups: FilterGroup[] = [
+      {
+        name: 'Size',
+        options: sizes.map(size => ({ id: size, label: size })),
+      },
+      {
+        name: 'Color',
+        options: colors.map(color => ({ id: color, label: color.charAt(0).toUpperCase() + color.slice(1) })),
+      },
+    ];
+
+    return { filters: filterGroups };
+  } catch (error) {
+    console.error('Error fetching filters:', error);
+    return {
+      filters: []
+    };
   }
-  return undefined;
 }
 
-const checkSorting = (sortBy: string | undefined): { price: "asc" | "desc" } | { createdAt: "asc" | "desc" } | undefined => {
-  if (sortBy === 'price_asc') {
-    return { price: "asc" };
-  } else if (sortBy === 'price_desc') {
-    return { price: "desc" };
-  } else if (sortBy === 'newest') {
-    return { createdAt: "desc" };
-  } else if (sortBy === 'featured') {
-    return { createdAt: "asc" };
-  } else {
-    return undefined;
-  }
-}
+

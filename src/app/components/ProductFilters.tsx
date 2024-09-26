@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { getFiltersAction } from '../actions';
+// import { getFiltersAction } from '../actions';
 import { FilterGroup } from '@/api/types';
 
 // const filterGroups: FilterGroup[] = [
@@ -30,26 +30,30 @@ import { FilterGroup } from '@/api/types';
 //   },
 // ];
 
-export function ProductFilters() {
+export function ProductFilters({
+  filterGroups,
+}: {
+  filterGroups: FilterGroup[];
+}) {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
 
-  const [filterGroups, setFilterGroups] = useState<FilterGroup[]>([]);
+  // const [filterGroups, setFilterGroups] = useState<FilterGroup[]>([]);
 
-  useEffect(() => {
-    const getFilters = async () => {
-      const { filters } = await getFiltersAction({
-        category: params.category as string,
-        subcategory: params.subcategory as string,
-      });
-      return filters;
-    };
+  // useEffect(() => {
+  //   const getFilters = async () => {
+  //     const { filters } = await getFiltersAction({
+  //       category: params.category as string,
+  //       subcategory: params.subcategory as string,
+  //     });
+  //     return filters;
+  //   };
 
-    getFilters().then((filters) => {
-      setFilterGroups(filters);
-    });
-  }, [params]);
+  //   getFilters().then((filters) => {
+  //     setFilterGroups(filters);
+  //   });
+  // }, [params]);
 
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
     {},

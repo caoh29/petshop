@@ -32,8 +32,8 @@ export default async function SubCategoryPage({
   });
 
   const { filters } = await getFiltersAction({
-    category: params.category as string,
-    subcategory: params.subcategory as string,
+    category: params.category,
+    subcategory: params.subcategory,
   });
 
   return (

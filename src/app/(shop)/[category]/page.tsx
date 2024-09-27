@@ -29,7 +29,7 @@ export default async function CategoryPage({
   });
 
   const { filters } = await getFiltersAction({
-    category: params.category as string,
+    category: params.category,
   });
 
   return (

@@ -119,7 +119,7 @@ export function ProductFilters({
       }
     });
     setSelectedFilters(initialSelectedFilters);
-  }, [searchParams]);
+  }, [searchParams, filterGroups]);
 
   return (
     <div className='space-y-4'>

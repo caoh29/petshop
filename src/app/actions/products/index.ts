@@ -132,7 +132,36 @@ export const getProductByIdAction = async ({
   }
 };
 
+export const getRelatedProductsAction = async ({ id, category, subcategory }: { id: string, category?: string, subcategory?: string }) => {
+  try {
+    const products = await prisma.product.findMany({
+      take: 4,
+      include: { reviews: true },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      where: {
+        category: category ?? undefined,
+        subcategory: subcategory ?? undefined,
+        NOT: {
+          id: id,
+        },
+      },
+    });
 
+    return products.map(product => ({
+      ...product,
+      createdAt: product.createdAt.toISOString(),
+      reviews: product.reviews.map(review => ({
+        ...review,
+        createdAt: review.createdAt.toISOString()
+      }))
+    }));
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
 
 export const getFiltersAction = async ({ category, subcategory, searchParams }: GetProducts): Promise<{ filters: FilterGroup[] }> => {
   try {

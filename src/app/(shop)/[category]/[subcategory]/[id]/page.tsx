@@ -1,7 +1,11 @@
 import { notFound } from 'next/navigation';
 
-import { getProductById } from '@/api/products';
-import { addToCartAction, addReviewAction } from '@/app/actions';
+// import { getProductById } from '@/api/products';
+import {
+  addToCartAction,
+  addReviewAction,
+  getProductByIdAction,
+} from '@/app/actions';
 
 import ProductImageGallery from '@/app/components/ProductImageGallery';
 import ProductDetails from '@/app/components/ProductDetails';
@@ -15,7 +19,7 @@ export default async function ProductDetail({
 }: Readonly<{
   params: { id: string; category: string; subcategory: string };
 }>) {
-  const product = await getProductById(id);
+  const product = await getProductByIdAction({ id });
 
   if (!product) {
     notFound();
@@ -32,12 +36,16 @@ export default async function ProductDetail({
       <ProductDetails product={product} addToCartAction={addToCartAction} />
 
       <Reviews
-        productId={id}
+        productId={product.id}
         reviews={product.reviews}
         addReviewAction={addReviewAction}
       />
 
-      <RelatedProducts productId={id} />
+      <RelatedProducts
+        productId={product.id}
+        productCategory={product.category}
+        productSubcategory={product.subcategory}
+      />
     </div>
   );
 }

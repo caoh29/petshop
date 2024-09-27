@@ -2,18 +2,14 @@
 import { useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 
-import { revalidatePath } from 'next/cache';
-import { useParams } from 'next/navigation';
+// import { revalidatePath } from 'next/cache';
+// import { useParams } from 'next/navigation';
 
 import { Review } from '@/api/types';
 import { setReviews, RootState } from '../../store/store';
 import { useReviews } from '../../hooks';
 
-export default function Reviews({
-  reviews: initialReviews,
-  addReviewAction,
-  productId: id,
-}: {
+interface ReviewsProps {
   productId: string;
   reviews: Review[];
   addReviewAction: (
@@ -22,7 +18,13 @@ export default function Reviews({
     rating: number,
     userId: string,
   ) => Promise<Review[]>;
-}) {
+}
+
+export default function Reviews({
+  reviews: initialReviews,
+  addReviewAction,
+  productId: id,
+}: Readonly<ReviewsProps>) {
   const store = useStore<RootState>();
   const initialized = useRef(false);
   if (!initialized.current) {
@@ -34,9 +36,6 @@ export default function Reviews({
   const [reviewRating, setReviewRating] = useState(5);
 
   const dispatch = useDispatch();
-
-  const params = useParams();
-  const { category, subcategory } = params;
 
   return (
     <div className='w-full p-4'>
@@ -57,7 +56,7 @@ export default function Reviews({
           dispatch(
             setReviews(await addReviewAction(id, reviewText, reviewRating, '')),
           );
-          revalidatePath(`/${category}/${subcategory}/${id}`);
+          // revalidatePath(`/${category}/${subcategory}/${id}`);
           setReviewText('');
           setReviewRating(5);
         }}

@@ -67,6 +67,10 @@ export default function ProductDetails({
         {product.description}
       </div>
 
+      <div className='mt-1 text-red-600'>
+        <span>SKU: {product.sku}</span>
+      </div>
+
       <div className='flex justify-end'>
         <AddToCart
           addToCartAction={addToCartAction}

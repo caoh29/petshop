@@ -1,4 +1,4 @@
-import { getProductById } from "./products";
+import { getProductByIdAction } from "@/app/actions";
 import { Cart } from "./types";
 
 const cart: Cart = {
@@ -34,7 +34,7 @@ export const addToCart = async (
     options: { size?: string; color?: string };
   }
 ): Promise<Cart> => {
-  const product = await getProductById(productId);
+  const product = await getProductByIdAction({ id: productId });
   const cart = await getCart();
   if (product) {
     const existingItemIndex = cart.products.findIndex(

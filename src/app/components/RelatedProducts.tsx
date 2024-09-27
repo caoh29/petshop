@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { getProducts } from '@/api/products';
+// import { getProducts } from '@/api/products';
 
 import {
   Carousel,
@@ -11,13 +11,24 @@ import {
   CarouselPrevious,
 } from './ui/carousel';
 import { Card, CardContent } from './ui/card';
+import { getRelatedProductsAction } from '../actions/products';
 
 interface Props {
   productId: string;
+  productCategory?: string;
+  productSubcategory?: string;
 }
 
-export default async function RelatedProducts({ productId }: Readonly<Props>) {
-  const products = await getProducts();
+export default async function RelatedProducts({
+  productId: id,
+  productCategory: category,
+  productSubcategory: subcategory,
+}: Readonly<Props>) {
+  const products = await getRelatedProductsAction({
+    id,
+    category,
+    subcategory,
+  });
 
   return (
     <div className='flex flex-col flex-wrap gap-6 w-full p-4'>
@@ -29,30 +40,28 @@ export default async function RelatedProducts({ productId }: Readonly<Props>) {
         className={`w-full max-w-sm self-center md:max-w-xl lg:max-w-4xl`}
       >
         <CarouselContent>
-          {products
-            .filter((p) => p.id !== productId)
-            .map((product) => (
-              <CarouselItem
-                key={product.name}
-                className='md:basis-1/2 lg:basis-1/3'
+          {products.map((product) => (
+            <CarouselItem
+              key={product.name}
+              className='md:basis-1/2 lg:basis-1/3'
+            >
+              <Link
+                href={`/${product.category}/${product.subcategory}/${product.id}`}
               >
-                <Link
-                  href={`/${product.category}/${product.subcategory}/${product.id}`}
-                >
-                  <Card>
-                    <CardContent className='flex aspect-square items-center justify-center p-6'>
-                      <Image
-                        className={`aspect-[2/2] rounded-md object-cover`}
-                        src={product.image ?? ''}
-                        alt={`${product.name} image`}
-                        width={1024}
-                        height={1024}
-                      />
-                    </CardContent>
-                  </Card>
-                </Link>
-              </CarouselItem>
-            ))}
+                <Card>
+                  <CardContent className='flex aspect-square items-center justify-center p-6'>
+                    <Image
+                      className={`aspect-[2/2] rounded-md object-cover`}
+                      src={product.image ?? ''}
+                      alt={`${product.name} image`}
+                      width={1024}
+                      height={1024}
+                    />
+                  </CardContent>
+                </Card>
+              </Link>
+            </CarouselItem>
+          ))}
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />

@@ -29,10 +29,11 @@ export default function QuantitySelector() {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.delete('Quantity');
     newParams.append('Quantity', quantity.toString());
-    router.push(
+    router.replace(
       `/${params.category}/${params.subcategory}/${
         params.id
       }?${newParams.toString()}`,
+      { scroll: false },
     );
   };
 

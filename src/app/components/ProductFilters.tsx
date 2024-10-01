@@ -76,11 +76,14 @@ export function ProductFilters({
     });
 
     if (params.subcategory) {
-      router.push(
+      router.replace(
         `/${params.category}/${params.subcategory}?${newParams.toString()}`,
+        { scroll: false },
       );
     } else {
-      router.push(`/${params.category}?${newParams.toString()}`);
+      router.replace(`/${params.category}?${newParams.toString()}`, {
+        scroll: false,
+      });
     }
   };
 

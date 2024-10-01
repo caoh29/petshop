@@ -34,10 +34,11 @@ export default function ColorSelector({
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.delete('Color');
     newParams.append('Color', color);
-    router.push(
+    router.replace(
       `/${params.category}/${params.subcategory}/${
         params.id
       }?${newParams.toString()}`,
+      { scroll: false },
     );
   };
 

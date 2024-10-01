@@ -33,10 +33,11 @@ export default function SizeSelector({
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.delete('Size');
     newParams.append('Size', size);
-    router.push(
+    router.replace(
       `/${params.category}/${params.subcategory}/${
         params.id
       }?${newParams.toString()}`,
+      { scroll: false },
     );
   };
 

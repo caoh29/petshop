@@ -40,7 +40,9 @@ export default function AddToCart({
     newParams.delete('Size');
     newParams.delete('Quantity');
     newParams.delete('Color');
-    router.push(`/${params.category}/${params.subcategory}/${params.id}`);
+    router.replace(`/${params.category}/${params.subcategory}/${params.id}`, {
+      scroll: false,
+    });
   };
 
   const handleClick = async () => {

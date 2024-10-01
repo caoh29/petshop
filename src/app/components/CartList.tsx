@@ -50,7 +50,12 @@ export default function CartList({
                 className='object-cover'
               />
               <div className='flex-grow'>
-                <h2 className='text-lg font-semibold'>{item.name}</h2>
+                <Link
+                  className='text-lg font-semibold hover:underline'
+                  href={`/${item.category}/${item.subcategory}/${item.id}`}
+                >
+                  {item.name}
+                </Link>
                 <p className='text-gray-600'>${item.price.toFixed(2)}</p>
                 {item.size && !item.color && (
                   <p className='text-sm text-gray-500'>Size: {item.size}</p>

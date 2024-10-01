@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 
 // import { getProductById } from '@/api/products';
 import {
@@ -14,11 +15,35 @@ import Reviews from '@/app/components/Reviews';
 
 export const dynamic = 'force-dynamic';
 
+interface Props {
+  params: { id: string; category: string; subcategory: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
+  // read route params
+  const id = params.id;
+
+  // fetch data
+  const product = await getProductByIdAction({ id });
+
+  return {
+    title: product?.name,
+    description: product?.description,
+    openGraph: {
+      title: product?.name,
+      description: product?.description,
+      images: [`/${product?.image}`],
+    },
+  };
+}
+
 export default async function ProductDetail({
   params: { id, category, subcategory },
-}: Readonly<{
-  params: { id: string; category: string; subcategory: string };
-}>) {
+}: Readonly<Props>) {
   const product = await getProductByIdAction({ id });
 
   if (!product) {

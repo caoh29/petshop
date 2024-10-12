@@ -5,13 +5,13 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 
-import { useHeaderVisibility } from '../../hooks';
+// import { useHeaderVisibility } from '../../hooks';
 
-// export function NavBar({
-//   className,
-//   isVisible,
-// }: Readonly<{ className?: string; isVisible: boolean }>) {
-export function NavBar({ className }: Readonly<{ className?: string }>) {
+export function NavBar({
+  className,
+  isVisible,
+}: Readonly<{ className?: string; isVisible: boolean }>) {
+  // export function NavBar({ className }: Readonly<{ className?: string }>) {
   const [showCategoryList, setShowCategoryList] = useState<
     Record<string, boolean>
   >({});
@@ -19,7 +19,7 @@ export function NavBar({ className }: Readonly<{ className?: string }>) {
     Record<string, boolean>
   >({});
 
-  const isVisible = useHeaderVisibility();
+  // const isVisible = useHeaderVisibility();
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({

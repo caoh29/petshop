@@ -3,9 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useDispatch } from 'react-redux';
+import { useAppDispatch, useCart } from '../../hooks';
 
-import { useCart } from '../../hooks';
 import { Cart } from '@/api/types';
 import { setCart } from '../../store/store';
 
@@ -28,7 +27,7 @@ export default function CartList({
   deleteCartAction,
 }: Readonly<Props>) {
   const cart = useCart();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div className='container'>
@@ -39,12 +38,12 @@ export default function CartList({
         <ul className='space-y-4'>
           {cart.products.map((item) => (
             <li
-              key={item.id}
+              key={item.productId}
               className='flex items-center space-x-4 border-b pb-4'
             >
               <Image
-                src={item.image}
-                alt={item.name}
+                src={item.productImage}
+                alt={item.productName}
                 width={100}
                 height={100}
                 className='object-cover'
@@ -52,11 +51,11 @@ export default function CartList({
               <div className='flex-grow'>
                 <Link
                   className='text-lg font-semibold hover:underline'
-                  href={`/${item.category}/${item.subcategory}/${item.id}`}
+                  href={`/${item.productCategory}/${item.productSubcategory}/${item.productId}`}
                 >
-                  {item.name}
+                  {item.productName}
                 </Link>
-                <p className='text-gray-600'>${item.price.toFixed(2)}</p>
+                <p className='text-gray-600'>${item.productPrice.toFixed(2)}</p>
                 {item.size && !item.color && (
                   <p className='text-sm text-gray-500'>Size: {item.size}</p>
                 )}
@@ -71,7 +70,7 @@ export default function CartList({
               </div>
               <CartQuantitySelector
                 quantity={item.quantity}
-                id={item.id}
+                id={item.productId}
                 size={item.size}
                 color={item.color}
                 updateCartAction={updateCartAction}
@@ -81,7 +80,7 @@ export default function CartList({
                 onClick={async () =>
                   dispatch(
                     setCart(
-                      await deleteCartAction(item.id, {
+                      await deleteCartAction(item.productId, {
                         size: item.size,
                         color: item.color,
                       }),

@@ -13,9 +13,9 @@ import { useCart, useHeaderVisibility } from '../../hooks';
 import CartPopup from './CartPopup';
 // import { type Cart } from '@/api/types';
 
-import { SearchBar } from './SearchBar';
-import { NavBar } from './NavBar';
-import { SideNavBar } from './SideNavBar';
+import SearchBar from './SearchBar';
+import NavBar from './NavBar';
+import SideNavBar from './SideNavBar';
 
 export default function Header() {
   const cart = useCart();

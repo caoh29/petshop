@@ -10,18 +10,12 @@ const initialState: SelectedProductState = {
     size: '',
     color: '',
     quantity: 1,
-    id: "",
-    sku: '',
-    createdAt: "",
-    name: "",
-    image: "",
-    price: 0,
-    category: "",
-    subcategory: "",
-    description: "",
-    reviews: [],
-    stock: 0,
-    isOutOfStock: false
+    productId: "",
+    productImage: "",
+    productName: "",
+    productPrice: 0,
+    productCategory: "",
+    productSubcategory: ""
   },
 };
 

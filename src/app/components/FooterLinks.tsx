@@ -48,7 +48,7 @@ const data: {
   },
 ];
 
-export function FooterLinks() {
+export default function FooterLinks() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

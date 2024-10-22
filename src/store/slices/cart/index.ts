@@ -1,4 +1,4 @@
-import { Cart } from "@/api/types";
+import { Cart, SelectedProduct } from "@/api/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartState {
@@ -20,5 +20,37 @@ export const cartSlice = createSlice({
     setCart: (state, action: PayloadAction<Cart>) => {
       state.cart = action.payload;
     },
-  },
+    // addProductToCart: (state, action: PayloadAction<SelectedProduct>) => {
+    //   if (state.cart.products.some((p) => p.productId === action.payload.productId && p.size === action.payload.size && p.color === action.payload.color)) {
+    //     state.cart.products = state.cart.products.map((p) => {
+    //       if (p.productId === action.payload.productId) {
+    //         return {
+    //           ...p,
+    //           quantity: p.quantity + action.payload.quantity,
+    //         };
+    //       }
+    //       return p;
+    //     });
+    //   }
+    //   else {
+    //     state.cart.products.push(action.payload);
+    //   }
+    // }
+    addProductToCart: (state, action: PayloadAction<SelectedProduct>) => {
+      const existingProductIndex = state.cart.products.findIndex(
+        (p) => p.productId === action.payload.productId &&
+          p.size === action.payload.size &&
+          p.color === action.payload.color
+      );
+
+      if (existingProductIndex !== -1) {
+        state.cart.products[existingProductIndex].quantity += action.payload.quantity;
+      } else {
+        state.cart.products.push(action.payload);
+      }
+    },
+    clearCart: (state) => {
+      state.cart = initialState.cart;
+    },
+  }
 });

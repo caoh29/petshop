@@ -30,7 +30,7 @@ import { FilterGroup } from '@/api/types';
 //   },
 // ];
 
-export function ProductFilters({
+export default function ProductFilters({
   filterGroups,
 }: {
   filterGroups: FilterGroup[];

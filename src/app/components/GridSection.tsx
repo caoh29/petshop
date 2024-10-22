@@ -16,7 +16,11 @@ function isProduct(item: Item): item is Product {
   return (item as Product).category !== undefined;
 }
 
-export function GridSection({ items, title, basePath }: Readonly<Props>) {
+export default function GridSection({
+  items,
+  title,
+  basePath,
+}: Readonly<Props>) {
   const getItemPath = (item: Item) => {
     if (isProduct(item)) {
       // If basePath is provided, use it; otherwise, construct from item properties

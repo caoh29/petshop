@@ -24,7 +24,7 @@ const sortOptions: SortOption[] = [
   { label: 'Price: High to Low', value: 'price_desc' },
 ];
 
-export function SortDropdown() {
+export default function SortDropdown() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();

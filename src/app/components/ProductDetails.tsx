@@ -10,7 +10,7 @@ import SizeSelector from '@/app/components/SizeSelector';
 import ColorSelector from '@/app/components/ColorSelector';
 import AddToCart from '@/app/components/AddToCart';
 import { capitalizeString } from '@/lib/utils';
-import { Cart, Product } from '@/api/types';
+import { Product, SelectedProduct } from '@/api/types';
 
 interface ProductDetailsProps {
   product: Product;
@@ -18,7 +18,7 @@ interface ProductDetailsProps {
     id: string,
     quantity: number,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
+  ) => Promise<SelectedProduct>;
 }
 
 export default function ProductDetails({

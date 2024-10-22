@@ -24,7 +24,9 @@ type Post = {
   sku: number;
 };
 
-export function SearchBar({ className }: Readonly<{ className?: string }>) {
+export default function SearchBar({
+  className,
+}: Readonly<{ className?: string }>) {
   const [query, setQuery] = useState('');
   return (
     <Sheet>

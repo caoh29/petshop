@@ -1,6 +1,8 @@
 'use server';
 
-import { addReview } from '@/api/reviews';
+import { getProductByIdAction } from "../products";
+
+// import { addReview } from '@/api/reviews';
 
 export const addReviewAction = async (
   id: string,
@@ -8,6 +10,19 @@ export const addReviewAction = async (
   rating: number,
   userId: string,
 ) => {
-  const reviews = await addReview(id, { text, rating, userId });
-  return reviews || [];
+  const product = await getProductByIdAction({ id });
+  if (product) {
+    product.reviews.push({
+      rating: rating,
+      text: text,
+      userId: userId,
+      createdAt: new Date().toISOString(),
+      // Needs improvement
+      id: "",
+      productId: ""
+    });
+  }
+  return product?.reviews;
+  // const reviews = await addReview(id, { text, rating, userId });
+  // return reviews || [];
 };

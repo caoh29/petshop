@@ -5,7 +5,13 @@ import Image from 'next/image';
 import { Card, CardContent } from './ui/card';
 import { capitalizeString } from '@/lib/utils';
 
-const PetCard = ({ name, image }: { name: string; image: string | null }) => {
+export default function PetCard({
+  name,
+  image,
+}: {
+  name: string;
+  image: string | null;
+}) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -33,6 +39,4 @@ const PetCard = ({ name, image }: { name: string; image: string | null }) => {
       </h3>
     </button>
   );
-};
-
-export default PetCard;
+}

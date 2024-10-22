@@ -65,7 +65,13 @@ export interface Product {
   createdAt: Date | string;
 }
 
-export interface SelectedProduct extends Product {
+export interface SelectedProduct {
+  productId: string;
+  productImage: string;
+  productName: string;
+  productPrice: number;
+  productCategory: string;
+  productSubcategory: string;
   quantity: number;
   size?: string;
   color?: string;

@@ -18,7 +18,7 @@ interface Props {
   className?: string;
 }
 
-export function CarouselSection({
+export default function CarouselSection({
   title,
   products,
   className,

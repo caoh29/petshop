@@ -1,13 +1,14 @@
 // import { getProductsBySubCategory } from '@/api/products';
 import { VALID_ROUTES } from '@/api/routes';
-import { GridSection } from '@/app/components/GridSection';
-import { ProductFilters } from '@/app/components/ProductFilters';
-import { SortDropdown } from '@/app/components/SortDropdown';
+import GridSection from '@/app/components/GridSection';
+import ProductFilters from '@/app/components/ProductFilters';
+import SortDropdown from '@/app/components/SortDropdown';
+import Pagination from '@/app/components/Pagination';
 import NotFound from '@/app/components/PageNotFound';
+
 import { capitalizeString } from '@/lib/utils';
 
 import { getFiltersAction, getPaginatedProductsAction } from '../../../actions';
-import { Pagination } from '@/app/components/Pagination';
 
 export default async function SubCategoryPage({
   params,

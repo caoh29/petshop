@@ -1,13 +1,15 @@
 // import { getProductsByCategory } from '@/api/products';
 import { VALID_ROUTES } from '@/api/routes';
-import { ProductFilters } from '@/app/components/ProductFilters';
-import { SortDropdown } from '@/app/components/SortDropdown';
-import { GridSection } from '@/app/components/GridSection';
+
+import ProductFilters from '@/app/components/ProductFilters';
+import SortDropdown from '@/app/components/SortDropdown';
+import GridSection from '@/app/components/GridSection';
 import NotFound from '@/app/components/PageNotFound';
+import Pagination from '@/app/components/Pagination';
+
 import { capitalizeString } from '@/lib/utils';
 
 import { getFiltersAction, getPaginatedProductsAction } from '../../actions';
-import { Pagination } from '@/app/components/Pagination';
 
 interface Props {
   params: { category: string };

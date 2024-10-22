@@ -6,14 +6,12 @@ export const revalidate = 60;
 // import { getProducts } from '@/api/products';
 import { redirect } from 'next/navigation';
 
-import { HeroSection } from '../components/HeroSection';
-import { GridSection } from '../components/GridSection';
-import { CarouselSection } from '../components/CarouselSection';
+import HeroSection from '../components/HeroSection';
+import GridSection from '../components/GridSection';
+import CarouselSection from '../components/CarouselSection';
 // import { Pagination } from '../components/Pagination';
 
-import { getPaginatedProductsAction } from '../actions';
-
-import { getCategories } from '@/api/categories';
+import { getCategoriesAction, getPaginatedProductsAction } from '../actions';
 
 // interface Props {
 //   searchParams: {
@@ -24,7 +22,7 @@ import { getCategories } from '@/api/categories';
 export default async function Home() {
   // const products = await getProducts();
   const { products } = await getPaginatedProductsAction({});
-  const categories = await getCategories();
+  const categories = await getCategoriesAction();
 
   if (products.length === 0 || categories.length === 0) redirect('/');
   return (

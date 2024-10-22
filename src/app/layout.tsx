@@ -3,11 +3,11 @@ import type { Metadata } from 'next';
 
 import StoreProvider from './StoreProvider';
 import Header from './components/Header';
+import Footer from './components/Footer';
 
-import { getCart } from '@/api/cart';
-
+// import { getCart } from '@/api/cart';
+import { getCartAction } from './actions/cart';
 import { ClerkProvider } from '@clerk/nextjs';
-import { Footer } from './components/Footer';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -21,13 +21,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cart = await getCart();
+  // const cart = await getCart();
+  const userId = 'XXXXXXXXX';
+  // const { userId } = auth();
+  const isAuthenticated = !!userId;
+
+  let cart = null;
+  if (isAuthenticated) {
+    cart = await getCartAction(userId);
+  }
 
   return (
     <ClerkProvider>
       <html lang='en'>
         <body>
-          <StoreProvider cart={cart}>
+          <StoreProvider cart={cart} isAuthenticated={isAuthenticated}>
             <Header />
             <main className=''>{children}</main>
             <Footer />

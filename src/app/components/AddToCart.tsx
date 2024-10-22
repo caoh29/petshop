@@ -1,11 +1,18 @@
 'use client';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setCart, resetProductState } from '../../store/store';
+
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
-import { type Cart } from '@/api/types';
-
 import { Button } from './ui/button';
+
+import {
+  RootState,
+  addProductToCart,
+  resetProductState,
+} from '../../store/store';
+
+import { useAppDispatch, useCart, useUserAuthentication } from '@/hooks';
+
+import { SelectedProduct, type Cart } from '@/api/types';
 
 export default function AddToCart({
   addToCartAction,
@@ -18,22 +25,36 @@ export default function AddToCart({
     id: string,
     quantity: number,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
+  ) => Promise<SelectedProduct>;
   disabled: boolean;
   productId: string;
   sizes?: string[];
   colors?: string[];
 }>) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+
+  const isAuthenticated = useUserAuthentication();
   // const { quantity, size, color } = useSelector(
   //   (state: RootState) => state.selectedProduct.selectedProduct,
   // );
+
+  const cart = useCart();
+
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
   const size = searchParams.get('Size') ?? '';
   const color = searchParams.get('Color') ?? '';
   const quantity = Number(searchParams.get('Quantity'));
+
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     const localCart = localStorage.getItem("cart");
+  //     if (localCart) {
+  //       dispatch(setCart(JSON.parse(localCart)));
+  //     }
+  //   }
+  // }, [isAuthenticated, dispatch]);
 
   const updateSearchParams = () => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -45,27 +66,55 @@ export default function AddToCart({
     });
   };
 
+  // This component needs to know if user is authenticated if so, send request to server, else get data from client's lcoal storage
+  // const handleClick = async () => {
+  //   if (disabled) return;
+  //   dispatch(
+  //     addProductToCart(
+  //       await addToCartAction(productId, quantity, {
+  //         size,
+  //         color,
+  //       }),
+  //     ),
+  //   );
+  //   updateSearchParams();
+  // };
   const handleClick = async () => {
     if (disabled) return;
-    if (quantity === 0) {
-      dispatch(
-        setCart(
-          await addToCartAction(productId, 1, {
-            size,
-            color,
-          }),
-        ),
-      );
+
+    let selectedProduct: SelectedProduct;
+
+    if (isAuthenticated) {
+      selectedProduct = await addToCartAction(productId, quantity, {
+        size,
+        color,
+      });
     } else {
-      dispatch(
-        setCart(
-          await addToCartAction(productId, quantity, {
-            size,
-            color,
-          }),
-        ),
+      selectedProduct = {
+        productId,
+        productImage: '', // You might want to pass these as props
+        productName: '', // You might want to pass these as props
+        productPrice: 0, // You might want to pass these as props
+        productCategory: '', // You might want to pass these as props
+        productSubcategory: '', // You might want to pass these as props
+        size,
+        color,
+        quantity,
+      };
+    }
+
+    dispatch(addProductToCart(selectedProduct));
+
+    if (!isAuthenticated) {
+      localStorage.setItem(
+        'cart',
+        JSON.stringify({
+          ...cart,
+          products: [...cart.products, selectedProduct],
+        }),
       );
     }
+
     updateSearchParams();
   };
 

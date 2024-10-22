@@ -1,6 +1,7 @@
-import { updateCartAction, deleteCartAction } from '@/app/actions';
 import CartList from '@/app/components/CartList';
 import CartSummary from '@/app/components/CartSummary';
+
+import { updateCartAction, deleteCartAction } from '@/app/actions';
 
 export default function CartPage() {
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '@/hooks';
 
 import { Minus, Plus } from 'lucide-react';
 import { setCart } from '../../store/store';
@@ -25,7 +25,7 @@ export default function CartQuantitySelector({
   color,
   updateCartAction,
 }: Readonly<Props>) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div className='my-4'>

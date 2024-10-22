@@ -7,7 +7,7 @@ import { ROUTES } from '@/api/routes';
 
 // import { useHeaderVisibility } from '../../hooks';
 
-export function NavBar({
+export default function NavBar({
   className,
   isVisible,
 }: Readonly<{ className?: string; isVisible: boolean }>) {

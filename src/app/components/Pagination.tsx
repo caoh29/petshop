@@ -16,7 +16,10 @@ interface Props {
   currentPage: number;
 }
 
-export function Pagination({ totalPages, currentPage }: Readonly<Props>) {
+export default function Pagination({
+  totalPages,
+  currentPage,
+}: Readonly<Props>) {
   const pathName = usePathname();
   const searchParams = useSearchParams();
 

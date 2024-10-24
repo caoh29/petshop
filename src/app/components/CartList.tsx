@@ -29,10 +29,6 @@ export default function CartList({
   deleteProductCartAction,
 }: Readonly<Props>) {
   const cart = useCart();
-
-  // CHECKING FOR PRODUCTS
-  console.log(cart.products);
-
   return (
     <div className='container'>
       <h1 className='text-2xl font-bold mb-4'>Bag</h1>

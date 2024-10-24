@@ -20,31 +20,15 @@ export const cartSlice = createSlice({
     setCart: (state, action: PayloadAction<Cart>) => {
       state.cart = action.payload;
     },
-    // addProductToCart: (state, action: PayloadAction<SelectedProduct>) => {
-    //   if (state.cart.products.some((p) => p.productId === action.payload.productId && p.size === action.payload.size && p.color === action.payload.color)) {
-    //     state.cart.products = state.cart.products.map((p) => {
-    //       if (p.productId === action.payload.productId) {
-    //         return {
-    //           ...p,
-    //           quantity: p.quantity + action.payload.quantity,
-    //         };
-    //       }
-    //       return p;
-    //     });
-    //   }
-    //   else {
-    //     state.cart.products.push(action.payload);
-    //   }
-    // }
     addProductToCart: (state, action: PayloadAction<SelectedProduct>) => {
-      const existingProductIndex = state.cart.products.findIndex(
+      const existingProduct = state.cart.products.find(
         (p) => p.productId === action.payload.productId &&
           p.size === action.payload.size &&
           p.color === action.payload.color
       );
 
-      if (existingProductIndex !== -1) {
-        state.cart.products[existingProductIndex].quantity += action.payload.quantity;
+      if (existingProduct) {
+        existingProduct.quantity += action.payload.quantity;
       } else {
         state.cart.products.push(action.payload);
       }
@@ -54,14 +38,14 @@ export const cartSlice = createSlice({
       state,
       action: PayloadAction<SelectedProduct>
     ) => {
-      const existingProductIndex = state.cart.products.findIndex(
-        (p) => p.productId === action.payload.productId &&
-          p.size === action.payload.size &&
+      const existingProduct = state.cart.products.find(
+        (p) => p.productId === action.payload.productId ||
+          p.size === action.payload.size ||
           p.color === action.payload.color
       );
 
-      if (existingProductIndex !== -1) {
-        state.cart.products[existingProductIndex].quantity = action.payload.quantity;
+      if (existingProduct && action.payload.quantity > 0 && action.payload.quantity < 100) {
+        existingProduct.quantity = action.payload.quantity;
       }
     },
 
@@ -75,14 +59,17 @@ export const cartSlice = createSlice({
     ) => {
       state.cart.products = state.cart.products.filter(
         (p) =>
-          p.productId !== action.payload.productId &&
-          p.size !== action.payload.size &&
+          p.productId !== action.payload.productId ||
+          p.size !== action.payload.size ||
           p.color !== action.payload.color
       );
     },
 
     clearCart: (state) => {
-      state.cart = initialState.cart;
+      state.cart = {
+        ...initialState.cart,
+        products: [],
+      };
     },
   }
 });

@@ -56,7 +56,7 @@ const getCart = async (userId: string): Promise<Cart> => {
       {
         productId,
         productImage: product.image,
-        productName: product.image,
+        productName: product.name,
         productPrice: product.price,
         productCategory: product.category,
         productSubcategory: product.subcategory,

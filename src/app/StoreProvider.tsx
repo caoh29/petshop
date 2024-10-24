@@ -7,12 +7,10 @@ import { AppStore, makeStore, setCart, setUserSession } from '../store/store';
 export default function StoreProvider({
   cart,
   userId,
-  isAuthenticated,
   children,
 }: Readonly<{
   cart: Cart | null;
   userId: string | null;
-  isAuthenticated: boolean;
   children: React.ReactNode;
 }>) {
   const storeRef = useRef<AppStore>();
@@ -23,14 +21,14 @@ export default function StoreProvider({
   }
 
   useEffect(() => {
-    if (isAuthenticated && cart !== null && userId !== null) {
+    if (userId !== null && cart !== null) {
       storeRef.current?.dispatch(
         setUserSession({
           userId,
         }),
       );
       storeRef.current?.dispatch(setCart(cart));
-    } else if (!isAuthenticated) {
+    } else {
       const localCart = localStorage.getItem('cart');
       if (localCart) {
         storeRef.current?.dispatch(setCart(JSON.parse(localCart)));
@@ -40,7 +38,7 @@ export default function StoreProvider({
         );
       }
     }
-  }, [cart, isAuthenticated]);
+  }, [cart, userId]);
 
   return <Provider store={storeRef.current}>{children}</Provider>;
 }

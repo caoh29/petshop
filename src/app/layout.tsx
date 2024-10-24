@@ -24,10 +24,9 @@ export default async function RootLayout({
   // const cart = await getCart();
   const userId = '272830cf-9709-41ef-81d3-24e10bfa2e39';
   // const { userId } = auth();
-  const isAuthenticated = userId !== null ? true : false;
 
   let cart = null;
-  if (isAuthenticated) {
+  if (userId !== null) {
     cart = await getCartAction(userId);
   }
 
@@ -35,11 +34,7 @@ export default async function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body>
-          <StoreProvider
-            cart={cart}
-            isAuthenticated={isAuthenticated}
-            userId={userId}
-          >
+          <StoreProvider cart={cart} userId={userId}>
             <Header />
             <main className=''>{children}</main>
             <Footer />

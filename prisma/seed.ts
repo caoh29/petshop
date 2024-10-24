@@ -1,5 +1,7 @@
 import prisma from "./db";
 import PRODUCTS from '../src/mocks/MOCK_PRODUCTS_2.json';
+import CATEGORIES from '../src/mocks/MOCK_CATEGORIES.json';
+
 
 async function main() {
   await prisma.cart.deleteMany();
@@ -12,8 +14,7 @@ async function main() {
   await prisma.user.deleteMany();
 
 
-  const data = await prisma.product.createMany({
-    data: PRODUCTS
+  const createdProducts = await prisma.product.createMany({
     // data: [
     //   {
     //     sku: "ABC123",
@@ -162,8 +163,15 @@ async function main() {
     //     createdAt: "2024-07-20T13:00:00Z",
     //   },
     // ]
+    data: PRODUCTS
   });
-  console.log({ data })
+  console.log({ createdProducts })
+
+  const createdCategories = await prisma.category.createMany({
+    data: CATEGORIES,
+  })
+
+  console.log({ createdCategories })
 }
 main()
   .then(async () => {

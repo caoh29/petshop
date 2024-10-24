@@ -3,28 +3,18 @@
 // it will be automatically fetched with the command below to revalidate teh data that is been displayed to the user
 export const revalidate = 60;
 
-// import { getProducts } from '@/api/products';
-import { redirect } from 'next/navigation';
-
 import HeroSection from '../components/HeroSection';
 import GridSection from '../components/GridSection';
 import CarouselSection from '../components/CarouselSection';
-// import { Pagination } from '../components/Pagination';
+import NotFound from '../components/PageNotFound';
 
 import { getCategoriesAction, getPaginatedProductsAction } from '../actions';
 
-// interface Props {
-//   searchParams: {
-//     [key: string]: string | string[] | undefined;
-//   };
-// }
-
 export default async function Home() {
-  // const products = await getProducts();
   const { products } = await getPaginatedProductsAction({});
   const categories = await getCategoriesAction();
 
-  if (products.length === 0 || categories.length === 0) redirect('/');
+  if (products.length === 0 || categories.length === 0) return <NotFound />;
   return (
     <>
       <HeroSection />

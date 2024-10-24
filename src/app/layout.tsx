@@ -22,9 +22,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // const cart = await getCart();
-  const userId = 'XXXXXXXXX';
+  const userId = '272830cf-9709-41ef-81d3-24e10bfa2e39';
   // const { userId } = auth();
-  const isAuthenticated = !!userId;
+  const isAuthenticated = userId !== null ? true : false;
 
   let cart = null;
   if (isAuthenticated) {

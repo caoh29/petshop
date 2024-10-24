@@ -1,0 +1,8 @@
+[
+  {"name":"dogs", "image":"/doggies.jpg"},
+  {"name":"cats", "image":"/doggies.jpg"},
+  {"name":"birds", "image":"/doggies.jpg"},
+  {"name":"fishes", "image":"/doggies.jpg"},
+  {"name":"reptiles", "image":"/doggies.jpg"},
+  {"name":"others", "image":"/doggies.jpg"}
+]

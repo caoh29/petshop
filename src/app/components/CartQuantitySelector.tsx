@@ -1,21 +1,22 @@
 'use client';
 
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useCart, useUserAuthentication } from '@/hooks';
 
 import { Minus, Plus } from 'lucide-react';
-import { setCart } from '../../store/store';
-import { Cart } from '@/api/types';
+import { setCart, updateProductInCart } from '../../store/store';
+import { SelectedProduct } from '@/api/types';
 
 interface Props {
   quantity: number;
   id: string;
   size?: string;
   color?: string;
-  updateCartAction: (
+  updateProductCartAction: (
     id: string,
     quantity: number,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
+    userId?: string,
+  ) => Promise<SelectedProduct>;
 }
 
 export default function CartQuantitySelector({
@@ -23,43 +24,72 @@ export default function CartQuantitySelector({
   quantity,
   size,
   color,
-  updateCartAction,
+  updateProductCartAction,
 }: Readonly<Props>) {
+  const { userId, isAuthenticated } = useUserAuthentication();
+  const cart = useCart();
   const dispatch = useAppDispatch();
+
+  const handleUpdateQuantity = async (newQuantity: number) => {
+    if (newQuantity < 1) return; // Prevent quantity from being less than 1
+
+    if (isAuthenticated) {
+      // Update the cart on the server for authenticated users
+      dispatch(
+        updateProductInCart(
+          await updateProductCartAction(
+            id,
+            newQuantity,
+            {
+              size,
+              color,
+            },
+            userId,
+          ),
+        ),
+      );
+    } else {
+      // Update the cart in localStorage for non-authenticated users
+      const updatedCart = {
+        ...cart,
+        products: cart.products.map((product) =>
+          product.productId === id &&
+          product.size === (size ?? '') &&
+          product.color === (color ?? '')
+            ? { ...product, quantity: newQuantity }
+            : product,
+        ),
+      };
+
+      // Save updated cart to localStorage and update Redux state
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      dispatch(
+        updateProductInCart({
+          productId: id,
+          productImage: '',
+          productName: '',
+          productPrice: 0,
+          productCategory: '',
+          productSubcategory: '',
+          size,
+          color,
+          quantity: newQuantity,
+        }),
+      );
+    }
+  };
 
   return (
     <div className='my-4'>
       <h3>Quantity</h3>
       <button
-        onClick={async () => {
-          if (quantity === 1) return;
-          quantity -= 1;
-          dispatch(
-            setCart(
-              await updateCartAction(id, quantity, {
-                size,
-                color,
-              }),
-            ),
-          );
-        }}
+        onClick={() => handleUpdateQuantity(quantity - 1)}
+        disabled={quantity === 1}
       >
         <Minus />
       </button>
       <span className='mx-4'>{quantity}</span>
-      <button
-        onClick={async () => {
-          quantity += 1;
-          dispatch(
-            setCart(
-              await updateCartAction(id, quantity, {
-                size,
-                color,
-              }),
-            ),
-          );
-        }}
-      >
+      <button onClick={() => handleUpdateQuantity(quantity + 1)}>
         <Plus />
       </button>
     </div>

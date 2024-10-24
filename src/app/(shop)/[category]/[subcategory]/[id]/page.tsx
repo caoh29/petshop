@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 // import { getProductById } from '@/api/products';
 import {
-  addToCartAction,
+  addProductToCartAction,
   addReviewAction,
   getProductByIdAction,
 } from '@/app/actions';
@@ -41,7 +41,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductDetail({
+export default async function ProductPage({
   params: { id, category, subcategory },
 }: Readonly<Props>) {
   const product = await getProductByIdAction({ id });
@@ -58,13 +58,16 @@ export default async function ProductDetail({
         productImage={product.image}
       />
 
-      <ProductDetails product={product} addToCartAction={addToCartAction} />
+      <ProductDetails
+        product={product}
+        addProductToCartAction={addProductToCartAction}
+      />
 
-      <Reviews
+      {/* <Reviews
         productId={product.id}
         reviews={product.reviews}
         addReviewAction={addReviewAction}
-      />
+      /> */}
 
       <RelatedProducts
         productId={product.id}

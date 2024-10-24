@@ -16,7 +16,7 @@ export const makeStore = () =>
     },
   });
 
-export const { setCart, addProductToCart } = cartSlice.actions;
+export const { setCart, addProductToCart, updateProductInCart, deleteProductFromCart, clearCart } = cartSlice.actions;
 export const { setReviews } = reviewsSlice.actions;
 export const { setHeaderVisibility } = headerSlice.actions;
 export const { setSize, setColor, increaseQuantity, decreaseQuantity, resetProductState } = selectedProductSlice.actions;

@@ -10,7 +10,7 @@ export const useHeaderVisibility = () =>
   useSelector((state: RootState) => state.header.isVisible);
 
 export const useUserAuthentication = () =>
-  useSelector((state: RootState) => state.user.isAuthenticated);
+  useSelector((state: RootState) => state.user);
 
 
 export const useAppDispatch: () => AppDispatch = useDispatch;

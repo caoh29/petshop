@@ -14,16 +14,17 @@ import { Product, SelectedProduct } from '@/api/types';
 
 interface ProductDetailsProps {
   product: Product;
-  addToCartAction: (
+  addProductToCartAction: (
     id: string,
     quantity: number,
     options: { size?: string; color?: string },
+    userId?: string,
   ) => Promise<SelectedProduct>;
 }
 
 export default function ProductDetails({
   product,
-  addToCartAction,
+  addProductToCartAction,
 }: Readonly<ProductDetailsProps>) {
   // const store = useStore<RootState>();
   // const initialized = useRef(false);
@@ -73,9 +74,9 @@ export default function ProductDetails({
 
       <div className='flex justify-end'>
         <AddToCart
-          addToCartAction={addToCartAction}
+          product={product}
+          addProductToCartAction={addProductToCartAction}
           disabled={product.isOutOfStock}
-          productId={product.id}
           sizes={product.sizes ?? []}
           colors={product.colors ?? []}
         />

@@ -3,29 +3,32 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useAppDispatch, useCart } from '../../hooks';
+import { useAppDispatch, useCart, useUserAuthentication } from '../../hooks';
 
-import { Cart } from '@/api/types';
-import { setCart } from '../../store/store';
+import { SelectedProduct } from '@/api/types';
+import { deleteProductFromCart } from '../../store/store';
 
 import CartQuantitySelector from './CartQuantitySelector';
 
 interface Props {
-  updateCartAction: (
+  updateProductCartAction: (
     id: string,
     quantity: number,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
-  deleteCartAction: (
+    userId?: string,
+  ) => Promise<SelectedProduct>;
+  deleteProductCartAction: (
     id: string,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
+    userId?: string,
+  ) => Promise<number>;
 }
 
 export default function CartList({
-  updateCartAction,
-  deleteCartAction,
+  updateProductCartAction,
+  deleteProductCartAction,
 }: Readonly<Props>) {
+  const { userId, isAuthenticated } = useUserAuthentication();
   const cart = useCart();
   const dispatch = useAppDispatch();
 
@@ -73,20 +76,41 @@ export default function CartList({
                 id={item.productId}
                 size={item.size}
                 color={item.color}
-                updateCartAction={updateCartAction}
+                updateProductCartAction={updateProductCartAction}
               />
               <button
                 className='text-red-500'
-                onClick={async () =>
+                onClick={async () => {
+                  if (isAuthenticated) {
+                    await deleteProductCartAction(
+                      item.productId,
+                      {
+                        size: item.size ?? '',
+                        color: item.color ?? '',
+                      },
+                      userId,
+                    );
+                  } else {
+                    localStorage.setItem(
+                      'cart',
+                      JSON.stringify(
+                        cart.products.filter(
+                          (product) =>
+                            product.productId !== item.productId &&
+                            product.size !== item.size &&
+                            product.color !== item.color,
+                        ),
+                      ),
+                    );
+                  }
                   dispatch(
-                    setCart(
-                      await deleteCartAction(item.productId, {
-                        size: item.size,
-                        color: item.color,
-                      }),
-                    ),
-                  )
-                }
+                    deleteProductFromCart({
+                      productId: item.productId,
+                      size: item.size ?? '',
+                      color: item.color ?? '',
+                    }),
+                  );
+                }}
               >
                 Remove
               </button>

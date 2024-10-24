@@ -49,6 +49,38 @@ export const cartSlice = createSlice({
         state.cart.products.push(action.payload);
       }
     },
+
+    updateProductInCart: (
+      state,
+      action: PayloadAction<SelectedProduct>
+    ) => {
+      const existingProductIndex = state.cart.products.findIndex(
+        (p) => p.productId === action.payload.productId &&
+          p.size === action.payload.size &&
+          p.color === action.payload.color
+      );
+
+      if (existingProductIndex !== -1) {
+        state.cart.products[existingProductIndex].quantity = action.payload.quantity;
+      }
+    },
+
+    deleteProductFromCart: (
+      state,
+      action: PayloadAction<{
+        productId: string;
+        size: string;
+        color: string;
+      }>
+    ) => {
+      state.cart.products = state.cart.products.filter(
+        (p) =>
+          p.productId !== action.payload.productId &&
+          p.size !== action.payload.size &&
+          p.color !== action.payload.color
+      );
+    },
+
     clearCart: (state) => {
       state.cart = initialState.cart;
     },

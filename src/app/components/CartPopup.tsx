@@ -1,8 +1,10 @@
 'use client';
 
 import { Dispatch, SetStateAction } from 'react';
-import { useCart } from '../../hooks';
+
 import Link from 'next/link';
+
+import { useCart } from '../../hooks';
 
 export default function CartPopup({
   setShowCartPopup,
@@ -25,14 +27,14 @@ export default function CartPopup({
         {cart.products.length > 0 && (
           <>
             {cart.products.map((product, index) => {
-              const price = product.price * product.quantity;
+              const price = product.productPrice * product.quantity;
               return (
                 <div
                   key={index}
                   className='flex text-black w-full justify-between'
                 >
                   <div className='font-bold'>
-                    {product.name}
+                    {product.productName}
                     {product.color && `(${product.color})`}
                   </div>
                   <div>{product.size}</div>

@@ -4,13 +4,9 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from './ui/button';
 
-import {
-  RootState,
-  addProductToCart,
-  resetProductState,
-} from '../../store/store';
+import { addProductToCart } from '../../store/store';
 
-import { useAppDispatch, useCart, useUserAuthentication } from '@/hooks';
+import { useAppDispatch, useUserAuthentication } from '@/hooks';
 
 import { Product, SelectedProduct, type Cart } from '@/api/types';
 
@@ -32,12 +28,8 @@ export default function AddToCart({
   sizes?: string[];
   colors?: string[];
 }>) {
-  const { userId, isAuthenticated } = useUserAuthentication();
-  const cart = useCart();
   const dispatch = useAppDispatch();
-  // const { quantity, size, color } = useSelector(
-  //   (state: RootState) => state.selectedProduct.selectedProduct,
-  // );
+  const { userId, isAuthenticated } = useUserAuthentication();
 
   const router = useRouter();
   const params = useParams();
@@ -45,15 +37,6 @@ export default function AddToCart({
   const size = searchParams.get('Size') ?? '';
   const color = searchParams.get('Color') ?? '';
   const quantity = Number(searchParams.get('Quantity'));
-
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     const localCart = localStorage.getItem("cart");
-  //     if (localCart) {
-  //       dispatch(setCart(JSON.parse(localCart)));
-  //     }
-  //   }
-  // }, [isAuthenticated, dispatch]);
 
   const updateSearchParams = () => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -96,16 +79,6 @@ export default function AddToCart({
     }
 
     dispatch(addProductToCart(selectedProduct));
-
-    if (!isAuthenticated) {
-      localStorage.setItem(
-        'cart',
-        JSON.stringify({
-          ...cart,
-          products: [...cart.products, selectedProduct],
-        }),
-      );
-    }
 
     updateSearchParams();
   };

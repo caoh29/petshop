@@ -1,9 +1,11 @@
 'use client';
 
+import { Minus, Plus } from 'lucide-react';
+
 import { useAppDispatch, useCart, useUserAuthentication } from '@/hooks';
 
-import { Minus, Plus } from 'lucide-react';
-import { setCart, updateProductInCart } from '../../store/store';
+import { updateProductInCart } from '../../store/store';
+
 import { SelectedProduct } from '@/api/types';
 
 interface Props {
@@ -26,9 +28,9 @@ export default function CartQuantitySelector({
   color,
   updateProductCartAction,
 }: Readonly<Props>) {
-  const { userId, isAuthenticated } = useUserAuthentication();
-  const cart = useCart();
   const dispatch = useAppDispatch();
+  const { userId, isAuthenticated } = useUserAuthentication();
+  // const cart = useCart();
 
   const handleUpdateQuantity = async (newQuantity: number) => {
     if (newQuantity < 1) return; // Prevent quantity from being less than 1
@@ -49,33 +51,32 @@ export default function CartQuantitySelector({
         ),
       );
     } else {
-      // Update the cart in localStorage for non-authenticated users
-      const updatedCart = {
-        ...cart,
-        products: cart.products.map((product) =>
-          product.productId === id &&
-          product.size === (size ?? '') &&
-          product.color === (color ?? '')
-            ? { ...product, quantity: newQuantity }
-            : product,
-        ),
-      };
-
-      // Save updated cart to localStorage and update Redux state
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      dispatch(
-        updateProductInCart({
-          productId: id,
-          productImage: '',
-          productName: '',
-          productPrice: 0,
-          productCategory: '',
-          productSubcategory: '',
-          size,
-          color,
-          quantity: newQuantity,
-        }),
-      );
+      // // Update the cart in localStorage for non-authenticated users
+      // const updatedCart = {
+      //   ...cart,
+      //   products: cart.products.map((product) =>
+      //     product.productId === id &&
+      //     product.size === (size ?? '') &&
+      //     product.color === (color ?? '')
+      //       ? { ...product, quantity: newQuantity }
+      //       : product,
+      //   ),
+      // };
+      // // Save updated cart to localStorage and update Redux state
+      // localStorage.setItem('cart', JSON.stringify(updatedCart));
+      // dispatch(
+      //   updateProductInCart({
+      //     productId: id,
+      //     productImage: '',
+      //     productName: '',
+      //     productPrice: 0,
+      //     productCategory: '',
+      //     productSubcategory: '',
+      //     size,
+      //     color,
+      //     quantity: newQuantity,
+      //   }),
+      // );
     }
   };
 

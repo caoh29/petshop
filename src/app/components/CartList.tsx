@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useAppDispatch, useCart, useUserAuthentication } from '../../hooks';
+import { useCart } from '../../hooks';
 
 import { SelectedProduct } from '@/api/types';
-import { deleteProductFromCart } from '../../store/store';
 
 import CartQuantitySelector from './CartQuantitySelector';
+import CartDeleteSelector from './CartDeleteSelector';
 
 interface Props {
   updateProductCartAction: (
@@ -28,9 +28,10 @@ export default function CartList({
   updateProductCartAction,
   deleteProductCartAction,
 }: Readonly<Props>) {
-  const { userId, isAuthenticated } = useUserAuthentication();
   const cart = useCart();
-  const dispatch = useAppDispatch();
+
+  // CHECKING FOR PRODUCTS
+  console.log(cart.products);
 
   return (
     <div className='container'>
@@ -78,42 +79,12 @@ export default function CartList({
                 color={item.color}
                 updateProductCartAction={updateProductCartAction}
               />
-              <button
-                className='text-red-500'
-                onClick={async () => {
-                  if (isAuthenticated) {
-                    await deleteProductCartAction(
-                      item.productId,
-                      {
-                        size: item.size ?? '',
-                        color: item.color ?? '',
-                      },
-                      userId,
-                    );
-                  } else {
-                    localStorage.setItem(
-                      'cart',
-                      JSON.stringify(
-                        cart.products.filter(
-                          (product) =>
-                            product.productId !== item.productId &&
-                            product.size !== item.size &&
-                            product.color !== item.color,
-                        ),
-                      ),
-                    );
-                  }
-                  dispatch(
-                    deleteProductFromCart({
-                      productId: item.productId,
-                      size: item.size ?? '',
-                      color: item.color ?? '',
-                    }),
-                  );
-                }}
-              >
-                Remove
-              </button>
+              <CartDeleteSelector
+                id={item.productId}
+                size={item.size}
+                color={item.color}
+                deleteProductCartAction={deleteProductCartAction}
+              />
             </li>
           ))}
         </ul>

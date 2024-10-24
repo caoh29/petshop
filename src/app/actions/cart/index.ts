@@ -1,6 +1,5 @@
 'use server';
 
-// import { deleteCartItem, updateCartItem, addToCart, clearCart } from '@/api/cart';
 import { Cart, SelectedProduct } from '@/api/types';
 import prisma from "../../../../prisma/db";
 
@@ -31,28 +30,19 @@ const getCart = async (userId: string): Promise<Cart> => {
         }
       }
     }
-    // include: {
-    //   products: {
-    //     include: {
-    //       product: {
-    //         select: {
-    //           name: true,
-    //           price: true,
-    //           image: true,
-    //           category: true,
-    //           subcategory: true,
-    //         }
-    //       }
-    //     },
-    //   },
-    // }
   });
 
   // If the cart is not found, return an empty cart structure
   if (!dbCart) {
+    // Create a new cart in the database
+    const newCart = await prisma.cart.create({
+      data: {
+        userId,
+      },
+    });
     return {
-      id: '',
-      userId,
+      id: newCart.id,
+      userId: newCart.userId,
       products: [],
     };
   }
@@ -180,10 +170,6 @@ export const addProductToCartAction = async (
   };
 
   return selectedProduct;
-  // return await addToCart(id, {
-  //   quantity,
-  //   options,
-  // });
 };
 
 export const updateProductCartAction = async (
@@ -255,10 +241,6 @@ export const updateProductCartAction = async (
     return selectedProduct;
   };
   throw new Error('Product not found in cart');
-  // return await updateCartItem(id, {
-  //   quantity,
-  //   options,
-  // });
 }
 
 export const deleteProductCartAction = async (
@@ -297,9 +279,6 @@ export const deleteProductCartAction = async (
   }
 
   throw new Error('Product not found in cart');
-  // return await deleteCartItem(id, {
-  //   options,
-  // });
 }
 
 
@@ -326,5 +305,4 @@ export const clearCartAction = async (userId?: string): Promise<Cart> => {
 
   // Return the empty cart
   return await getCart(userId);
-  // return await clearCart();
 };

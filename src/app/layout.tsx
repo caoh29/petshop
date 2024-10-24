@@ -35,7 +35,11 @@ export default async function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body>
-          <StoreProvider cart={cart} isAuthenticated={isAuthenticated}>
+          <StoreProvider
+            cart={cart}
+            isAuthenticated={isAuthenticated}
+            userId={userId}
+          >
             <Header />
             <main className=''>{children}</main>
             <Footer />

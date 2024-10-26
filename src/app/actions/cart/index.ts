@@ -235,6 +235,8 @@ export const updateProductCartAction = async (
       productPrice: dbSelectedProduct?.product.price ?? 0,
       productCategory: dbSelectedProduct?.product.category ?? '',
       productSubcategory: dbSelectedProduct?.product.subcategory ?? '',
+      size: dbSelectedProduct?.size ?? '',
+      color: dbSelectedProduct?.color ?? '',
       quantity: dbSelectedProduct?.quantity ?? 0
     };
 

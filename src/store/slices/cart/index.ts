@@ -20,6 +20,7 @@ export const cartSlice = createSlice({
     setCart: (state, action: PayloadAction<Cart>) => {
       state.cart = action.payload;
     },
+    // NEEDS IMPROVEMENT
     addProductToCart: (state, action: PayloadAction<SelectedProduct>) => {
       const existingProduct = state.cart.products.find(
         (p) => p.productId === action.payload.productId &&
@@ -39,8 +40,8 @@ export const cartSlice = createSlice({
       action: PayloadAction<SelectedProduct>
     ) => {
       const existingProduct = state.cart.products.find(
-        (p) => p.productId === action.payload.productId ||
-          p.size === action.payload.size ||
+        (p) => p.productId === action.payload.productId &&
+          p.size === action.payload.size &&
           p.color === action.payload.color
       );
 

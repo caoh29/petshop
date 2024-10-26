@@ -36,7 +36,7 @@ export default function AddToCart({
   const searchParams = useSearchParams();
   const size = searchParams.get('Size') ?? '';
   const color = searchParams.get('Color') ?? '';
-  const quantity = Number(searchParams.get('Quantity'));
+  const quantity = Number(searchParams.get('Quantity') ?? 1);
 
   const updateSearchParams = () => {
     const newParams = new URLSearchParams(searchParams.toString());

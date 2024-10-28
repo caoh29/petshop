@@ -22,7 +22,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // const cart = await getCart();
-  const userId = '272830cf-9709-41ef-81d3-24e10bfa2e39';
+  // const userId = '272830cf-9709-41ef-81d3-24e10bfa2e39';
+  const userId = null;
   // const { userId } = auth();
 
   let cart = null;

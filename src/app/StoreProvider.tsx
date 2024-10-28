@@ -1,8 +1,13 @@
 'use client';
 import { useEffect, useRef } from 'react';
+
 import { Provider } from 'react-redux';
-import { type Cart } from '@/api/types';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+
 import { AppStore, makeStore, setCart, setUserSession } from '../store/store';
+
+import { type Cart } from '@/api/types';
 
 export default function StoreProvider({
   cart,
@@ -20,6 +25,8 @@ export default function StoreProvider({
     // storeRef.current.dispatch(setCart(cart));
   }
 
+  const persistor = persistStore(storeRef.current);
+
   useEffect(() => {
     if (userId !== null && cart !== null) {
       storeRef.current?.dispatch(
@@ -28,17 +35,14 @@ export default function StoreProvider({
         }),
       );
       storeRef.current?.dispatch(setCart(cart));
-    } else {
-      const localCart = localStorage.getItem('cart');
-      if (localCart) {
-        storeRef.current?.dispatch(setCart(JSON.parse(localCart)));
-      } else {
-        storeRef.current?.dispatch(
-          setCart({ id: '', userId: '', products: [] }),
-        );
-      }
     }
   }, [cart, userId]);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return (
+    <Provider store={storeRef.current}>
+      <PersistGate loading={null} persistor={persistor}>
+        {children}
+      </PersistGate>
+    </Provider>
+  );
 }

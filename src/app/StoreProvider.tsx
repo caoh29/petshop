@@ -25,7 +25,11 @@ export default function StoreProvider({
     // storeRef.current.dispatch(setCart(cart));
   }
 
-  const persistor = persistStore(storeRef.current);
+  // If userId is null then persist the store in localStorage
+  let persistor: any = null;
+  if (userId === null) {
+    persistor = persistStore(storeRef.current);
+  }
 
   useEffect(() => {
     if (userId !== null && cart !== null) {
@@ -40,9 +44,13 @@ export default function StoreProvider({
 
   return (
     <Provider store={storeRef.current}>
-      <PersistGate loading={null} persistor={persistor}>
-        {children}
-      </PersistGate>
+      {userId === null ? (
+        <PersistGate loading={null} persistor={persistor}>
+          {children}
+        </PersistGate>
+      ) : (
+        children
+      )}
     </Provider>
   );
 }

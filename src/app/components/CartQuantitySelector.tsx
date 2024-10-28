@@ -30,7 +30,7 @@ export default function CartQuantitySelector({
 }: Readonly<Props>) {
   const dispatch = useAppDispatch();
   const { userId, isAuthenticated } = useUserAuthentication();
-  // const cart = useCart();
+  const cart = useCart();
 
   const handleUpdateQuantity = async (newQuantity: number) => {
     if (newQuantity < 1) return; // Prevent quantity from being less than 1
@@ -49,13 +49,14 @@ export default function CartQuantitySelector({
       );
     } else {
       // // If the user is not authenticated, update local storage and Redux
+      const prod = cart.products.find((product) => product.productId === id);
       selectedProduct = {
         productId: id,
-        productImage: '',
-        productName: '',
-        productPrice: 0,
-        productCategory: '',
-        productSubcategory: '',
+        productImage: prod?.productImage ?? '',
+        productName: prod?.productName ?? '',
+        productPrice: prod?.productPrice ?? 0,
+        productCategory: prod?.productCategory ?? '',
+        productSubcategory: prod?.productSubcategory ?? '',
         size,
         color,
         quantity: newQuantity,

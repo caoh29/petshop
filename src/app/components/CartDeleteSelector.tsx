@@ -36,20 +36,8 @@ export default function CartDeleteSelector({
         },
         userId,
       );
-    } else {
-      // // Update the cart in localStorage for non-authenticated users
-      // localStorage.setItem(
-      //   'cart',
-      //   JSON.stringify(
-      //     cart.products.filter(
-      //       (product) =>
-      //         product.productId !== item.productId &&
-      //         product.size !== item.size &&
-      //         product.color !== item.color,
-      //     ),
-      //   ),
-      // );
     }
+
     dispatch(
       deleteProductFromCart({
         productId: id,

@@ -1,28 +1,36 @@
 'use server';
 
-import { getProductByIdAction } from "../products";
-
-// import { addReview } from '@/api/reviews';
+import prisma from "../../../../prisma/db";
 
 export const addReviewAction = async (
-  id: string,
+  productId: string,
   text: string,
   rating: number,
   userId: string,
 ) => {
-  const product = await getProductByIdAction({ id });
-  if (product) {
-    product.reviews.push({
-      rating: rating,
-      text: text,
-      userId: userId,
-      createdAt: new Date().toISOString(),
-      // Needs improvement
-      id: "",
-      productId: ""
+  try {
+    await prisma.review.create({
+      data: {
+        text,
+        rating,
+        userId,
+        productId,
+      },
     });
+
+    const reviews = await prisma.review.findMany({
+      where: {
+        productId,
+      },
+    });
+
+    return reviews.map(review => ({
+      ...review,
+      createdAt: review.createdAt.toISOString(),
+    }));
   }
-  return product?.reviews;
-  // const reviews = await addReview(id, { text, rating, userId });
-  // return reviews || [];
+  catch (error) {
+    console.log(error);
+    return [];
+  }
 };

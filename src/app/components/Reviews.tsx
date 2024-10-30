@@ -2,12 +2,9 @@
 import { useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 
-// import { revalidatePath } from 'next/cache';
-// import { useParams } from 'next/navigation';
-
 import { Review } from '@/api/types';
 import { setReviews, RootState } from '../../store/store';
-import { useReviews } from '../../hooks';
+import { useReviews, useUserAuthentication } from '../../hooks';
 
 interface ReviewsProps {
   productId: string;
@@ -23,7 +20,7 @@ interface ReviewsProps {
 export default function Reviews({
   reviews: initialReviews,
   addReviewAction,
-  productId: id,
+  productId,
 }: Readonly<ReviewsProps>) {
   const store = useStore<RootState>();
   const initialized = useRef(false);
@@ -35,12 +32,14 @@ export default function Reviews({
   const [reviewText, setReviewText] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
 
+  const { isAuthenticated, userId } = useUserAuthentication();
+
   const dispatch = useDispatch();
 
   return (
     <div className='w-full p-4'>
-      {reviews?.map((review, index) => (
-        <div key={index} className='p-5'>
+      {reviews?.map((review) => (
+        <div key={review.id} className='p-5'>
           <div className='my-1 text-md leading-5 text-gray-300'>
             {review.rating} stars
           </div>
@@ -52,11 +51,16 @@ export default function Reviews({
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          // Here i need to do some logicto retrive the user id from cookies
           dispatch(
-            setReviews(await addReviewAction(id, reviewText, reviewRating, '')),
+            setReviews(
+              await addReviewAction(
+                productId,
+                reviewText,
+                reviewRating,
+                userId,
+              ),
+            ),
           );
-          // revalidatePath(`/${category}/${subcategory}/${id}`);
           setReviewText('');
           setReviewRating(5);
         }}
@@ -82,7 +86,7 @@ export default function Reviews({
         </div>
         <div className='flex justify-end'>
           <button
-            disabled={!reviewText}
+            disabled={!reviewText || !isAuthenticated}
             className='mt-6 px-8 py-2 text-lg font-bold text-white bg-blue-800 rounded-lg disabled:bg-gray-500 disabled:cursor-not-allowed'
           >
             Submit Review

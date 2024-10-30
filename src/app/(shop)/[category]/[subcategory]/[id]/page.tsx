@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
-// import { getProductById } from '@/api/products';
 import {
   addProductToCartAction,
   addReviewAction,
@@ -41,9 +40,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductPage({
-  params: { id, category, subcategory },
-}: Readonly<Props>) {
+export default async function ProductPage({ params: { id } }: Readonly<Props>) {
   const product = await getProductByIdAction({ id });
 
   if (!product) {
@@ -63,11 +60,11 @@ export default async function ProductPage({
         addProductToCartAction={addProductToCartAction}
       />
 
-      {/* <Reviews
+      <Reviews
         productId={product.id}
         reviews={product.reviews}
         addReviewAction={addReviewAction}
-      /> */}
+      />
 
       <RelatedProducts
         productId={product.id}

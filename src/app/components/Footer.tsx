@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FooterLinks } from './FooterLinks';
+import FooterLinks from './FooterLinks';
 import { ReactNode } from 'react';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 
@@ -40,7 +40,7 @@ const links = [
   },
 ];
 
-export function Footer() {
+export default function Footer() {
   return (
     <footer className='flex flex-col items-center justify-center py-10 px-8 bg-[#2A5135] gap-12'>
       <FooterLinks />

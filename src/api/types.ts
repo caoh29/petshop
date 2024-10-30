@@ -60,11 +60,18 @@ export interface Product {
   availableSizes?: string[];
   colors?: string[];
   availableColors?: string[];
+  stock: number;
   isOutOfStock: boolean;
   createdAt: Date | string;
 }
 
-export interface SelectedProduct extends Product {
+export interface SelectedProduct {
+  productId: string;
+  productImage: string;
+  productName: string;
+  productPrice: number;
+  productCategory: string;
+  productSubcategory: string;
   quantity: number;
   size?: string;
   color?: string;
@@ -86,4 +93,14 @@ export interface SubCategory {
   id: string;
   name: string;
   image: string;
+}
+
+export interface FilterOption {
+  id: string;
+  label: string;
+}
+
+export interface FilterGroup {
+  name: string;
+  options: FilterOption[];
 }

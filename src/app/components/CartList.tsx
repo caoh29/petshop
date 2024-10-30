@@ -3,33 +3,32 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useDispatch } from 'react-redux';
-
 import { useCart } from '../../hooks';
-import { Cart } from '@/api/types';
-import { setCart } from '../../store/store';
+
+import { SelectedProduct } from '@/api/types';
 
 import CartQuantitySelector from './CartQuantitySelector';
+import CartDeleteSelector from './CartDeleteSelector';
 
 interface Props {
-  updateCartAction: (
+  updateProductCartAction: (
     id: string,
     quantity: number,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
-  deleteCartAction: (
+    userId?: string,
+  ) => Promise<SelectedProduct>;
+  deleteProductCartAction: (
     id: string,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
+    userId?: string,
+  ) => Promise<number>;
 }
 
 export default function CartList({
-  updateCartAction,
-  deleteCartAction,
+  updateProductCartAction,
+  deleteProductCartAction,
 }: Readonly<Props>) {
   const cart = useCart();
-  const dispatch = useDispatch();
-
   return (
     <div className='container'>
       <h1 className='text-2xl font-bold mb-4'>Bag</h1>
@@ -39,19 +38,24 @@ export default function CartList({
         <ul className='space-y-4'>
           {cart.products.map((item) => (
             <li
-              key={item.id}
+              key={item.productId}
               className='flex items-center space-x-4 border-b pb-4'
             >
               <Image
-                src={item.image}
-                alt={item.name}
+                src={item.productImage}
+                alt={item.productName}
                 width={100}
                 height={100}
                 className='object-cover'
               />
               <div className='flex-grow'>
-                <h2 className='text-lg font-semibold'>{item.name}</h2>
-                <p className='text-gray-600'>${item.price.toFixed(2)}</p>
+                <Link
+                  className='text-lg font-semibold hover:underline'
+                  href={`/${item.productCategory}/${item.productSubcategory}/${item.productId}`}
+                >
+                  {item.productName}
+                </Link>
+                <p className='text-gray-600'>${item.productPrice.toFixed(2)}</p>
                 {item.size && !item.color && (
                   <p className='text-sm text-gray-500'>Size: {item.size}</p>
                 )}
@@ -60,29 +64,23 @@ export default function CartList({
                     Size: {item.size}, Color: {item.color}
                   </p>
                 )}
+                {!item.size && item.color && (
+                  <p className='text-sm text-gray-500'>Color: {item.color}</p>
+                )}
               </div>
               <CartQuantitySelector
                 quantity={item.quantity}
-                id={item.id}
+                id={item.productId}
                 size={item.size}
                 color={item.color}
-                updateCartAction={updateCartAction}
+                updateProductCartAction={updateProductCartAction}
               />
-              <button
-                className='text-red-500'
-                onClick={async () =>
-                  dispatch(
-                    setCart(
-                      await deleteCartAction(item.id, {
-                        size: item.size,
-                        color: item.color,
-                      }),
-                    ),
-                  )
-                }
-              >
-                Remove
-              </button>
+              <CartDeleteSelector
+                id={item.productId}
+                size={item.size}
+                color={item.color}
+                deleteProductCartAction={deleteProductCartAction}
+              />
             </li>
           ))}
         </ul>

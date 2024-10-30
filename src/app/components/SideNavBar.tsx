@@ -6,7 +6,9 @@ import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet';
 
-export function SideNavBar({ className }: Readonly<{ className?: string }>) {
+export default function SideNavBar({
+  className,
+}: Readonly<{ className?: string }>) {
   const [showCategoryList, setShowCategoryList] = useState<
     Record<string, boolean>
   >({});

@@ -1,21 +1,38 @@
-import { getProductsByCategory } from '@/api/products';
+// import { getProductsByCategory } from '@/api/products';
 import { VALID_ROUTES } from '@/api/routes';
-import { ProductFilters } from '@/app/components/ProductFilters';
-import { SortDropdown } from '@/app/components/SortDropdown';
-import { GridSection } from '@/app/components/GridSection';
+
+import ProductFilters from '@/app/components/ProductFilters';
+import SortDropdown from '@/app/components/SortDropdown';
+import GridSection from '@/app/components/GridSection';
 import NotFound from '@/app/components/PageNotFound';
+import Pagination from '@/app/components/Pagination';
+
 import { capitalizeString } from '@/lib/utils';
+
+import { getFiltersAction, getPaginatedProductsAction } from '../../actions';
+
+interface Props {
+  params: { category: string };
+  searchParams: {
+    [key: string]: string | string[] | undefined;
+  };
+}
 
 export default async function CategoryPage({
   params,
   searchParams,
-}: Readonly<{
-  params: { category: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}>) {
+}: Readonly<Props>) {
   if (!VALID_ROUTES.has(`/${params.category}`)) return <NotFound />;
+  // const products = await getProductsByCategory(params.category, searchParams);
 
-  const products = await getProductsByCategory(params.category, searchParams);
+  const { products, pages, currentPage } = await getPaginatedProductsAction({
+    category: params.category,
+    searchParams,
+  });
+
+  const { filters } = await getFiltersAction({
+    category: params.category,
+  });
 
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -24,7 +41,7 @@ export default async function CategoryPage({
       </h1>
       <div className='flex flex-col md:flex-row gap-8'>
         <div className='w-full md:w-1/4'>
-          <ProductFilters />
+          <ProductFilters filterGroups={filters} />
         </div>
         <div className='w-full md:w-3/4'>
           <div className='flex justify-between items-center mb-4'>
@@ -35,7 +52,13 @@ export default async function CategoryPage({
             )}
             <SortDropdown />
           </div>
-          <GridSection items={products ?? []} />
+          <GridSection
+            items={products ?? []}
+            basePath={`/${params.category}`}
+          />
+          {pages > 1 && (
+            <Pagination totalPages={pages} currentPage={currentPage || 1} />
+          )}
         </div>
       </div>
     </div>

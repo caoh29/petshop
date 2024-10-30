@@ -15,7 +15,6 @@ datasource db {
 
 model User {
   id         String    @id @default(uuid())
-  name       String
   email      String    @unique
   password   String
   createdAt  DateTime  @default(now())
@@ -77,6 +76,7 @@ model Product {
   availableSizes   String[]
   colors           String[]
   availableColors  String[]
+  stock            Int
   isOutOfStock     Boolean
   createdAt        DateTime          @default(now())
   wishedBy         User[]            @relation("UserWishlist")

@@ -13,7 +13,10 @@ import Link from 'next/link';
 export default function CartSummary() {
   const cart = useCart();
 
-  const subtotal = cart.products.reduce((a, b) => a + b.price * b.quantity, 0);
+  const subtotal = cart.products.reduce(
+    (a, b) => a + b.productPrice * b.quantity,
+    0,
+  );
   const tax = subtotal * 0.13;
   const shipping = subtotal >= 75 || subtotal === 0 ? 0 : 9.99;
 

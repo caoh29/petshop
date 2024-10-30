@@ -1,21 +1,24 @@
 'use client';
 
-import { useDispatch } from 'react-redux';
-
 import { Minus, Plus } from 'lucide-react';
-import { setCart } from '../../store/store';
-import { Cart } from '@/api/types';
+
+import { useAppDispatch, useCart, useUserAuthentication } from '@/hooks';
+
+import { updateProductInCart } from '../../store/store';
+
+import { SelectedProduct } from '@/api/types';
 
 interface Props {
   quantity: number;
   id: string;
   size?: string;
   color?: string;
-  updateCartAction: (
+  updateProductCartAction: (
     id: string,
     quantity: number,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
+    userId?: string,
+  ) => Promise<SelectedProduct>;
 }
 
 export default function CartQuantitySelector({
@@ -23,43 +26,56 @@ export default function CartQuantitySelector({
   quantity,
   size,
   color,
-  updateCartAction,
+  updateProductCartAction,
 }: Readonly<Props>) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { userId, isAuthenticated } = useUserAuthentication();
+  const cart = useCart();
+
+  const handleUpdateQuantity = async (newQuantity: number) => {
+    if (newQuantity < 1) return; // Prevent quantity from being less than 1
+
+    let selectedProduct: SelectedProduct;
+    if (isAuthenticated) {
+      // Update the cart on the server for authenticated users
+      selectedProduct = await updateProductCartAction(
+        id,
+        newQuantity,
+        {
+          size,
+          color,
+        },
+        userId,
+      );
+    } else {
+      // // If the user is not authenticated, update local storage and Redux
+      const prod = cart.products.find((product) => product.productId === id);
+      selectedProduct = {
+        productId: id,
+        productImage: prod?.productImage ?? '',
+        productName: prod?.productName ?? '',
+        productPrice: prod?.productPrice ?? 0,
+        productCategory: prod?.productCategory ?? '',
+        productSubcategory: prod?.productSubcategory ?? '',
+        size,
+        color,
+        quantity: newQuantity,
+      };
+    }
+    dispatch(updateProductInCart(selectedProduct));
+  };
 
   return (
     <div className='my-4'>
       <h3>Quantity</h3>
       <button
-        onClick={async () => {
-          if (quantity === 1) return;
-          quantity -= 1;
-          dispatch(
-            setCart(
-              await updateCartAction(id, quantity, {
-                size,
-                color,
-              }),
-            ),
-          );
-        }}
+        onClick={() => handleUpdateQuantity(quantity - 1)}
+        disabled={quantity === 1}
       >
         <Minus />
       </button>
       <span className='mx-4'>{quantity}</span>
-      <button
-        onClick={async () => {
-          quantity += 1;
-          dispatch(
-            setCart(
-              await updateCartAction(id, quantity, {
-                size,
-                color,
-              }),
-            ),
-          );
-        }}
-      >
+      <button onClick={() => handleUpdateQuantity(quantity + 1)}>
         <Plus />
       </button>
     </div>

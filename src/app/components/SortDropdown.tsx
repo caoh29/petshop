@@ -24,7 +24,7 @@ const sortOptions: SortOption[] = [
   { label: 'Price: High to Low', value: 'price_desc' },
 ];
 
-export function SortDropdown() {
+export default function SortDropdown() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
@@ -34,7 +34,9 @@ export function SortDropdown() {
   const updateSort = (newSortBy: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set('sort', newSortBy);
-    router.push(`/${params.category}?${newParams.toString()}`);
+    router.replace(`/${params.category}?${newParams.toString()}`, {
+      scroll: false,
+    });
   };
 
   useEffect(() => {

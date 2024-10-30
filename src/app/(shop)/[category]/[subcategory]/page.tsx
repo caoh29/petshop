@@ -1,10 +1,14 @@
-import { getProductsBySubCategory } from '@/api/products';
+// import { getProductsBySubCategory } from '@/api/products';
 import { VALID_ROUTES } from '@/api/routes';
-import { GridSection } from '@/app/components/GridSection';
-import { ProductFilters } from '@/app/components/ProductFilters';
-import { SortDropdown } from '@/app/components/SortDropdown';
+import GridSection from '@/app/components/GridSection';
+import ProductFilters from '@/app/components/ProductFilters';
+import SortDropdown from '@/app/components/SortDropdown';
+import Pagination from '@/app/components/Pagination';
 import NotFound from '@/app/components/PageNotFound';
+
 import { capitalizeString } from '@/lib/utils';
+
+import { getFiltersAction, getPaginatedProductsAction } from '../../../actions';
 
 export default async function SubCategoryPage({
   params,
@@ -16,11 +20,22 @@ export default async function SubCategoryPage({
   if (!VALID_ROUTES.has(`/${params.category}/${params.subcategory}`))
     return <NotFound />;
 
-  const products = await getProductsBySubCategory(
-    params.category,
-    params.subcategory,
+  // const products = await getProductsBySubCategory(
+  //   params.category,
+  //   params.subcategory,
+  //   searchParams,
+  // );
+
+  const { products, pages, currentPage } = await getPaginatedProductsAction({
+    category: params.category,
+    subcategory: params.subcategory,
     searchParams,
-  );
+  });
+
+  const { filters } = await getFiltersAction({
+    category: params.category,
+    subcategory: params.subcategory,
+  });
 
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -29,7 +44,7 @@ export default async function SubCategoryPage({
       </h1>
       <div className='flex flex-col md:flex-row gap-8'>
         <div className='w-full md:w-1/4'>
-          <ProductFilters />
+          <ProductFilters filterGroups={filters} />
         </div>
         <div className='w-full md:w-3/4'>
           <div className='flex justify-between items-center mb-4'>
@@ -40,7 +55,13 @@ export default async function SubCategoryPage({
             )}
             <SortDropdown />
           </div>
-          <GridSection items={products ?? []} />
+          <GridSection
+            items={products ?? []}
+            basePath={`/${params.category}/${params.subcategory}`}
+          />
+          {pages > 1 && (
+            <Pagination totalPages={pages} currentPage={currentPage || 1} />
+          )}
         </div>
       </div>
     </div>

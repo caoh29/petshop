@@ -1,32 +1,29 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+// import Link from 'next/link';
 
 import { ShoppingCart } from 'lucide-react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
-import { useDispatch } from 'react-redux';
-import { setHeaderVisibility } from '../../store/store';
+// import { useDispatch } from 'react-redux';
+// import { setHeaderVisibility } from '../../store/store';
 
-import { useCart, useHeaderVisibility } from '../../hooks';
+import { useCart } from '../../hooks';
 
 import CartPopup from './CartPopup';
-import { type Cart } from '@/api/types';
+// import { type Cart } from '@/api/types';
 
-import { SearchBar } from './SearchBar';
-import { NavBar } from './NavBar';
-import { SideNavBar } from './SideNavBar';
+import SearchBar from './SearchBar';
+import NavBar from './NavBar';
+import SideNavBar from './SideNavBar';
 
-export default function Header({
-  clearCartAction,
-}: Readonly<{
-  clearCartAction: () => Promise<Cart>;
-}>) {
+export default function Header() {
   const cart = useCart();
-  const [showCart, setShowCart] = useState(false);
+  const [showCartPopup, setShowCartPopup] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  // const dispatch = useDispatch();
+  // const headerVisibility = useHeaderVisibility();
 
-  const dispatch = useDispatch();
-  const headerVisibility = useHeaderVisibility();
-  // const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const prevScrollPos = useRef(0);
 
   useEffect(() => {
@@ -34,13 +31,12 @@ export default function Header({
       const currentScrollPos = window.scrollY;
       const isScrollingDown = currentScrollPos > prevScrollPos.current;
 
-      // if (isScrollingDown !== !isHeaderVisible && currentScrollPos > 150) {
-      //   setIsHeaderVisible(!isScrollingDown);
-      // }
-      if (isScrollingDown !== !headerVisibility && currentScrollPos > 150) {
-        // setIsHeaderVisible(!isScrollingDown);
-        dispatch(setHeaderVisibility({ isVisible: !isScrollingDown }));
+      if (isScrollingDown !== !isHeaderVisible && currentScrollPos > 150) {
+        setIsHeaderVisible(!isScrollingDown);
       }
+      // if (isScrollingDown !== !headerVisibility && currentScrollPos > 150) {
+      //   dispatch(setHeaderVisibility({ isVisible: !isScrollingDown }));
+      // }
 
       prevScrollPos.current = currentScrollPos;
     };
@@ -51,13 +47,13 @@ export default function Header({
       window.removeEventListener('scroll', handleScroll);
     };
     // }, [isHeaderVisible]);
-  }, [headerVisibility, dispatch]);
+  }, [isHeaderVisible]);
 
   return (
     <header
       className={`${
-        // isHeaderVisible ? 'top-0 ' : '-top-20'
-        headerVisibility ? 'top-0 ' : '-top-20'
+        isHeaderVisible ? 'top-0 ' : '-top-20'
+        // headerVisibility ? 'top-0 ' : '-top-20'
       } sticky z-10 flex items-center justify-center py-4 px-8 bg-[#2A5135] h-20 gap-8 transition-all ease-in duration-500`}
     >
       <SideNavBar className='lg:hidden' />
@@ -66,19 +62,25 @@ export default function Header({
       </h2>
       <NavBar
         className='hidden lg:block lg:mx-auto lg:order-2'
-        // isVisible={isHeaderVisible}
+        isVisible={isHeaderVisible}
       />
       <SearchBar className='order-3' />
+      {/* <Link href='/checkout' className='order-4 lg:hidden'>
+        <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
+          {cart.products.length}
+        </span>
+        <ShoppingCart color='#ffffff' />
+      </Link> */}
       <button
         className='relative order-4'
         onClick={() => {
-          setShowCart(!showCart);
+          setShowCartPopup(!showCartPopup);
         }}
       >
         <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
           {cart.products.length}
         </span>
-        {showCart && <CartPopup clearCartAction={clearCartAction} />}
+        {showCartPopup && <CartPopup setShowCartPopup={setShowCartPopup} />}
         <ShoppingCart color='#ffffff' />
       </button>
       <div className='order-5 text-white'>

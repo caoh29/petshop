@@ -1,50 +1,92 @@
 'use client';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setCart, resetProductState } from '../../store/store';
 
-import { Product, type Cart } from '@/api/types';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from './ui/button';
 
+import { addProductToCart } from '../../store/store';
+
+import { useAppDispatch, useUserAuthentication } from '@/hooks';
+
+import { Product, SelectedProduct, type Cart } from '@/api/types';
+
 export default function AddToCart({
-  addToCartAction,
+  addProductToCartAction,
   disabled,
-  productId,
+  product,
   sizes,
   colors,
 }: Readonly<{
-  addToCartAction: (
+  addProductToCartAction: (
     id: string,
     quantity: number,
     options: { size?: string; color?: string },
-  ) => Promise<Cart>;
+    userId?: string,
+  ) => Promise<SelectedProduct>;
   disabled: boolean;
-  productId: string;
+  product: Product;
   sizes?: string[];
   colors?: string[];
 }>) {
-  const dispatch = useDispatch();
-  const { quantity, size, color } = useSelector(
-    (state: RootState) => state.selectedProduct.selectedProduct,
-  );
+  const dispatch = useAppDispatch();
+  const { userId, isAuthenticated } = useUserAuthentication();
 
+  const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const size = searchParams.get('Size') ?? '';
+  const color = searchParams.get('Color') ?? '';
+  const quantity = Number(searchParams.get('Quantity') ?? 1);
+
+  const updateSearchParams = () => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('Size');
+    newParams.delete('Quantity');
+    newParams.delete('Color');
+    router.replace(`/${params.category}/${params.subcategory}/${params.id}`, {
+      scroll: false,
+    });
+  };
+
+  // This component needs to know if user is authenticated if so, send request to server, else get data from client's lcoal storage
   const handleClick = async () => {
     if (disabled) return;
-    dispatch(
-      setCart(
-        await addToCartAction(productId, quantity, {
+
+    let selectedProduct: SelectedProduct;
+
+    if (isAuthenticated) {
+      selectedProduct = await addProductToCartAction(
+        product.id,
+        quantity,
+        {
           size,
           color,
-        }),
-      ),
-    );
-    dispatch(resetProductState());
+        },
+        userId,
+      );
+    } else {
+      selectedProduct = {
+        productId: product.id,
+        productImage: product.image,
+        productName: product.name,
+        productPrice: product.price,
+        productCategory: product.category,
+        productSubcategory: product.subcategory,
+        size,
+        color,
+        quantity,
+      };
+    }
+
+    dispatch(addProductToCart(selectedProduct));
+
+    updateSearchParams();
   };
 
   return (
     <Button
       className={`mt-6 text-lg font-bold`}
-      onClick={handleClick}
+      onClick={() => handleClick()}
       disabled={
         disabled ||
         (!size && sizes && sizes.length > 0) ||

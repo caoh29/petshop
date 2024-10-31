@@ -34,9 +34,20 @@ export default function SortDropdown() {
   const updateSort = (newSortBy: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set('sort', newSortBy);
-    router.replace(`/${params.category}?${newParams.toString()}`, {
-      scroll: false,
-    });
+    if (params.subcategory && params.category) {
+      router.replace(
+        `/${params.category}/${params.subcategory}?${newParams.toString()}`,
+        { scroll: false },
+      );
+    } else if (params.category && !params.subcategory) {
+      router.replace(`/${params.category}?${newParams.toString()}`, {
+        scroll: false,
+      });
+    } else {
+      router.replace(`?${newParams.toString()}`, {
+        scroll: false,
+      });
+    }
   };
 
   useEffect(() => {

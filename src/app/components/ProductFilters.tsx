@@ -75,13 +75,17 @@ export default function ProductFilters({
       values.forEach((value) => newParams.append(key, value));
     });
 
-    if (params.subcategory) {
+    if (params.subcategory && params.category) {
       router.replace(
         `/${params.category}/${params.subcategory}?${newParams.toString()}`,
         { scroll: false },
       );
-    } else {
+    } else if (params.category && !params.subcategory) {
       router.replace(`/${params.category}?${newParams.toString()}`, {
+        scroll: false,
+      });
+    } else {
+      router.replace(`?${newParams.toString()}`, {
         scroll: false,
       });
     }

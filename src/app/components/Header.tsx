@@ -65,12 +65,6 @@ export default function Header() {
         isVisible={isHeaderVisible}
       />
       <SearchBar className='order-3' />
-      {/* <Link href='/checkout' className='order-4 lg:hidden'>
-        <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
-          {cart.products.length}
-        </span>
-        <ShoppingCart color='#ffffff' />
-      </Link> */}
       <button
         className='relative order-4'
         onClick={() => {

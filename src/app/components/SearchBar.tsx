@@ -1,33 +1,47 @@
 'use client';
-import { useState } from 'react';
-
+import { ChangeEvent, useState, useRef } from 'react';
+import Link from 'next/link';
 import { Search } from 'lucide-react';
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from './ui/sheet';
-
-import Data from '../../mocks/MOCK_DATA.json';
-import Link from 'next/link';
-
-// needs improvement
-type Post = {
-  id: number;
-  product_name: string;
-  category: string;
-  sku: number;
-};
+import { searchProductAction } from '../actions';
+import { Product } from '@/api/types';
+import { useRouter } from 'next/navigation';
 
 export default function SearchBar({
   className,
 }: Readonly<{ className?: string }>) {
   const [query, setQuery] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const timeoutId = useRef<NodeJS.Timeout | null>(null);
+
+  const router = useRouter();
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+
+    if (timeoutId.current) clearTimeout(timeoutId.current);
+
+    if (newQuery.length >= 3) {
+      setLoading(true); // Start loading
+      timeoutId.current = setTimeout(async () => {
+        const results = await searchProductAction(newQuery);
+        setProducts(results);
+        setLoading(false); // Stop loading after request completes
+      }, 1000); // 1000 ms delay
+    } else {
+      setProducts([]);
+      setLoading(false); // Ensure loading is false for short queries
+    }
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -45,31 +59,38 @@ export default function SearchBar({
             id='name'
             type='text'
             className='w-4/5 border-2 border-slate-200 border-solid py-1 px-2 rounded'
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleChange}
           />
         </div>
-        {query &&
-          Data.filter((post: Post) => {
-            if (post.product_name.toLowerCase().includes(query.toLowerCase())) {
-              return post;
-            }
-          }).map((post) => (
-            <Link
-              className='p-2 border-2 border-slate-200 border-solid flex flex-col flex-nowrap hover:bg-slate-400'
-              key={post.id}
-              href={`/${post.category.toLowerCase().split(' ')[0]}/${
-                post.product_name.toLowerCase().split(' ')[0]
-              }`}
-            >
-              <p className='text-white'>{post.product_name}</p>
-              <p className='text-slate-500 font-extralight text-sm'>
-                {post.category}
-              </p>
-            </Link>
-          ))}
+        {query.length >= 3 && !loading && products.length === 0 ? (
+          <p className='text-white text-center'>
+            No products matching your description were found.
+          </p>
+        ) : (
+          products.map((product) => (
+            <SheetClose key={product.id} asChild>
+              <Link
+                className='p-2 border-2 border-slate-200 border-solid flex flex-col flex-nowrap hover:bg-slate-400'
+                href={`/${product.category}/${product.subcategory}/${product.id}`}
+              >
+                <p className='text-white'>{product.name}</p>
+                <p className='text-slate-500 font-extralight text-sm'>
+                  {product.category}
+                </p>
+              </Link>
+            </SheetClose>
+          ))
+        )}
         <SheetFooter>
           <SheetClose asChild>
-            <button className='mt-5 mr-6 p-2 rounded bg-black text-white'>
+            <button
+              className='mt-5 mr-6 p-2 rounded bg-black text-white'
+              onClick={() => {
+                if (query.length > 0) {
+                  router.push(`/search?query=${query}`);
+                }
+              }}
+            >
               Submit
             </button>
           </SheetClose>

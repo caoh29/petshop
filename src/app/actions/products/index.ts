@@ -57,25 +57,31 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
     const sizes = checkSearchParam(searchParams?.Size);
     const colors = checkSearchParam(searchParams?.Color);
     const sortBy = checkSorting(searchParams?.sort as string);
+    const query = searchParams?.query as string;
 
-    // Create the where clause for the product count query
-    const countWhereClause = {
-      category: category ?? undefined,
-      subcategory: subcategory ?? undefined,
-      sizes: sizes ? { hasSome: sizes } : undefined,
-      colors: colors ? { hasSome: colors } : undefined,
-    };
 
     // Get the total count of products based on the filters
     const totalCount = await prisma.product.count({
-      where: countWhereClause
+      where: {
+        category: category ?? undefined,
+        subcategory: subcategory ?? undefined,
+        sizes: sizes ? { hasSome: sizes } : undefined,
+        colors: colors ? { hasSome: colors } : undefined,
+        name: query ? { contains: query, mode: 'insensitive' } : undefined,
+      }
     });
 
     const products = await prisma.product.findMany({
       take,
       skip,
       include: { reviews: true }, // Include reviews in the initial query
-      where: countWhereClause,
+      where: {
+        category: category ?? undefined,
+        subcategory: subcategory ?? undefined,
+        sizes: sizes ? { hasSome: sizes } : undefined,
+        colors: colors ? { hasSome: colors } : undefined,
+        name: query ? { contains: query, mode: 'insensitive' } : undefined,
+      },
       orderBy: sortBy ?? undefined,
     });
 
@@ -163,12 +169,45 @@ export const getRelatedProductsAction = async ({ id, category, subcategory }: { 
   }
 }
 
+export const searchProductAction = async (query: string) => {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: 'insensitive',
+        },
+      },
+      take: 10,
+      include: { reviews: true },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return products.map(product => ({
+      ...product,
+      createdAt: product.createdAt.toISOString(),
+      reviews: product.reviews.map(review => ({
+        ...review,
+        createdAt: review.createdAt.toISOString()
+      }))
+    }));
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
 export const getFiltersAction = async ({ category, subcategory, searchParams }: GetProducts): Promise<{ filters: FilterGroup[] }> => {
   try {
+    const query = searchParams?.query as string;
+
     const filters = await prisma.product.findMany({
       where: {
         category: category ?? undefined,
         subcategory: subcategory ?? undefined,
+        name: query ? { contains: query, mode: 'insensitive' } : undefined,
       },
       select: {
         sizes: true,

@@ -5,3 +5,5 @@ export { clearCartAction, updateProductCartAction, deleteProductCartAction, addP
 export { addReviewAction } from './reviews';
 
 export { getCategoriesAction } from './categories';
+
+export { registerUserAction } from './auth';

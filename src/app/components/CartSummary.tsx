@@ -7,7 +7,7 @@ import Subtotal from './Subtotal';
 import { Button } from './ui/button';
 
 import { useCart } from '../../hooks';
-import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
+// import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import Link from 'next/link';
 
 export default function CartSummary() {
@@ -35,7 +35,7 @@ export default function CartSummary() {
           <Total total={total} />
         </div>
       </div>
-      <SignedOut>
+      {/* <SignedOut>
         <Link href={'/checkout'}>
           <Button className='w-full'>Guest Checkout</Button>
         </Link>
@@ -47,7 +47,9 @@ export default function CartSummary() {
         <Link href={'/checkout'}>
           <Button className='w-full'>Checkout</Button>
         </Link>
-      </SignedIn>
+      </SignedIn> */}
+      <Button className='w-full'>Guest Checkout</Button>
+      <Button>Member Checkout</Button>
       <Button>PayPal</Button>
     </div>
   );

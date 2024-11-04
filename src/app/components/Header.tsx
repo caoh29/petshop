@@ -1,9 +1,9 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-// import Link from 'next/link';
+import Link from 'next/link';
 
 import { ShoppingCart } from 'lucide-react';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
+// import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 // import { useDispatch } from 'react-redux';
 // import { setHeaderVisibility } from '../../store/store';
@@ -78,12 +78,14 @@ export default function Header() {
         <ShoppingCart color='#ffffff' />
       </button>
       <div className='order-5 text-white'>
-        <SignedOut>
+        <Link href='/auth/signin'>Sign In</Link>
+        <Link href='/auth/signup'>Sign Up</Link>
+        {/* <SignedOut>
           <SignInButton />
         </SignedOut>
         <SignedIn>
           <UserButton />
-        </SignedIn>
+        </SignedIn> */}
       </div>
     </header>
   );

@@ -1,25 +1,80 @@
 export interface User {
   id: string;
-  name: string;
+  name?: string; // Made optional as per NextAuth schema
   email: string;
-  password: string;
+  password?: string; // Optional if you're supporting OAuth/magic links only
+  emailVerified?: string; // Date in string format
+  image?: string;
   createdAt: string;
+  updatedAt: string;
   firstName: string;
   lastName: string;
-  address: string;
+  address?: string;
   address2?: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-  phone: string;
-  isAdmin: boolean;
-  isVerified: boolean;
-  orders: Order[];
-  reviews: Review[];
-  cart: Cart;
-  wishlist: Product[];
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+  phone?: string;
+  isAdmin?: boolean;
+  isVerified?: boolean;
+
+  // Relations
+  orders?: Order[];
+  reviews?: Review[];
+  cart?: Cart;
+  wishlist?: Product[];
+  accounts?: Account[]; // For OAuth providers
+  sessions?: Session[]; // For active sessions
+
+  // Optional WebAuthn support
+  authenticators?: Authenticator[];
 }
+
+// New interfaces for NextAuth-related models
+export interface Account {
+  id: string;
+  userId: string;
+  type: string;
+  provider: string;
+  providerAccountId: string;
+  refresh_token?: string;
+  access_token?: string;
+  expires_at?: number;
+  token_type?: string;
+  scope?: string;
+  id_token?: string;
+  session_state?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Session {
+  sessionToken: string;
+  userId: string;
+  expires: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface VerificationToken {
+  identifier: string;
+  token: string;
+  expires: string;
+}
+
+// Optional for WebAuthn support
+export interface Authenticator {
+  credentialID: string;
+  userId: string;
+  providerAccountId: string;
+  credentialPublicKey: string;
+  counter: number;
+  credentialDeviceType: string;
+  credentialBackedUp: boolean;
+  transports?: string;
+}
+
 
 export interface Order {
   id: string;

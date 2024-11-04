@@ -6,4 +6,4 @@ export { addReviewAction } from './reviews';
 
 export { getCategoriesAction } from './categories';
 
-export { registerUserAction } from './auth';
+export { registerUserAction, loginUserAction } from './auth';

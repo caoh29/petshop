@@ -8,7 +8,6 @@ import { SchemaLogin, schemaLogin } from "@/lib/schemas/login-user";
 import { signIn } from "@/auth";
 
 import { saltAndHashPassword } from "@/lib/utils";
-import { User } from "@/api/types";
 
 export async function registerUserAction(data: SchemaRegister) {
   const validatedFields = await schemaRegister.safeParseAsync(data);
@@ -57,12 +56,21 @@ export async function registerUserAction(data: SchemaRegister) {
       },
     });
 
-    return {
-      data: {
-        message: "User registered successfully",
-        userId: user.id,
-      },
-    };
+    if (user) {
+      return {
+        data: {
+          message: "User registered successfully",
+          status: 201,
+        },
+      };
+    } else {
+      return {
+        errors: {
+          email: ["Error registering user in DB"],
+        },
+        message: "Error registering user in DB. Failed to Register.",
+      };
+    }
   } catch (error) {
     console.error("Error registering user in DB:", error);
     return {

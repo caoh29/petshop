@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import {
   CardTitle,
@@ -34,7 +35,10 @@ import {
   SchemaRegister,
   defaultValues,
 } from '@/lib/schemas/register-user';
+
 export function SignupForm() {
+  const router = useRouter();
+
   // Define form
   const form = useForm<SchemaRegister>({
     resolver: zodResolver(schemaRegister),
@@ -45,6 +49,7 @@ export function SignupForm() {
   async function onSubmit(data: SchemaRegister) {
     const res = await registerUserAction(data);
     if (!res.errors) form.reset();
+    if (res.data) router.push('/auth/signin');
   }
   return (
     <div className='w-full max-w-md'>

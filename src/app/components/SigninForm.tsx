@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import {
   CardTitle,
@@ -35,6 +36,8 @@ import {
   defaultValues,
 } from '@/lib/schemas/login-user';
 export function SigninForm() {
+  const router = useRouter();
+
   // Define form
   const form = useForm<SchemaLogin>({
     resolver: zodResolver(schemaLogin),
@@ -45,6 +48,7 @@ export function SigninForm() {
   async function onSubmit(data: SchemaLogin) {
     const res = await loginUserAction(data);
     if (!res.errors) form.reset();
+    if (res.data) router.push('/');
   }
   return (
     <div className='w-full max-w-md'>
@@ -53,9 +57,10 @@ export function SigninForm() {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader className='space-y-1'>
-              <CardTitle className='text-3xl font-bold'>Sign Up</CardTitle>
+              <CardTitle className='text-3xl font-bold'>Sign In</CardTitle>
               <CardDescription>
-                Enter your details to create a new account
+                Enter your details to login using username and password, else
+                use these providers
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>

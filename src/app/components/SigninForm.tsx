@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { useState } from 'react';
+
 import {
   CardTitle,
   CardDescription,
@@ -38,6 +40,8 @@ import {
 export function SigninForm() {
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   // Define form
   const form = useForm<SchemaLogin>({
     resolver: zodResolver(schemaLogin),
@@ -46,7 +50,9 @@ export function SigninForm() {
 
   // Handle submission.
   async function onSubmit(data: SchemaLogin) {
+    setLoading(true);
     const res = await loginUserAction(data);
+    setLoading(false);
     if (!res.errors) form.reset();
     if (res.data) router.push('/');
   }
@@ -100,9 +106,15 @@ export function SigninForm() {
               />
             </CardContent>
             <CardFooter className='flex flex-col'>
-              <Button type='submit' className='w-full'>
-                Sign In
-              </Button>
+              {loading ? (
+                <Button type='submit' className='w-full' disabled>
+                  Signing In...
+                </Button>
+              ) : (
+                <Button type='submit' className='w-full'>
+                  Sign In
+                </Button>
+              )}
             </CardFooter>
           </Card>
           <div className='mt-4 text-center text-sm'>

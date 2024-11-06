@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { useState } from 'react';
+
 import {
   CardTitle,
   CardDescription,
@@ -39,6 +41,8 @@ import {
 export function SignupForm() {
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   // Define form
   const form = useForm<SchemaRegister>({
     resolver: zodResolver(schemaRegister),
@@ -47,7 +51,9 @@ export function SignupForm() {
 
   // Handle submission.
   async function onSubmit(data: SchemaRegister) {
+    setLoading(true);
     const res = await registerUserAction(data);
+    setLoading(false);
     if (!res.errors) form.reset();
     if (res.data) router.push('/auth/signin');
   }
@@ -124,39 +130,17 @@ export function SignupForm() {
                   </FormItem>
                 )}
               />
-              {/* <div className='space-y-2'>
-                <Label htmlFor='username'>Username</Label>
-                <Input
-                  id='username'
-                  name='username'
-                  type='text'
-                  placeholder='username'
-                />
-              </div>
-              <div className='space-y-2'>
-                <Label htmlFor='email'>Email</Label>
-                <Input
-                  id='email'
-                  name='email'
-                  type='email'
-                  placeholder='name@example.com'
-                />
-              </div>
-
-              <div className='space-y-2'>
-                <Label htmlFor='password'>Password</Label>
-                <Input
-                  id='password'
-                  name='password'
-                  type='password'
-                  placeholder='password'
-                />
-              </div> */}
             </CardContent>
             <CardFooter className='flex flex-col'>
-              <Button type='submit' className='w-full'>
-                Sign Up
-              </Button>
+              {loading ? (
+                <Button type='submit' className='w-full' disabled>
+                  Signing Up...
+                </Button>
+              ) : (
+                <Button type='submit' className='w-full'>
+                  Sign Up
+                </Button>
+              )}
             </CardFooter>
           </Card>
           <div className='mt-4 text-center text-sm'>

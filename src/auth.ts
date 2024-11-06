@@ -31,6 +31,7 @@ const authorize = async (credentials: any): Promise<User | null> => {
   if (!isValidPassword) {
     throw new Error("Invalid password.")
   }
+
   console.log("User logged in");
   // return JSON object with the user data
   return {

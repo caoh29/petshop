@@ -6,7 +6,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import prisma from "../prisma/db"
 import { User } from "./api/types"
 import { schemaLogin } from "./lib/schemas/login-user"
-import { saltAndHashPassword } from "./lib/utils"
+import { checkPassword } from "./lib/utils"
 
 
 
@@ -15,21 +15,23 @@ const authorize = async (credentials: any): Promise<User | null> => {
 
   const { email, password } = await schemaLogin.parseAsync(credentials);
 
-  // logic to salt and hash password
-  const pwHash = await saltAndHashPassword(password)
-
   // logic to verify if the user exists
   user = await prisma.user.findUnique({
     where: {
-      email: email,
-      password: pwHash,
+      email: email.toLowerCase(),
     },
   });
 
   if (!user) {
-    throw new Error("Invalid credentials.")
+    throw new Error("No user was found.")
   }
+  // logic to salt and hash password
+  const isValidPassword = await checkPassword(password, user?.password);
 
+  if (!isValidPassword) {
+    throw new Error("Invalid password.")
+  }
+  console.log("User logged in");
   // return JSON object with the user data
   return {
     id: user.id,
@@ -38,6 +40,11 @@ const authorize = async (credentials: any): Promise<User | null> => {
     email: user.email,
     createdAt: user.createdAt.toISOString(),
     updatedAt: user.updatedAt.toISOString(),
+    // Optional
+    isAdmin: user.isAdmin ?? false,
+    isVerified: user.isVerified ?? false,
+    name: `${user.firstName} ${user.lastName}`,
+    image: user.image ?? undefined
   };
 };
 

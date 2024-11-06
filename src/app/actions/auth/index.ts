@@ -93,12 +93,11 @@ export async function loginUserAction(data: SchemaLogin) {
   }
 
   try {
-    await signIn("credentials", {
+    const res = await signIn("credentials", {
       email: validatedFields.data.email,
       password: validatedFields.data.password,
-      redirectTo: "/",
     });
-
+    console.log(res);
     return {
       data: {
         message: "User logged in successfully",

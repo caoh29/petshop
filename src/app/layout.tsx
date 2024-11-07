@@ -33,6 +33,8 @@ export default async function RootLayout({
     cart = await getCartAction(userId);
   }
 
+  console.log(session);
+
   return (
     // <ClerkProvider>
     <html lang='en'>

@@ -5,9 +5,10 @@ import prisma from "../../../../prisma/db";
 import { SchemaRegister, schemaRegister } from "@/lib/schemas/register-user";
 import { SchemaLogin, schemaLogin } from "@/lib/schemas/login-user";
 
-import { signIn } from "@/auth";
+import { signIn, auth } from "@/auth";
 
 import { saltAndHashPassword } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 
 export async function registerUserAction(data: SchemaRegister) {
   const validatedFields = await schemaRegister.safeParseAsync(data);
@@ -97,8 +98,10 @@ export async function loginUserAction(data: SchemaLogin) {
       email: validatedFields.data.email,
       password: validatedFields.data.password,
       redirect: false,
-      callbackUrl: "/auth/signin",
     });
+
+    if (callbackUrl) revalidatePath("/auth/signin");
+
     return {
       data: {
         message: "User logged in successfully",

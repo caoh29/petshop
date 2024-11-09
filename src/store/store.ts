@@ -62,7 +62,7 @@ export const makeStore = () => {
 
 export const { setCart, addProductToCart, updateProductInCart, deleteProductFromCart, clearCart } = cartSlice.actions;
 export const { setReviews } = reviewsSlice.actions;
-export const { setUserSession } = userSlice.actions;
+export const { setUserSession, deleteUserSession } = userSlice.actions;
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore["getState"]>;

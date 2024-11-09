@@ -1,7 +1,11 @@
+'use client';
+
 import Link from 'next/link';
-import FooterLinks from './FooterLinks';
+import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
+
 import { Facebook, Instagram, Twitter } from 'lucide-react';
+import FooterLinks from './FooterLinks';
 
 const socials: { title: string; icon: ReactNode; href: string }[] = [
   {
@@ -41,6 +45,9 @@ const links = [
 ];
 
 export default function Footer() {
+  const path = usePathname();
+  if (path === '/auth/signin' || path === '/auth/signup') return;
+
   return (
     <footer className='flex flex-col items-center justify-center py-10 px-8 bg-[#2A5135] gap-12'>
       <FooterLinks />

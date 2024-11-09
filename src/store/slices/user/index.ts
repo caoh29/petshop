@@ -19,5 +19,9 @@ export const userSlice = createSlice({
       state.userId = action.payload.userId;
       state.isAuthenticated = true;
     },
+    deleteUserSession: (state) => {
+      state.userId = '';
+      state.isAuthenticated = false;
+    },
   },
 });

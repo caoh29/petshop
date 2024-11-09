@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 
 import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -7,7 +7,6 @@ import prisma from "../prisma/db"
 import { User } from "./api/types"
 import { schemaLogin } from "./lib/schemas/login-user"
 import { checkPassword } from "./lib/utils"
-
 
 
 const authorize = async (credentials: any): Promise<User | null> => {
@@ -49,16 +48,43 @@ const authorize = async (credentials: any): Promise<User | null> => {
   };
 };
 
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
+const config = {
   adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "example@domain.com" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" }
       },
       authorize: authorize,
-    })
+    }),
+    // google
+    // other provider
   ],
-})
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 60 * 24, // 1 day
+  },
+  secret: process.env.AUTH_SECRET,
+  pages: {
+    signIn: "/auth/signin",
+    signOut: "/"
+  },
+  callbacks: {
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.sub!;
+      }
+      return session;
+    },
+    // async jwt({ user, token }) {
+    //   if (user) {
+    //     token.sub = user.id;
+    //   }
+    //   return token;
+    // }
+  },
+} satisfies NextAuthConfig
+
+export const { handlers, signIn, signOut, auth } = NextAuth(config)

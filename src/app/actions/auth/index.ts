@@ -100,7 +100,8 @@ export async function loginUserAction(data: SchemaLogin) {
       redirect: false,
     });
 
-    if (callbackUrl) revalidatePath("/auth/signin");
+    // check
+    if (callbackUrl) revalidatePath("/");
 
     return {
       data: {

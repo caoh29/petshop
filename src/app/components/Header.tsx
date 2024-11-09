@@ -1,6 +1,11 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import { useState, useEffect, useRef } from 'react';
+
+import { signOut } from 'next-auth/react';
 
 import { ShoppingCart } from 'lucide-react';
 // import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
@@ -8,17 +13,22 @@ import { ShoppingCart } from 'lucide-react';
 // import { useDispatch } from 'react-redux';
 // import { setHeaderVisibility } from '../../store/store';
 
-import { useCart } from '../../hooks';
+import { useAppDispatch, useCart, useUserAuthentication } from '../../hooks';
+import { clearCart, deleteUserSession } from '@/store/store';
 
 import CartPopup from './CartPopup';
-// import { type Cart } from '@/api/types';
-
 import SearchBar from './SearchBar';
 import NavBar from './NavBar';
 import SideNavBar from './SideNavBar';
+import { Button } from './ui/button';
 
 export default function Header() {
+  const user = useUserAuthentication();
   const cart = useCart();
+  const dispatch = useAppDispatch();
+
+  const path = usePathname();
+
   const [showCartPopup, setShowCartPopup] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   // const dispatch = useDispatch();
@@ -49,6 +59,8 @@ export default function Header() {
     // }, [isHeaderVisible]);
   }, [isHeaderVisible]);
 
+  if (path === '/auth/signin' || path === '/auth/signup') return;
+
   return (
     <header
       className={`${
@@ -78,8 +90,19 @@ export default function Header() {
         <ShoppingCart color='#ffffff' />
       </button>
       <div className='order-5 text-white'>
-        <Link href='/auth/signin'>Sign In</Link>
-        <Link href='/auth/signup'>Sign Up</Link>
+        {user.isAuthenticated ? (
+          <Button
+            onClick={() => {
+              signOut();
+              dispatch(deleteUserSession());
+              dispatch(clearCart());
+            }}
+          >
+            Sign Out
+          </Button>
+        ) : (
+          <Link href='/auth/signin'>Sign In</Link>
+        )}
         {/* <SignedOut>
           <SignInButton />
         </SignedOut>

@@ -54,7 +54,10 @@ export function SigninForm() {
     const res = await loginUserAction(data);
     setLoading(false);
     if (!res.errors) form.reset();
-    if (res.data) router.push('/');
+    if (res.data) {
+      router.push('/');
+      router.refresh();
+    }
   }
   return (
     <div className='w-full max-w-md'>

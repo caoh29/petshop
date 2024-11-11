@@ -53,8 +53,36 @@ export function SigninForm() {
     setLoading(true);
     const res = await loginUserAction(data);
     setLoading(false);
-    if (!res.errors) form.reset();
-    if (res.data) {
+    if (res.errors) {
+      if ('email' in res.errors && res.errors.email && !res.errors.password) {
+        form.setError(
+          'email',
+          { message: res.errors.email[0] },
+          { shouldFocus: true },
+        );
+      } else if (
+        'password' in res.errors &&
+        res.errors.password &&
+        !res.errors.email
+      ) {
+        form.setError(
+          'password',
+          { message: res.errors.password[0] },
+          { shouldFocus: true },
+        );
+      } else if (
+        'email' in res.errors &&
+        'password' in res.errors &&
+        res.errors.password &&
+        res.errors.email
+      ) {
+        form.setError('email', { message: res.errors.email[0] });
+        form.setError('password', { message: res.errors.password[0] });
+      } else {
+        form.setError('root', { message: res.message });
+      }
+    } else {
+      form.reset();
       router.push('/');
       router.refresh();
     }
@@ -108,15 +136,9 @@ export function SigninForm() {
               />
             </CardContent>
             <CardFooter className='flex flex-col'>
-              {loading ? (
-                <Button type='submit' className='w-full' disabled>
-                  Signing In...
-                </Button>
-              ) : (
-                <Button type='submit' className='w-full'>
-                  Sign In
-                </Button>
-              )}
+              <Button type='submit' className='w-full' disabled={loading}>
+                {loading ? 'Signing In...' : 'Sign In'}
+              </Button>
             </CardFooter>
           </Card>
           <div className='mt-4 text-center text-sm'>

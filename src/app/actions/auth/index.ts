@@ -6,6 +6,7 @@ import { SchemaRegister, schemaRegister } from "@/lib/schemas/register-user";
 import { SchemaLogin, schemaLogin } from "@/lib/schemas/login-user";
 
 import { signIn, signOut } from "@/auth";
+import { AuthError } from "next-auth"
 
 import { saltAndHashPassword } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
@@ -37,9 +38,9 @@ export async function registerUserAction(data: SchemaRegister) {
     console.error("Error checking for existing user:", error);
     return {
       errors: {
-        email: ["Error checking for existing user"],
+        server: ["An error occurred while checking for existing user."],
       },
-      message: "Error checking for existing user. Failed to Register.",
+      message: "An error occurred. Failed to register.",
     };
   }
 
@@ -67,18 +68,18 @@ export async function registerUserAction(data: SchemaRegister) {
     } else {
       return {
         errors: {
-          email: ["Error registering user in DB"],
+          server: ["Error registering user in database."],
         },
-        message: "Error registering user in DB. Failed to Register.",
+        message: "Error registering user in database. Failed to Register.",
       };
     }
   } catch (error) {
-    console.error("Error registering user in DB:", error);
+    console.error("An error occurred while registering the user.", error);
     return {
       errors: {
-        email: ["Error registering user in DB"],
+        server: ["Error encrypting password"],
       },
-      message: "Error registering user in DB. Failed to Register.",
+      message: "Error encrypting password. Failed to Register.",
     };
   }
 }
@@ -111,9 +112,34 @@ export async function loginUserAction(data: SchemaLogin) {
     };
   } catch (error) {
     console.error("Error logging in user:", error);
+    if (error instanceof AuthError) {
+      // console.log(error.cause?.err?.message);
+      if (error.cause?.err?.message === "No user was found.") {
+        return {
+          errors: {
+            email: ["Invalid Email. No user registered with this email"],
+          },
+          message: "Email not found. Failed to Login.",
+        };
+      } else if (error.cause?.err?.message === "Invalid password.") {
+        return {
+          errors: {
+            password: ["Invalid password"],
+          },
+          message: "Invalid password. Failed to Login.",
+        };
+      } else {
+        return {
+          errors: {
+            server: ["An error occurred while logging in."],
+          },
+          message: "An error occurred. Failed to Login.",
+        };
+      }
+    }
     return {
       errors: {
-        email: ["Error logging in user"],
+        server: ["Error logging in user"],
       },
       message: "Error logging in user. Failed to Login.",
     };
@@ -136,7 +162,7 @@ export async function logoutUserAction() {
     console.error("Error logging out user:", error);
     return {
       errors: {
-        email: ["Error logging out user"],
+        server: ["Error logging out user"],
       },
       message: "Error logging out user. Failed to Logout.",
     };

@@ -5,7 +5,6 @@ import StoreProvider from './StoreProvider';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-// import { getCart } from '@/api/cart';
 import { getCartAction } from './actions/cart';
 // import { ClerkProvider } from '@clerk/nextjs';
 
@@ -23,8 +22,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const cart = await getCart();
-  // const userId = '272830cf-9709-41ef-81d3-24e10bfa2e39';
   const session = await auth();
   const userId = session?.user?.id ?? null;
 
@@ -32,8 +29,6 @@ export default async function RootLayout({
   if (userId !== null) {
     cart = await getCartAction(userId);
   }
-
-  console.log(session);
 
   return (
     // <ClerkProvider>

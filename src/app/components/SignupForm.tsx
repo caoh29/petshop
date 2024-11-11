@@ -54,13 +54,43 @@ export function SignupForm() {
     setLoading(true);
     const res = await registerUserAction(data);
     setLoading(false);
-    if (!res.errors) form.reset();
-    if (res.data) router.push('/auth/signin');
+    if (res.errors) {
+      if ('email' in res.errors && res.errors.email && !res.errors.password) {
+        form.setError(
+          'email',
+          { message: res.errors.email[0] },
+          { shouldFocus: true },
+        );
+      } else if (
+        'password' in res.errors &&
+        res.errors.password &&
+        !res.errors.email
+      ) {
+        form.setError(
+          'password',
+          { message: res.errors.password[0] },
+          { shouldFocus: true },
+        );
+      } else if (
+        'email' in res.errors &&
+        'password' in res.errors &&
+        res.errors.password &&
+        res.errors.email
+      ) {
+        form.setError('email', { message: res.errors.email[0] });
+        form.setError('password', { message: res.errors.password[0] });
+      } else {
+        form.setError('root', { message: res.message });
+      }
+    } else {
+      form.reset();
+      router.push('/auth/signin');
+      router.refresh();
+    }
   }
   return (
     <div className='w-full max-w-md'>
       <Form {...form}>
-        {/* <form action={registerUserAction}> */}
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader className='space-y-1'>
@@ -132,15 +162,9 @@ export function SignupForm() {
               />
             </CardContent>
             <CardFooter className='flex flex-col'>
-              {loading ? (
-                <Button type='submit' className='w-full' disabled>
-                  Signing Up...
-                </Button>
-              ) : (
-                <Button type='submit' className='w-full'>
-                  Sign Up
-                </Button>
-              )}
+              <Button type='submit' className='w-full' disabled={loading}>
+                {loading ? 'Signing Up...' : 'Sign Up'}
+              </Button>
             </CardFooter>
           </Card>
           <div className='mt-4 text-center text-sm'>

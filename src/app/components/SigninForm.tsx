@@ -62,7 +62,6 @@ export function SigninForm() {
   return (
     <div className='w-full max-w-md'>
       <Form {...form}>
-        {/* <form action={registerUserAction}> */}
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader className='space-y-1'>

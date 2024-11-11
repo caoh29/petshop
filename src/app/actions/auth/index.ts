@@ -5,7 +5,7 @@ import prisma from "../../../../prisma/db";
 import { SchemaRegister, schemaRegister } from "@/lib/schemas/register-user";
 import { SchemaLogin, schemaLogin } from "@/lib/schemas/login-user";
 
-import { signIn, auth } from "@/auth";
+import { signIn, signOut } from "@/auth";
 
 import { saltAndHashPassword } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
@@ -101,7 +101,7 @@ export async function loginUserAction(data: SchemaLogin) {
     });
 
     // check
-    if (callbackUrl) revalidatePath("/");
+    if (callbackUrl) revalidatePath(callbackUrl);
 
     return {
       data: {
@@ -116,6 +116,29 @@ export async function loginUserAction(data: SchemaLogin) {
         email: ["Error logging in user"],
       },
       message: "Error logging in user. Failed to Login.",
+    };
+  }
+}
+
+export async function logoutUserAction() {
+  try {
+    const isSignedOut = await signOut({ redirect: false });
+
+    // check
+    if (isSignedOut) revalidatePath("/");
+    return {
+      data: {
+        message: "User logged out successfully",
+        isSignedOut,
+      },
+    };
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    return {
+      errors: {
+        email: ["Error logging out user"],
+      },
+      message: "Error logging out user. Failed to Logout.",
     };
   }
 }

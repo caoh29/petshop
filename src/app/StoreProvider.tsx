@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 
 import { Provider } from 'react-redux';
-import { persistStore } from 'redux-persist';
+import { Persistor, persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { AppStore, makeStore, setCart, setUserSession } from '../store/store';
@@ -19,6 +19,7 @@ export default function StoreProvider({
   children: React.ReactNode;
 }>) {
   const storeRef = useRef<AppStore>();
+  const persistorRef = useRef<Persistor>();
   if (!storeRef.current) {
     // Create the store instance the first time this renders
     storeRef.current = makeStore();
@@ -26,9 +27,11 @@ export default function StoreProvider({
   }
 
   // If userId is null then persist the store in localStorage
-  let persistor: any = null;
   if (userId === null) {
-    persistor = persistStore(storeRef.current);
+    persistorRef.current = persistStore(storeRef.current);
+  } else {
+    persistorRef.current?.purge();
+    persistorRef.current?.pause();
   }
 
   useEffect(() => {
@@ -45,7 +48,7 @@ export default function StoreProvider({
   return (
     <Provider store={storeRef.current}>
       {userId === null ? (
-        <PersistGate loading={null} persistor={persistor}>
+        <PersistGate loading={null} persistor={persistorRef.current!}>
           {children}
         </PersistGate>
       ) : (

@@ -24,8 +24,6 @@ export default function AuthButton() {
     if (res.data?.isSignedOut) {
       dispatch(deleteUserSession());
       dispatch(clearCart());
-      // Add a short delay before refreshing the page
-      // await new Promise((resolve) => setTimeout(resolve, 100));
       router.refresh();
     } else {
       alert(res.message);

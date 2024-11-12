@@ -67,10 +67,7 @@ export const cartSlice = createSlice({
     },
 
     clearCart: (state) => {
-      state.cart = {
-        ...initialState.cart,
-        products: [],
-      };
+      state.cart = initialState.cart;
     },
   }
 });

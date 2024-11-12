@@ -11,6 +11,7 @@ import {
 } from 'redux-persist'
 
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+// import storage from 'redux-persist/lib/storage';
 
 import { cartSlice } from "./slices/cart";
 import { reviewsSlice } from "./slices/reviews";
@@ -36,8 +37,8 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 const persistConfig = {
   key: 'store',
   storage: storage,
-  whiteList: ['cart', 'user'],
-  blacklist: ['reviews'],
+  whiteList: ['cart'],
+  blacklist: ['reviews', 'user'],
 };
 
 const rootReducer = combineReducers({

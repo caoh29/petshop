@@ -38,7 +38,7 @@ export async function registerUserAction(data: SchemaRegister) {
     console.error("Error checking for existing user:", error);
     return {
       errors: {
-        server: ["An error occurred while checking for existing user."],
+        server: ["An error occurred while checking for existing user"],
       },
       message: "An error occurred. Failed to register.",
     };
@@ -68,7 +68,7 @@ export async function registerUserAction(data: SchemaRegister) {
     } else {
       return {
         errors: {
-          server: ["Error registering user in database."],
+          server: ["Error registering user in database"],
         },
         message: "Error registering user in database. Failed to Register.",
       };
@@ -114,14 +114,14 @@ export async function loginUserAction(data: SchemaLogin) {
     console.error("Error logging in user:", error);
     if (error instanceof AuthError) {
       // console.log(error.cause?.err?.message);
-      if (error.cause?.err?.message === "No user was found.") {
+      if (error.cause?.err?.message === "No user was found") {
         return {
           errors: {
             email: ["Invalid Email. No user registered with this email"],
           },
           message: "Email not found. Failed to Login.",
         };
-      } else if (error.cause?.err?.message === "Invalid password.") {
+      } else if (error.cause?.err?.message === "Invalid password") {
         return {
           errors: {
             password: ["Invalid password"],
@@ -131,7 +131,7 @@ export async function loginUserAction(data: SchemaLogin) {
       } else {
         return {
           errors: {
-            server: ["An error occurred while logging in."],
+            server: ["An error occurred while logging in"],
           },
           message: "An error occurred. Failed to Login.",
         };

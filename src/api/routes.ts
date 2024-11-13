@@ -240,6 +240,11 @@ export const ROUTES: Route[] = [
     href: '/contact',
   },
   {
+    title: 'Profile',
+    isProtected: false,
+    href: '/profile',
+  },
+  {
     title: 'Admin',
     isProtected: true,
     href: '/admin',

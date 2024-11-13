@@ -241,7 +241,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: 'Profile',
-    isProtected: false,
+    isProtected: true,
     href: '/profile',
   },
   {
@@ -287,4 +287,28 @@ const getAllValidRoutes = (routes: Route[], basePath: string = ''): Set<string> 
   return validRoutes;
 };
 
+const getAllProtectedRoutes = (routes: Route[], basePath: string = ''): Set<string> => {
+  const validRoutes = new Set<string>();
+
+  // const traverseRoutes = (routes: Route[], basePath: string): void => {
+  const traverseRoutes = (routes: Route[]): void => {
+    // Adding the filter so it only iterates over protected ones
+    routes.filter((route) => route.isProtected).forEach((route) => {
+      // const fullPath = `${basePath}${route.href ?? ''}`;
+      if (route.href) {
+        validRoutes.add(route.href);
+      }
+      if (route.children) {
+        traverseRoutes(route.children);
+      }
+    });
+  };
+
+  // traverseRoutes(routes, basePath);
+  traverseRoutes(routes);
+  return validRoutes;
+};
+
 export const VALID_ROUTES = getAllValidRoutes(ROUTES);
+
+export const PROTECTED_ROUTES = getAllProtectedRoutes(ROUTES);

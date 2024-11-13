@@ -85,7 +85,6 @@ export function SignupForm() {
     } else {
       form.reset();
       router.push('/auth/signin');
-      router.refresh();
     }
   }
   return (

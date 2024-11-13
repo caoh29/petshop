@@ -24,6 +24,7 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   const userId = session?.user?.id ?? null;
+  const isAdmin = session?.user?.isAdmin ?? false;
 
   let cart = null;
   if (userId !== null) {
@@ -34,7 +35,7 @@ export default async function RootLayout({
     // <ClerkProvider>
     <html lang='en'>
       <body>
-        <StoreProvider cart={cart} userId={userId}>
+        <StoreProvider cart={cart} userId={userId} isAdmin={isAdmin}>
           <Header />
           <main className=''>{children}</main>
           <Footer />

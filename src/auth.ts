@@ -1,4 +1,5 @@
-import NextAuth, { NextAuthConfig } from "next-auth"
+import NextAuth, { DefaultSession, NextAuthConfig } from "next-auth"
+import { JWT } from "next-auth/jwt"
 import Credentials from "next-auth/providers/credentials"
 
 import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -6,6 +7,27 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import prisma from "../prisma/db"
 import { schemaLogin } from "./lib/schemas/login-user"
 import { checkPassword } from "./lib/utils"
+
+declare module "next-auth" {
+  interface User {
+    isAdmin?: boolean;
+    isVerified?: boolean;
+  }
+
+  interface Session {
+    user: {
+      isAdmin: boolean;
+      isVerified: boolean;
+    } & DefaultSession["user"];
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string
+    isAdmin?: boolean
+  }
+}
 
 const config = {
   adapter: PrismaAdapter(prisma),
@@ -65,13 +87,15 @@ const config = {
   callbacks: {
     async jwt({ user, token }) {
       if (user) {
-        token.sub = user.id;
+        token.id = user.id;
+        token.isAdmin = user.isAdmin;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub!;
+        session.user.id = token.id!;
+        session.user.isAdmin = token.isAdmin ?? false;
       }
       return session;
     },

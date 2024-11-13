@@ -12,10 +12,12 @@ import { type Cart } from '@/api/types';
 export default function StoreProvider({
   cart,
   userId,
+  isAdmin,
   children,
 }: Readonly<{
   cart: Cart | null;
   userId: string | null;
+  isAdmin: boolean;
   children: React.ReactNode;
 }>) {
   const storeRef = useRef<AppStore>();
@@ -39,11 +41,12 @@ export default function StoreProvider({
       storeRef.current?.dispatch(
         setUserSession({
           userId,
+          isAdmin,
         }),
       );
       storeRef.current?.dispatch(setCart(cart));
     }
-  }, [cart, userId]);
+  }, [cart, userId, isAdmin]);
 
   return (
     <Provider store={storeRef.current}>

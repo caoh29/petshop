@@ -86,6 +86,28 @@ const config = {
         });
 
         if (user) {
+          if (!user.image || !user.name) {
+            const updatedUser = await prisma.user.update({
+              where: {
+                email: profile.email.toLowerCase(),
+              },
+              data: {
+                image: profile.picture,
+                name: profile.name,
+                isVerified: profile.email_verified,
+              },
+            });
+
+            return {
+              id: updatedUser.id,
+              name: updatedUser.name,
+              email: updatedUser.email,
+              image: updatedUser.image,
+              isAdmin: updatedUser.isAdmin ?? false,
+              isVerified: updatedUser.isVerified ?? false,
+            }
+          }
+
           return {
             id: user.id,
             name: user.name ?? `${user.firstName} ${user.lastName}`,
@@ -103,8 +125,8 @@ const config = {
           lastName: profile.family_name,
           email: profile.email,
           image: profile.picture,
+          isVerified: profile.email_verified,
           isAdmin: false,
-          isVerified: false,
         }
       },
     }),

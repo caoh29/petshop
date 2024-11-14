@@ -11,7 +11,7 @@ model User {
   id            String    @id @default(uuid()) // or cuid() if preferred
   name          String?
   email         String    @unique
-  password      String // Add as needed for credentials-based login
+  password      String? // Add as needed for credentials-based login
   emailVerified DateTime?
   image         String?
   createdAt     DateTime  @default(now())

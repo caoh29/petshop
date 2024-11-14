@@ -1,6 +1,7 @@
 import NextAuth, { DefaultSession, NextAuthConfig } from "next-auth"
-import { JWT } from "next-auth/jwt"
 import Credentials from "next-auth/providers/credentials"
+import Google from "next-auth/providers/google"
+import { JWT } from "next-auth/jwt"
 import { NextResponse } from "next/server"
 
 import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -56,7 +57,7 @@ const config = {
           throw new Error("No user was found")
         }
         // logic to salt and hash password
-        const isValidPassword = await checkPassword(password, user?.password);
+        const isValidPassword = await checkPassword(password, user?.password ?? '');
 
         if (!isValidPassword) {
           throw new Error("Invalid password")
@@ -74,7 +75,39 @@ const config = {
         };
       },
     }),
-    // google
+    Google({
+      allowDangerousEmailAccountLinking: true,
+      async profile(profile) {
+        // logic to verify if the user exists
+        const user = await prisma.user.findUnique({
+          where: {
+            email: profile.email.toLowerCase(),
+          },
+        });
+
+        if (user) {
+          return {
+            id: user.id,
+            name: user.name ?? `${user.firstName} ${user.lastName}`,
+            email: user.email,
+            image: user.image ?? undefined,
+            isAdmin: user.isAdmin ?? false,
+            isVerified: user.isVerified ?? false,
+          }
+        }
+
+        return {
+          id: profile.sub,
+          name: profile.name,
+          firstName: profile.given_name,
+          lastName: profile.family_name,
+          email: profile.email,
+          image: profile.picture,
+          isAdmin: false,
+          isVerified: false,
+        }
+      },
+    }),
     // other provider
   ],
   pages: {

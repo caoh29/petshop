@@ -1,6 +1,7 @@
 import NextAuth, { DefaultSession, NextAuthConfig } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import Credentials from "next-auth/providers/credentials"
+import { NextResponse } from "next/server"
 
 import { PrismaAdapter } from "@auth/prisma-adapter"
 
@@ -8,6 +9,7 @@ import prisma from "../prisma/db"
 import { schemaLogin } from "./lib/schemas/login-user"
 import { checkPassword } from "./lib/utils"
 import { PROTECTED_ROUTES } from "./api/routes"
+
 
 declare module "next-auth" {
   interface User {
@@ -103,13 +105,15 @@ const config = {
     async authorized({ auth, request: { nextUrl }, }) {
       const isLoggedIn = !!auth?.user;
       const isOnProtectedRoute = PROTECTED_ROUTES.has(nextUrl.pathname);
+
       if (isOnProtectedRoute && !isLoggedIn) {
         return false;
-      } else if (nextUrl.pathname.startsWith('/auth') && isLoggedIn) {
-        return false;
-      } else {
-        return true;
       }
+      if (nextUrl.pathname.startsWith('/auth') && isLoggedIn) {
+        return NextResponse.redirect(new URL('/', nextUrl));
+      }
+
+      return true;
     },
   },
 } satisfies NextAuthConfig

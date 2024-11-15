@@ -1,7 +1,7 @@
 'use client';
 
 import Total from './Total';
-import Taxes from './Taxes';
+// import Taxes from './Taxes';
 import Shipping from './Shipping';
 import Subtotal from './Subtotal';
 import { Button } from './ui/button';
@@ -9,6 +9,7 @@ import { Button } from './ui/button';
 import { useCart, useUser } from '../../hooks';
 // import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import Link from 'next/link';
+// import { Separator } from './ui/separator';
 
 export default function CartSummary() {
   const cart = useCart();
@@ -30,6 +31,7 @@ export default function CartSummary() {
           <Subtotal subtotal={subtotal} />
           <Shipping shipping={shipping} />
         </div>
+        {/* <Separator /> */}
         <div className='border-t-2 border-slate-400 border-solid pb-2 pt-6'>
           <Total total={total} />
         </div>

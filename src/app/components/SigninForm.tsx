@@ -28,6 +28,7 @@ import { Input } from './ui/input';
 import { Button } from './ui/button';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useUser } from '@/hooks';
 
 import { useForm } from 'react-hook-form';
 
@@ -38,8 +39,10 @@ import {
   SchemaLogin,
   defaultValues,
 } from '@/lib/schemas/login-user';
+
 export function SigninForm() {
   const router = useRouter();
+  const { redirectToPath } = useUser();
 
   const [loading, setLoading] = useState(false);
 
@@ -84,7 +87,7 @@ export function SigninForm() {
       }
     } else {
       form.reset();
-      router.push('/');
+      router.push(redirectToPath);
       router.refresh();
     }
   }
@@ -147,7 +150,15 @@ export function SigninForm() {
               <hr className='flex-1 border-b border-slate-500' />
             </div>
             <div className='mt-4 text-center text-sm'>
-              <Button onClick={() => signIn('google')}>Google</Button>
+              <Button
+                onClick={() =>
+                  signIn('google', {
+                    redirectTo: redirectToPath,
+                  })
+                }
+              >
+                Google
+              </Button>
             </div>
           </CardFooter>
         </Card>

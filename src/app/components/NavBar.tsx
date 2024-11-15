@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
-import { useUserAuthentication } from '@/hooks';
+import { useUser } from '@/hooks';
 
 // import { useHeaderVisibility } from '../../hooks';
 
@@ -22,7 +22,7 @@ export default function NavBar({
 
   // const isVisible = useHeaderVisibility();
 
-  const { isAdmin } = useUserAuthentication();
+  const { isAdmin } = useUser();
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({

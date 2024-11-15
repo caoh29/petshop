@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet';
-import { useUserAuthentication } from '@/hooks';
+import { useUser } from '@/hooks';
 
 export default function SideNavBar({
   className,
@@ -17,7 +17,7 @@ export default function SideNavBar({
     Record<string, boolean>
   >({});
 
-  const { isAdmin } = useUserAuthentication();
+  const { isAdmin } = useUser();
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({

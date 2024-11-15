@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppDispatch, useCart, useUserAuthentication } from '@/hooks';
+import { useAppDispatch, useCart, useUser } from '@/hooks';
 
 import { deleteProductFromCart } from '../../store/store';
 
@@ -22,7 +22,7 @@ export default function CartDeleteSelector({
   deleteProductCartAction,
 }: Readonly<Props>) {
   const dispatch = useAppDispatch();
-  const { userId, isAuthenticated } = useUserAuthentication();
+  const { userId, isAuthenticated } = useUser();
   // const cart = useCart();
 
   const handleDelete = async () => {

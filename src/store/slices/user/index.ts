@@ -4,12 +4,14 @@ export interface UserState {
   userId: string
   isAdmin: boolean
   isAuthenticated: boolean
+  redirectToPath: string
 }
 
 const initialUser: UserState = {
   userId: '',
   isAdmin: false,
   isAuthenticated: false,
+  redirectToPath: '',
 };
 
 export const userSlice = createSlice({
@@ -25,6 +27,10 @@ export const userSlice = createSlice({
       state.userId = '';
       state.isAdmin = false;
       state.isAuthenticated = false;
+      state.redirectToPath = '';
     },
+    setRedirectPath: (state, action: PayloadAction<string>) => {
+      state.redirectToPath = action.payload;
+    }
   },
 });

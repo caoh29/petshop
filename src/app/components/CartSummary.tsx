@@ -6,12 +6,13 @@ import Shipping from './Shipping';
 import Subtotal from './Subtotal';
 import { Button } from './ui/button';
 
-import { useCart } from '../../hooks';
+import { useCart, useUser } from '../../hooks';
 // import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import Link from 'next/link';
 
 export default function CartSummary() {
   const cart = useCart();
+  const { isAuthenticated } = useUser();
 
   const subtotal = cart.products.reduce(
     (a, b) => a + b.productPrice * b.quantity,
@@ -35,21 +36,20 @@ export default function CartSummary() {
           <Total total={total} />
         </div>
       </div>
-      {/* <SignedOut>
-        <Link href={'/checkout'}>
-          <Button className='w-full'>Guest Checkout</Button>
-        </Link>
-        <SignInButton>
-          <Button>Member Checkout</Button>
-        </SignInButton>
-      </SignedOut>
-      <SignedIn>
+      {isAuthenticated ? (
         <Link href={'/checkout'}>
           <Button className='w-full'>Checkout</Button>
         </Link>
-      </SignedIn> */}
-      <Button className='w-full'>Guest Checkout</Button>
-      <Button>Member Checkout</Button>
+      ) : (
+        <>
+          <Link href={'/checkout'}>
+            <Button className='w-full'>Guest Checkout</Button>
+          </Link>
+          <Link href={'/auth/signin'}>
+            <Button className='w-full'>Member Checkout</Button>
+          </Link>
+        </>
+      )}
       <Button>PayPal</Button>
     </div>
   );

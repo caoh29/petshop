@@ -2,7 +2,7 @@
 
 import { Minus, Plus } from 'lucide-react';
 
-import { useAppDispatch, useCart, useUserAuthentication } from '@/hooks';
+import { useAppDispatch, useCart, useUser } from '@/hooks';
 
 import { updateProductInCart } from '../../store/store';
 
@@ -29,7 +29,7 @@ export default function CartQuantitySelector({
   updateProductCartAction,
 }: Readonly<Props>) {
   const dispatch = useAppDispatch();
-  const { userId, isAuthenticated } = useUserAuthentication();
+  const { userId, isAuthenticated } = useUser();
   const cart = useCart();
 
   const handleUpdateQuantity = async (newQuantity: number) => {

@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { useAppDispatch, useUserAuthentication } from '../../hooks';
+import { useAppDispatch, useUser } from '../../hooks';
 
-import { clearCart, deleteUserSession } from '@/store/store';
+import { clearCart, deleteUserSession, setRedirectPath } from '@/store/store';
 
 import { logoutUserAction } from '../actions/auth';
 
@@ -16,9 +16,10 @@ import { Button } from './ui/button';
 export default function AuthButton() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const user = useUserAuthentication();
+  const { isAuthenticated } = useUser();
+  const pathname = usePathname();
 
-  const handleClick = async () => {
+  const handleSignOut = async () => {
     const res = await logoutUserAction();
 
     if (res.data?.isSignedOut) {
@@ -30,12 +31,18 @@ export default function AuthButton() {
     }
   };
 
+  const handleSignIn = () => {
+    dispatch(setRedirectPath(pathname));
+  };
+
   return (
     <div className='order-5 text-white'>
-      {user.isAuthenticated ? (
-        <Button onClick={handleClick}>Sign Out</Button>
+      {isAuthenticated ? (
+        <Button onClick={handleSignOut}>Sign Out</Button>
       ) : (
-        <Link href='/auth/signin'>Sign In</Link>
+        <Link href='/auth/signin' onClick={handleSignIn}>
+          <Button>Sign In</Button>
+        </Link>
       )}
       {/* <SignedOut>
       <SignInButton />

@@ -6,7 +6,7 @@ export const useCart = () => useSelector((state: RootState) => state.cart.cart);
 export const useReviews = () =>
   useSelector((state: RootState) => state.reviews.reviews);
 
-export const useUserAuthentication = () =>
+export const useUser = () =>
   useSelector((state: RootState) => state.user);
 
 

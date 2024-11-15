@@ -4,7 +4,7 @@ import { useDispatch, useStore } from 'react-redux';
 
 import { Review } from '@/api/types';
 import { setReviews, RootState } from '../../store/store';
-import { useReviews, useUserAuthentication } from '../../hooks';
+import { useReviews, useUser } from '../../hooks';
 
 interface ReviewsProps {
   productId: string;
@@ -32,7 +32,7 @@ export default function Reviews({
   const [reviewText, setReviewText] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
 
-  const { isAuthenticated, userId } = useUserAuthentication();
+  const { isAuthenticated, userId } = useUser();
 
   const dispatch = useDispatch();
 

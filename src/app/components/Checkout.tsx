@@ -2,9 +2,13 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import {
+  schemaCheckout,
+  SchemaCheckout,
+  defaultValues,
+} from '@/lib/schemas/checkout';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Check, CreditCard } from 'lucide-react';
+import { Check, CreditCard, Store, Truck } from 'lucide-react';
 
 import { Button } from '@/app/components/ui/button';
 import {
@@ -19,36 +23,24 @@ import { Input } from '@/app/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import { Separator } from '@/app/components/ui/separator';
 import { ScrollArea } from '@/app/components/ui/scroll-area';
-
-const formSchema = z.object({
-  email: z.string().email(),
-  firstName: z.string().min(2),
-  lastName: z.string().min(2),
-  address: z.string().min(5),
-  city: z.string().min(2),
-  postalCode: z.string().min(5),
-  phone: z.string().min(10),
-  paymentMethod: z.enum(['stripe', 'paypal']),
-});
+import { Checkbox } from './ui/checkbox';
+import { useUser } from '@/hooks';
 
 export default function Checkout() {
+  const user = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      firstName: '',
-      lastName: '',
-      address: '',
-      city: '',
-      postalCode: '',
-      phone: '',
-      paymentMethod: 'stripe',
-    },
+  const getDefaultValues = async (userId: string) => {
+    if (userId.length === 0) return defaultValues;
+    return await getUserDefaultValuesAction(userId);
+  };
+
+  const form = useForm<SchemaCheckout>({
+    resolver: zodResolver(schemaCheckout),
+    defaultValues: getDefaultValues(user.userId),
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: SchemaCheckout) {
     setIsSubmitting(true);
     try {
       // Here you would integrate with your payment provider
@@ -61,12 +53,52 @@ export default function Checkout() {
   }
 
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <div className='mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8'>
+    <div className='min-h-screen bg-gray-200'>
+      <div className='mx-auto max-w-7xl p-4 sm:px-6 lg:px-8'>
         <div className='grid gap-8 lg:grid-cols-2'>
+          {/* Order Summary */}
+          <div className='rounded-lg bg-white p-8 shadow-sm lg:sticky lg:top-4'>
+            <h2 className='text-lg font-semibold'>Order Summary</h2>
+            <ScrollArea className='h-[300px] py-4'>
+              <div className='space-y-4'>
+                {/* Example order items - replace with your actual cart items */}
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center gap-4'>
+                    <div className='h-16 w-16 rounded-md bg-gray-100' />
+                    <div>
+                      <p className='font-medium'>Product Name</p>
+                      <p className='text-sm text-gray-500'>Quantity: 1</p>
+                    </div>
+                  </div>
+                  <p className='font-medium'>$99.00</p>
+                </div>
+              </div>
+            </ScrollArea>
+            <Separator className='my-4' />
+            <div className='space-y-2'>
+              <div className='flex justify-between'>
+                <p>Subtotal</p>
+                <p className='font-medium'>$99.00</p>
+              </div>
+              <div className='flex justify-between'>
+                <p>Shipping</p>
+                <p className='font-medium'>$9.99</p>
+              </div>
+              <div className='flex justify-between'>
+                <p>Tax</p>
+                <p className='font-medium'>$10.99</p>
+              </div>
+              <Separator />
+              <div className='flex justify-between text-lg font-semibold'>
+                <p>Total</p>
+                <p>$119.98</p>
+              </div>
+            </div>
+          </div>
+
           {/* Checkout Form */}
           <div className='rounded-lg bg-white p-8 shadow-sm'>
-            <h1 className='text-2xl font-semibold'>Checkout</h1>
+            <h1 className='text-2xl font-semibold'>Delivery</h1>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -74,12 +106,37 @@ export default function Checkout() {
               >
                 <FormField
                   control={form.control}
-                  name='email'
+                  name='deliveryMethod'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Delivery Method</FormLabel>
                       <FormControl>
-                        <Input placeholder='your@email.com' {...field} />
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className='grid gap-4'
+                        >
+                          <div className='flex items-center space-x-2 rounded-lg border p-4'>
+                            <RadioGroupItem value='ship' id='ship' />
+                            <FormLabel
+                              htmlFor='ship'
+                              className='flex items-center gap-2'
+                            >
+                              <Truck className='h-4 w-4' />
+                              Ship
+                            </FormLabel>
+                          </div>
+                          <div className='flex items-center space-x-2 rounded-lg border p-4'>
+                            <RadioGroupItem value='pickup' id='pickup' />
+                            <FormLabel
+                              htmlFor='pickup'
+                              className='flex items-center gap-2'
+                            >
+                              <Store className='h-4 w-4' />
+                              Pickup in store
+                            </FormLabel>
+                          </div>
+                        </RadioGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -118,7 +175,20 @@ export default function Checkout() {
                   name='address'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Address</FormLabel>
+                      <FormLabel>Address Line 1</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='address2'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Address Line 2 (Optional)</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -142,7 +212,7 @@ export default function Checkout() {
                   />
                   <FormField
                     control={form.control}
-                    name='postalCode'
+                    name='zip'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Postal Code</FormLabel>
@@ -154,6 +224,66 @@ export default function Checkout() {
                     )}
                   />
                 </div>
+                <div className='grid gap-4 sm:grid-cols-2'>
+                  <FormField
+                    control={form.control}
+                    name='state'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>State/Province</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='country'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Country</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name='saveAddress'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-nowrap gap-2 items-center'>
+                      <FormLabel className='order-2'>
+                        Save shipping address information for faster checkout
+                      </FormLabel>
+                      <FormControl className='order-1 h-4 w-4'>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Separator />
+                <FormField
+                  control={form.control}
+                  name='email'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder='your@email.com' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name='phone'
@@ -162,6 +292,20 @@ export default function Checkout() {
                       <FormLabel>Phone</FormLabel>
                       <FormControl>
                         <Input type='tel' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Separator />
+                <FormField
+                  control={form.control}
+                  name='promoCode'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Promo Code</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -228,46 +372,6 @@ export default function Checkout() {
                 </Button>
               </form>
             </Form>
-          </div>
-
-          {/* Order Summary */}
-          <div className='rounded-lg bg-white p-8 shadow-sm lg:sticky lg:top-4'>
-            <h2 className='text-lg font-semibold'>Order Summary</h2>
-            <ScrollArea className='h-[300px] py-4'>
-              <div className='space-y-4'>
-                {/* Example order items - replace with your actual cart items */}
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-4'>
-                    <div className='h-16 w-16 rounded-md bg-gray-100' />
-                    <div>
-                      <p className='font-medium'>Product Name</p>
-                      <p className='text-sm text-gray-500'>Quantity: 1</p>
-                    </div>
-                  </div>
-                  <p className='font-medium'>$99.00</p>
-                </div>
-              </div>
-            </ScrollArea>
-            <Separator className='my-4' />
-            <div className='space-y-2'>
-              <div className='flex justify-between'>
-                <p>Subtotal</p>
-                <p className='font-medium'>$99.00</p>
-              </div>
-              <div className='flex justify-between'>
-                <p>Shipping</p>
-                <p className='font-medium'>$9.99</p>
-              </div>
-              <div className='flex justify-between'>
-                <p>Tax</p>
-                <p className='font-medium'>$10.99</p>
-              </div>
-              <Separator />
-              <div className='flex justify-between text-lg font-semibold'>
-                <p>Total</p>
-                <p>$119.98</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

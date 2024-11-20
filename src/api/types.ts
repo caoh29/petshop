@@ -136,6 +136,7 @@ export interface Cart {
   id: string;
   userId: string;
   products: SelectedProduct[];
+  validatedProducts: { productId: string, isAvailable: boolean }[];
 }
 
 export interface Category {

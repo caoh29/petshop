@@ -4,22 +4,18 @@ import { useAppDispatch, useCart, useUser } from '@/hooks';
 
 import { deleteProductFromCart } from '../../store/store';
 
+import { deleteProductCartAction } from '@/app/actions';
+
 interface Props {
   id: string;
   size?: string;
   color?: string;
-  deleteProductCartAction: (
-    id: string,
-    options: { size?: string; color?: string },
-    userId?: string,
-  ) => Promise<number>;
 }
 
 export default function CartDeleteSelector({
   id,
   size,
   color,
-  deleteProductCartAction,
 }: Readonly<Props>) {
   const dispatch = useAppDispatch();
   const { userId, isAuthenticated } = useUser();

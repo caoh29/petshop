@@ -283,28 +283,81 @@ export const deleteProductCartAction = async (
   throw new Error('Product not found in cart');
 }
 
+export const validateStockAction = async (selectedProducts: SelectedProduct[]): Promise<{ productId: string; isAvailable: boolean }[]> => {
+  const stockValidation = await Promise.all(
+    selectedProducts.map(async (item) => {
+      const product = await prisma.product.findUnique({
+        where: { id: item.productId },
+      });
 
-export const clearCartAction = async (userId?: string): Promise<Cart> => {
-  if (!userId) {
-    throw new Error('User ID is required');
-  }
+      if (!product) {
+        throw new Error(`Product with ID ${item.productId} not found`);
+      }
 
-  // Get the cart
-  const cart = await prisma.cart.findUnique({
-    where: { userId },
+      return {
+        productId: item.productId,
+        isAvailable: product.stock >= item.quantity
+      };
+    })
+  );
+
+  return stockValidation;
+}
+
+export const reserveStockAction = async (selectedProducts: SelectedProduct[]) => {
+  return prisma.$transaction(async (tx) => {
+    const updateResults = await Promise.all(
+      selectedProducts.map(async (item) => {
+        // Check stock before updating
+        const product = await tx.product.findUnique({
+          where: { id: item.productId },
+        });
+
+        if (!product || product.stock < item.quantity) {
+          throw new Error(`Insufficient stock for product ${item.productId}`);
+        }
+
+        return tx.product.update({
+          where: { id: item.productId },
+          data: {
+            stock: { decrement: item.quantity },
+            reservedStock: { increment: item.quantity }
+          }
+        });
+      })
+    );
+
+    if (updateResults.length === selectedProducts.length) return {
+      message: 'Stock reserved',
+      productsUpdated: updateResults.length
+    };
+    throw new Error('Error reserving stock');
+  }, {
+    maxWait: 5000,
+    timeout: 10000
   });
+}
 
-  if (!cart) {
-    throw new Error('Cart not found');
-  }
+export const releaseReservedStockAction = async (selectedProducts: SelectedProduct[]) => {
+  return prisma.$transaction(async (tx) => {
+    const updateResults = await Promise.all(
+      selectedProducts.map(async (item) => {
+        return await tx.product.update({
+          where: { id: item.productId },
+          data: {
+            reservedStock: { decrement: item.quantity }
+          }
+        });
 
-  // Delete all selected products for this cart
-  await prisma.selectedProduct.deleteMany({
-    where: {
-      cartId: cart.id,
-    },
+      })
+    );
+
+    return {
+      message: 'Reserved stock released',
+      productsUpdated: updateResults.length
+    };
+  }, {
+    maxWait: 5000,
+    timeout: 10000
   });
-
-  // Return the empty cart
-  return await getCart(userId);
-};
+}

@@ -5,30 +5,12 @@ import Link from 'next/link';
 
 import { useCart } from '../../hooks';
 
-import { SelectedProduct } from '@/api/types';
-
 import CartQuantitySelector from './CartQuantitySelector';
 import CartDeleteSelector from './CartDeleteSelector';
 
-interface Props {
-  updateProductCartAction: (
-    id: string,
-    quantity: number,
-    options: { size?: string; color?: string },
-    userId?: string,
-  ) => Promise<SelectedProduct>;
-  deleteProductCartAction: (
-    id: string,
-    options: { size?: string; color?: string },
-    userId?: string,
-  ) => Promise<number>;
-}
-
-export default function CartList({
-  updateProductCartAction,
-  deleteProductCartAction,
-}: Readonly<Props>) {
+export default function CartList() {
   const cart = useCart();
+
   return (
     <div className='container'>
       <h1 className='text-2xl font-bold mb-4'>Bag</h1>
@@ -50,11 +32,22 @@ export default function CartList({
               />
               <div className='flex-grow'>
                 <Link
-                  className='text-lg font-semibold hover:underline'
+                  className={`text-lg font-semibold hover:underline`}
                   href={`/${item.productCategory}/${item.productSubcategory}/${item.productId}`}
                 >
                   {item.productName}
                 </Link>
+                {cart.validatedProducts.find(
+                  (product) => product.productId === item.productId,
+                ) &&
+                  !cart.validatedProducts.find(
+                    (product) => product.productId === item.productId,
+                  )?.isAvailable && (
+                    <p className='text-red-500 w-3/4'>
+                      The item quantity is not valid, reduce the quantity or
+                      remove the product
+                    </p>
+                  )}
                 <p className='text-gray-600'>${item.productPrice.toFixed(2)}</p>
                 {item.size && !item.color && (
                   <p className='text-sm text-gray-500'>Size: {item.size}</p>
@@ -73,13 +66,11 @@ export default function CartList({
                 id={item.productId}
                 size={item.size}
                 color={item.color}
-                updateProductCartAction={updateProductCartAction}
               />
               <CartDeleteSelector
                 id={item.productId}
                 size={item.size}
                 color={item.color}
-                deleteProductCartAction={deleteProductCartAction}
               />
             </li>
           ))}

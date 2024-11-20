@@ -7,7 +7,7 @@ import { useAppDispatch, useUser } from '../../hooks';
 
 import { clearCart, deleteUserSession, setRedirectPath } from '@/store/store';
 
-import { logoutUserAction } from '../actions/auth';
+import { logoutUserAction } from '../actions';
 
 import { Button } from './ui/button';
 

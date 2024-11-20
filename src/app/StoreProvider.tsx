@@ -44,7 +44,12 @@ export default function StoreProvider({
           isAdmin,
         }),
       );
-      storeRef.current?.dispatch(setCart(cart));
+      storeRef.current?.dispatch(
+        setCart({
+          ...cart,
+          validatedProducts: [],
+        }),
+      );
     }
   }, [cart, userId, isAdmin]);
 

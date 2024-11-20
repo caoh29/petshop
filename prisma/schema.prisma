@@ -130,6 +130,7 @@ model Product {
   stock            Int
   isOutOfStock     Boolean
   createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
   reservedStock    Int               @default(0)
   reviews          Review[]
   selectedProducts SelectedProduct[]

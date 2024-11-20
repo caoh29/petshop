@@ -25,6 +25,7 @@ import { Separator } from '@/app/components/ui/separator';
 import { ScrollArea } from '@/app/components/ui/scroll-area';
 import { Checkbox } from './ui/checkbox';
 import { useUser } from '@/hooks';
+import { getUserDefaultValuesAction } from '../actions';
 
 export default function Checkout() {
   const user = useUser();
@@ -32,7 +33,15 @@ export default function Checkout() {
 
   const getDefaultValues = async (userId: string) => {
     if (userId.length === 0) return defaultValues;
-    return await getUserDefaultValuesAction(userId);
+    const userData = await getUserDefaultValuesAction(userId);
+    if (!userData) return defaultValues;
+    return {
+      ...userData,
+      paymentMethod: 'stripe' as const,
+      deliveryMethod: 'ship' as const,
+      saveAddress: false,
+      promoCode: '',
+    };
   };
 
   const form = useForm<SchemaCheckout>({

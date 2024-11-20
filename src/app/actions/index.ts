@@ -7,3 +7,5 @@ export { addReviewAction } from './reviews';
 export { getCategoriesAction } from './categories';
 
 export { registerUserAction, loginUserAction, logoutUserAction } from './auth';
+
+export { getUserDefaultValuesAction } from './checkout';

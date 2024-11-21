@@ -31,22 +31,22 @@ export default function Checkout() {
   const user = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const getDefaultValues = async (userId: string) => {
-    if (userId.length === 0) return defaultValues;
-    const userData = await getUserDefaultValuesAction(userId);
+  const getDefaultValues = async () => {
+    if (user.userId.length === 0) return defaultValues;
+    const userData = await getUserDefaultValuesAction(user.userId);
     if (!userData) return defaultValues;
     return {
       ...userData,
-      paymentMethod: 'stripe' as const,
-      deliveryMethod: 'ship' as const,
-      saveAddress: false,
+      paymentMethod: 'stripe',
+      deliveryMethod: 'ship',
+      saveAddress: true,
       promoCode: '',
-    };
+    } satisfies SchemaCheckout;
   };
 
   const form = useForm<SchemaCheckout>({
     resolver: zodResolver(schemaCheckout),
-    defaultValues: getDefaultValues(user.userId),
+    defaultValues: getDefaultValues,
   });
 
   async function onSubmit(values: SchemaCheckout) {

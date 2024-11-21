@@ -119,28 +119,28 @@ Visit [http://localhost:3000](http://localhost:3000) to see your application run
 
 ```
 petshop/
-├── .next/                  # Next.js build output
-├── node_modules/          # Project dependencies
-├── postgresql/           # Database container data
-├── prisma/              # Database schema and migrations
-├── public/              # Static assets and images
-├── src/                 # Source code
-│   ├── api/            # API routes and handlers
-│   ├── app/            # Next.js app router components and pages
-│   ├── hooks/          # Custom React hooks
-│   ├── lib/            # Utility functions and shared logic
-│   ├── mocks/          # Mock data and testing utilities
-│   ├── store/          # Redux store configuration
-│   ├── middleware.ts   # Next.js middleware configuration
-│   └── auth.ts         # Authentication configuration
-├── .env                # Environment variables
-├── docker-compose.yaml # Docker configuration
-├── next.config.js     # Next.js configuration
-├── package.json       # Project dependencies and scripts
-├── postcss.config.js  # PostCSS configuration
-├── README.md         # Project documentation
-├── tailwind.config.js # Tailwind CSS configuration
-└── tsconfig.json     # TypeScript configuration
+├── .next/                    # Next.js build output
+├── node_modules/             # Project dependencies
+├── postgresql/               # Database container data
+├── prisma/                   # Database schema and migrations
+├── public/                   # Static assets and images
+├── src/                      # Source code
+│   ├── api/                  # API routes and handlers
+│   ├── app/                  # Next.js app router components and pages
+│   ├── hooks/                # Custom React hooks
+│   ├── lib/                  # Utility functions and shared logic
+│   ├── mocks/                # Mock data and testing utilities
+│   ├── store/                # Redux store configuration
+│   ├── middleware.ts         # Next.js middleware configuration
+│   └── auth.ts               # Authentication configuration
+├── .env                      # Environment variables
+├── docker-compose.yaml       # Docker configuration
+├── next.config.js            # Next.js configuration
+├── package.json              # Project dependencies and scripts
+├── postcss.config.js         # PostCSS configuration
+├── README.md                 # Project documentation
+├── tailwind.config.js        # Tailwind CSS configuration
+└── tsconfig.json             # TypeScript configuration
 ```
 
 ### Key Directories Explained
@@ -235,6 +235,6 @@ Give a ⭐️ if this project helped you!
 
 ## 📞 Contact
 
-Your Name - [@92iMAHC](https://x.com/92iMAHC) - email@example.com
+Camilo Ordonez Herrera - [@92iMAHC](https://x.com/92iMAHC) - cronox20@gmail.com
 
 Project Link: [https://github.com/caoh29/petshop](https://github.com/caoh29/petshop)

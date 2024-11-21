@@ -235,6 +235,6 @@ Give a ⭐️ if this project helped you!
 
 ## 📞 Contact
 
-Your Name - [@92iMAHC](https://x.com/92iMAHC) - email@example.com
+Camilo Ordonez Herrera - [@92iMAHC](https://x.com/92iMAHC) - cronox20@gmail.com
 
 Project Link: [https://github.com/caoh29/petshop](https://github.com/caoh29/petshop)

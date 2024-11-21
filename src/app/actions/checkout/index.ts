@@ -1,3 +1,7 @@
+"use server";
+
+import { capitalizeString } from "@/lib/utils";
+
 import prisma from "../../../../prisma/db";
 
 export const getUserDefaultValuesAction = async (userId: string) => {
@@ -25,12 +29,12 @@ export const getUserDefaultValuesAction = async (userId: string) => {
     }
 
     return {
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: capitalizeString(user.firstName),
+      lastName: capitalizeString(user.lastName),
       email: user.email,
-      address: user.address ?? '',
-      address2: user.address2 ?? '',
-      city: user.city ?? '',
+      address: capitalizeString(user.address ?? ''),
+      address2: capitalizeString(user.address2 ?? ''),
+      city: capitalizeString(user.city ?? ''),
       state: user.state ?? '',
       zip: user.zip ?? '',
       country: user.country ?? '',

@@ -2,6 +2,10 @@
 
 import Checkout from '@/app/components/Checkout';
 
-export default function CheckoutPage() {
-  return <Checkout />;
+import { auth } from '@/auth';
+
+export default async function CheckoutPage() {
+  const session = await auth();
+
+  return <Checkout user={session?.user} />;
 }

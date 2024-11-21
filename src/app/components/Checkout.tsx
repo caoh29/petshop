@@ -24,16 +24,29 @@ import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import { Separator } from '@/app/components/ui/separator';
 import { ScrollArea } from '@/app/components/ui/scroll-area';
 import { Checkbox } from './ui/checkbox';
-import { useUser } from '@/hooks';
-import { getUserDefaultValuesAction } from '../actions';
 
-export default function Checkout() {
-  const user = useUser();
+import { getUserDefaultValuesAction } from '../actions';
+import { User } from 'next-auth';
+
+interface Props {
+  user:
+    | ({
+        isAdmin: boolean;
+        isVerified: boolean;
+      } & User)
+    | undefined;
+}
+
+type DeliveryMethod = 'ship' | 'pickup' | undefined;
+
+export default function Checkout({ user }: Readonly<Props>) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deliveryMethod, setDeliveryMethod] =
+    useState<DeliveryMethod>(undefined);
 
   const getDefaultValues = async () => {
-    if (user.userId.length === 0) return defaultValues;
-    const userData = await getUserDefaultValuesAction(user.userId);
+    if (!user || !user.id) return defaultValues;
+    const userData = await getUserDefaultValuesAction(user.id);
     if (!userData) return defaultValues;
     return {
       ...userData,
@@ -121,8 +134,11 @@ export default function Checkout() {
                       <FormLabel>Delivery Method</FormLabel>
                       <FormControl>
                         <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            setDeliveryMethod(value as DeliveryMethod);
+                          }}
+                          defaultValue={deliveryMethod}
                           className='grid gap-4'
                         >
                           <div className='flex items-center space-x-2 rounded-lg border p-4'>
@@ -151,134 +167,144 @@ export default function Checkout() {
                     </FormItem>
                   )}
                 />
-                <div className='grid gap-4 sm:grid-cols-2'>
-                  <FormField
-                    control={form.control}
-                    name='firstName'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>First Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='lastName'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Last Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <FormField
-                  control={form.control}
-                  name='address'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address Line 1</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='address2'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address Line 2 (Optional)</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className='grid gap-4 sm:grid-cols-2'>
-                  <FormField
-                    control={form.control}
-                    name='city'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>City</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='zip'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Postal Code</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className='grid gap-4 sm:grid-cols-2'>
-                  <FormField
-                    control={form.control}
-                    name='state'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>State/Province</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='country'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Country</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <FormField
-                  control={form.control}
-                  name='saveAddress'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-nowrap gap-2 items-center'>
-                      <FormLabel className='order-2'>
-                        Save shipping address information for faster checkout
-                      </FormLabel>
-                      <FormControl className='order-1 h-4 w-4'>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {deliveryMethod && (
+                  <>
+                    <Separator />
+                    <div className='grid gap-4 sm:grid-cols-2'>
+                      <FormField
+                        control={form.control}
+                        name='firstName'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>First Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='lastName'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Last Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </>
+                )}
+                {deliveryMethod === 'ship' && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name='address'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Address Line 1</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='address2'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Address Line 2 (Optional)</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className='grid gap-4 sm:grid-cols-2'>
+                      <FormField
+                        control={form.control}
+                        name='city'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>City</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='zip'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Postal Code</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className='grid gap-4 sm:grid-cols-2'>
+                      <FormField
+                        control={form.control}
+                        name='state'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>State/Province</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='country'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Country</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name='saveAddress'
+                      render={({ field }) => (
+                        <FormItem className='flex flex-nowrap gap-2 items-center'>
+                          <FormLabel className='order-2'>
+                            Save shipping address information for faster
+                            checkout
+                          </FormLabel>
+                          <FormControl className='order-1 h-4 w-4'>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
                 <Separator />
                 <FormField
                   control={form.control}

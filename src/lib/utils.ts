@@ -8,7 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export function capitalizeString(str: string) {
   if (!str) return '';
-  return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  if (str.includes('-')) return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 export function debounce(func: Function, delay: number) {

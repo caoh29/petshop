@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,40 +8,98 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  email      String    @unique
-  password   String
-  createdAt  DateTime  @default(now())
-  firstName  String
-  lastName   String
-  address    String
-  address2   String?
-  city       String
-  state      String
-  zip        String
-  country    String
-  phone      String
-  isAdmin    Boolean   @default(false)
-  isVerified Boolean   @default(false)
-  orders     Order[]
-  reviews    Review[]
-  cart       Cart?
-  wishlist   Product[] @relation("UserWishlist")
+  id             String          @id @default(uuid())
+  name           String?
+  email          String          @unique
+  password       String?
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  firstName      String
+  lastName       String
+  address        String?
+  address2       String?
+  city           String?
+  state          String?
+  zip            String?
+  country        String?
+  phone          String?
+  isAdmin        Boolean?        @default(false)
+  isVerified     Boolean?        @default(false)
+  accounts       Account[]
+  Authenticators Authenticator[]
+  cart           Cart?
+  orders         Order[]
+  reviews        Review[]
+  sessions       Session[]
+  wishlist       Product[]       @relation("UserWishlist")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
 
 model Order {
   id              String            @id @default(uuid())
   userId          String
-  user            User              @relation(fields: [userId], references: [id])
-  products        SelectedProduct[]
   total           Float
   createdAt       DateTime          @default(now())
   status          String
   shippingAddress String
   billingAddress  String
   paymentMethod   String
-  shippingMethod  String
-  trackingNumber  String
+  trackingNumber  String?
+  deliveryMethod  String
+  pickupPerson    String?
+  user            User              @relation(fields: [userId], references: [id])
+  products        SelectedProduct[]
 }
 
 model Review {
@@ -56,9 +108,9 @@ model Review {
   text      String
   createdAt DateTime @default(now())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
   productId String
   product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Product {
@@ -71,7 +123,6 @@ model Product {
   category         String
   subcategory      String
   description      String
-  reviews          Review[]
   sizes            String[]
   availableSizes   String[]
   colors           String[]
@@ -79,8 +130,11 @@ model Product {
   stock            Int
   isOutOfStock     Boolean
   createdAt        DateTime          @default(now())
-  wishedBy         User[]            @relation("UserWishlist")
+  updatedAt        DateTime          @updatedAt
+  reservedStock    Int               @default(0)
+  reviews          Review[]
   selectedProducts SelectedProduct[]
+  wishedBy         User[]            @relation("UserWishlist")
 }
 
 model SelectedProduct {
@@ -89,11 +143,11 @@ model SelectedProduct {
   size      String?
   color     String?
   productId String
-  product   Product @relation(fields: [productId], references: [id])
   orderId   String?
-  order     Order?  @relation(fields: [orderId], references: [id])
   cartId    String?
   cart      Cart?   @relation(fields: [cartId], references: [id])
+  order     Order?  @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Cart {

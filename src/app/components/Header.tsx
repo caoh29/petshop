@@ -1,24 +1,26 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
-// import Link from 'next/link';
 
-import { ShoppingCart } from 'lucide-react';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
+import { usePathname } from 'next/navigation';
+
+import { useState, useEffect, useRef } from 'react';
 
 // import { useDispatch } from 'react-redux';
 // import { setHeaderVisibility } from '../../store/store';
 
 import { useCart } from '../../hooks';
 
-import CartPopup from './CartPopup';
-// import { type Cart } from '@/api/types';
-
 import SearchBar from './SearchBar';
 import NavBar from './NavBar';
 import SideNavBar from './SideNavBar';
+import Logo from './Logo';
+import ShoppingCart from './ShoppingCart';
+import AuthButton from './AuthButton';
 
 export default function Header() {
   const cart = useCart();
+
+  const path = usePathname();
+
   const [showCartPopup, setShowCartPopup] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   // const dispatch = useDispatch();
@@ -49,6 +51,8 @@ export default function Header() {
     // }, [isHeaderVisible]);
   }, [isHeaderVisible]);
 
+  if (path === '/auth/signin' || path === '/auth/signup') return;
+
   return (
     <header
       className={`${
@@ -57,34 +61,18 @@ export default function Header() {
       } sticky z-10 flex items-center justify-center py-4 px-8 bg-[#2A5135] h-20 gap-8 transition-all ease-in duration-500`}
     >
       <SideNavBar className='lg:hidden' />
-      <h2 className='scroll-m-20 text-3xl font-semibold text-amber-500 tracking-tight mx-auto order-2 lg:order-1 lg:mx-0'>
-        PetShop
-      </h2>
+      <Logo className='order-2 lg:order-1 lg:mx-0' />
       <NavBar
         className='hidden lg:block lg:mx-auto lg:order-2'
         isVisible={isHeaderVisible}
       />
       <SearchBar className='order-3' />
-      <button
-        className='relative order-4'
-        onClick={() => {
-          setShowCartPopup(!showCartPopup);
-        }}
-      >
-        <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
-          {cart.products.length}
-        </span>
-        {showCartPopup && <CartPopup setShowCartPopup={setShowCartPopup} />}
-        <ShoppingCart color='#ffffff' />
-      </button>
-      <div className='order-5 text-white'>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </div>
+      <ShoppingCart
+        showCartPopup={showCartPopup}
+        setShowCartPopup={setShowCartPopup}
+        cart={cart}
+      />
+      <AuthButton />
     </header>
   );
 }

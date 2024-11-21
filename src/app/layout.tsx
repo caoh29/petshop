@@ -5,9 +5,10 @@ import StoreProvider from './StoreProvider';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-// import { getCart } from '@/api/cart';
 import { getCartAction } from './actions/cart';
-import { ClerkProvider } from '@clerk/nextjs';
+// import { ClerkProvider } from '@clerk/nextjs';
+
+import { auth } from '@/auth';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -21,10 +22,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const cart = await getCart();
-  // const userId = '272830cf-9709-41ef-81d3-24e10bfa2e39';
-  const userId = null;
-  // const { userId } = auth();
+  const session = await auth();
+  const userId = session?.user?.id ?? null;
+  const isAdmin = session?.user?.isAdmin ?? false;
 
   let cart = null;
   if (userId !== null) {
@@ -32,16 +32,16 @@ export default async function RootLayout({
   }
 
   return (
-    <ClerkProvider>
-      <html lang='en'>
-        <body>
-          <StoreProvider cart={cart} userId={userId}>
-            <Header />
-            <main className=''>{children}</main>
-            <Footer />
-          </StoreProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    // <ClerkProvider>
+    <html lang='en'>
+      <body>
+        <StoreProvider cart={cart} userId={userId} isAdmin={isAdmin}>
+          <Header />
+          <main className=''>{children}</main>
+          <Footer />
+        </StoreProvider>
+      </body>
+    </html>
+    // </ClerkProvider>
   );
 }

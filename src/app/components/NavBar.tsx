@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
+import { useUser } from '@/hooks';
 
 // import { useHeaderVisibility } from '../../hooks';
 
@@ -20,6 +21,8 @@ export default function NavBar({
   >({});
 
   // const isVisible = useHeaderVisibility();
+
+  const { isAdmin, isAuthenticated } = useUser();
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({
@@ -54,10 +57,16 @@ export default function NavBar({
     }
   }, [isVisible]);
 
+  const filterRoutes = () => {
+    if (!isAuthenticated) return ROUTES.filter((route) => !route.isProtected);
+    if (isAdmin) return ROUTES;
+    return ROUTES.filter((route) => route.href !== '/admin');
+  };
+
   return (
     <nav className={`flex justify-between items-center mx-auto ${className}`}>
       <ul className='flex flex-col flex-nowrap lg:flex-row list-none text-white'>
-        {ROUTES.map((component) => (
+        {filterRoutes().map((component) => (
           <li key={component.title} className='mx-4'>
             {component.href && (
               <Link onClick={resetStates} href={component.href}>

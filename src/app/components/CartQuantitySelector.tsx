@@ -2,23 +2,18 @@
 
 import { Minus, Plus } from 'lucide-react';
 
-import { useAppDispatch, useCart, useUserAuthentication } from '@/hooks';
+import { useAppDispatch, useCart, useUser } from '@/hooks';
 
 import { updateProductInCart } from '../../store/store';
 
 import { SelectedProduct } from '@/api/types';
+import { updateProductCartAction } from '@/app/actions';
 
 interface Props {
   quantity: number;
   id: string;
   size?: string;
   color?: string;
-  updateProductCartAction: (
-    id: string,
-    quantity: number,
-    options: { size?: string; color?: string },
-    userId?: string,
-  ) => Promise<SelectedProduct>;
 }
 
 export default function CartQuantitySelector({
@@ -26,10 +21,9 @@ export default function CartQuantitySelector({
   quantity,
   size,
   color,
-  updateProductCartAction,
 }: Readonly<Props>) {
   const dispatch = useAppDispatch();
-  const { userId, isAuthenticated } = useUserAuthentication();
+  const { userId, isAuthenticated } = useUser();
   const cart = useCart();
 
   const handleUpdateQuantity = async (newQuantity: number) => {

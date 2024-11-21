@@ -61,7 +61,7 @@ export default function CartPopup({
             className='mt-6 px-4 py-2 text-lg font-bold text-white bg-blue-800 rounded-lg'
             href={'/cart'}
           >
-            Checkout
+            Review Cart
           </Link>
         </div>
       </div>

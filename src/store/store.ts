@@ -11,6 +11,7 @@ import {
 } from 'redux-persist'
 
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+// import storage from 'redux-persist/lib/storage';
 
 import { cartSlice } from "./slices/cart";
 import { reviewsSlice } from "./slices/reviews";
@@ -36,8 +37,8 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 const persistConfig = {
   key: 'store',
   storage: storage,
-  whiteList: ['cart', 'user'],
-  blacklist: ['reviews'],
+  whiteList: ['cart'],
+  blacklist: ['reviews', 'user'],
 };
 
 const rootReducer = combineReducers({
@@ -60,9 +61,9 @@ export const makeStore = () => {
   });
 }
 
-export const { setCart, addProductToCart, updateProductInCart, deleteProductFromCart, clearCart } = cartSlice.actions;
+export const { setCart, addProductToCart, updateProductInCart, deleteProductFromCart, clearCart, setValidatedProducts } = cartSlice.actions;
 export const { setReviews } = reviewsSlice.actions;
-export const { setUserSession } = userSlice.actions;
+export const { setUserSession, deleteUserSession, setRedirectPath } = userSlice.actions;
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore["getState"]>;

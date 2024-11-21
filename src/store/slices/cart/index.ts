@@ -10,6 +10,7 @@ const initialState: CartState = {
     id: "",
     userId: "",
     products: [],
+    validatedProducts: []
   },
 };
 
@@ -67,10 +68,11 @@ export const cartSlice = createSlice({
     },
 
     clearCart: (state) => {
-      state.cart = {
-        ...initialState.cart,
-        products: [],
-      };
+      state.cart = initialState.cart;
     },
+
+    setValidatedProducts: (state, action: PayloadAction<{ productId: string; isAvailable: boolean; }[]>) => {
+      state.cart.validatedProducts = action.payload;
+    }
   }
 });

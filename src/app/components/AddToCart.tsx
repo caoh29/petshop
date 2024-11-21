@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 
 import { addProductToCart } from '../../store/store';
 
-import { useAppDispatch, useUserAuthentication } from '@/hooks';
+import { useAppDispatch, useUser } from '@/hooks';
 
 import { Product, SelectedProduct, type Cart } from '@/api/types';
 
@@ -29,7 +29,7 @@ export default function AddToCart({
   colors?: string[];
 }>) {
   const dispatch = useAppDispatch();
-  const { userId, isAuthenticated } = useUserAuthentication();
+  const { userId, isAuthenticated } = useUser();
 
   const router = useRouter();
   const params = useParams();

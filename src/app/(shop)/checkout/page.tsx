@@ -1,5 +1,3 @@
-// import Address from '@/app/components/Address';
-
 import Checkout from '@/app/components/Checkout';
 
 import { auth } from '@/auth';

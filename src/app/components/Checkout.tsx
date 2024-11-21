@@ -1,5 +1,7 @@
 'use client';
 
+import { User } from 'next-auth';
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -24,9 +26,10 @@ import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import { Separator } from '@/app/components/ui/separator';
 import { ScrollArea } from '@/app/components/ui/scroll-area';
 import { Checkbox } from './ui/checkbox';
+import CartList from './CartList';
+import CartSummary from './CartSummary';
 
 import { getUserDefaultValuesAction } from '../actions';
-import { User } from 'next-auth';
 
 interface Props {
   user:
@@ -80,11 +83,11 @@ export default function Checkout({ user }: Readonly<Props>) {
         <div className='grid gap-8 lg:grid-cols-2'>
           {/* Order Summary */}
           <div className='rounded-lg bg-white p-8 shadow-sm lg:sticky lg:top-4'>
-            <h2 className='text-lg font-semibold'>Order Summary</h2>
-            <ScrollArea className='h-[300px] py-4'>
+            <h1 className='text-2xl font-semibold'>Order Summary</h1>
+            <ScrollArea className='h-[300px] p-4'>
               <div className='space-y-4'>
                 {/* Example order items - replace with your actual cart items */}
-                <div className='flex items-center justify-between'>
+                {/* <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-4'>
                     <div className='h-16 w-16 rounded-md bg-gray-100' />
                     <div>
@@ -93,29 +96,12 @@ export default function Checkout({ user }: Readonly<Props>) {
                     </div>
                   </div>
                   <p className='font-medium'>$99.00</p>
-                </div>
+                </div> */}
+                <CartList variant />
               </div>
             </ScrollArea>
             <Separator className='my-4' />
-            <div className='space-y-2'>
-              <div className='flex justify-between'>
-                <p>Subtotal</p>
-                <p className='font-medium'>$99.00</p>
-              </div>
-              <div className='flex justify-between'>
-                <p>Shipping</p>
-                <p className='font-medium'>$9.99</p>
-              </div>
-              <div className='flex justify-between'>
-                <p>Tax</p>
-                <p className='font-medium'>$10.99</p>
-              </div>
-              <Separator />
-              <div className='flex justify-between text-lg font-semibold'>
-                <p>Total</p>
-                <p>$119.98</p>
-              </div>
-            </div>
+            <CartSummary variant />
           </div>
 
           {/* Checkout Form */}

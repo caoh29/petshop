@@ -29,3 +29,7 @@ export async function saltAndHashPassword(password: string) {
 export async function checkPassword(password: string, hashedPassword: string) {
   return await bcrypt.compare(password, hashedPassword);
 }
+
+export function convertToCurrency(amount: number) {
+  return Math.round(amount * 100);
+}

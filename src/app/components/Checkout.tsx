@@ -11,7 +11,6 @@ import {
   schemaShip,
 } from '@/lib/schemas/checkout';
 
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { CreditCard, Store, Truck } from 'lucide-react';
@@ -40,6 +39,8 @@ import {
   createPaymentIntentAction,
   getUserDefaultValuesAction,
 } from '../actions';
+import { useCart } from '@/hooks';
+import { convertToCurrency } from '@/lib/utils';
 
 interface Props {
   user: (User & { isAdmin: boolean; isVerified: boolean }) | undefined;
@@ -59,6 +60,8 @@ const createDynamicSchema = (deliveryMethod: string | undefined) => {
 };
 
 export default function Checkout({ user }: Props) {
+  const cart = useCart();
+
   const [deliveryMethod, setDeliveryMethod] = useState<'ship' | 'pickup'>(
     'ship',
   );
@@ -109,6 +112,16 @@ export default function Checkout({ user }: Props) {
     mode: 'onChange',
   });
 
+  const subtotal = cart.products.reduce(
+    (a, b) => a + b.productPrice * b.quantity,
+    0,
+  );
+  const shipping = subtotal >= 75 || subtotal === 0 ? 0 : 9.99;
+
+  const tax = (subtotal + shipping) * 0.13;
+
+  const total = subtotal + shipping + tax;
+
   // Watch delivery method to trigger form updates
   const watchDeliveryMethod = form.watch('deliveryMethod');
 
@@ -123,9 +136,8 @@ export default function Checkout({ user }: Props) {
   const onSubmit = async (values: SchemaCheckout) => {
     setIsSubmitting(true);
     try {
-      const amount = 1000; // Replace with actual cart total
       const res = await createPaymentIntentAction(
-        amount,
+        convertToCurrency(total),
         `Payment for ${values.firstName} ${values.lastName}`,
       );
 

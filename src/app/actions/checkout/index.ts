@@ -4,6 +4,10 @@ import { capitalizeString } from "@/lib/utils";
 
 import prisma from "../../../../prisma/db";
 
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
+
 export const getUserDefaultValuesAction = async (userId: string) => {
   try {
     const user = await prisma.user.findUnique({
@@ -43,4 +47,14 @@ export const getUserDefaultValuesAction = async (userId: string) => {
   } catch (error) {
     console.error(error);
   }
+}
+
+export const createPaymentIntentAction = async (amount: number, description: string) => {
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount,
+    description,
+    currency: 'CAD',
+  });
+
+  return paymentIntent.client_secret;
 }

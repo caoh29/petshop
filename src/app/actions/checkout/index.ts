@@ -49,12 +49,14 @@ export const getUserDefaultValuesAction = async (userId: string) => {
   }
 }
 
-export const createPaymentIntentAction = async (amount: number, description: string) => {
+export const createPaymentIntentAction = async (amount: number) => {
   const paymentIntent = await stripe.paymentIntents.create({
     amount,
-    description,
-    currency: 'CAD',
+    currency: 'cad',
+    automatic_payment_methods: {
+      enabled: true,
+    },
   });
 
-  return paymentIntent.client_secret;
+  return { clientSecret: paymentIntent.client_secret };
 }

@@ -44,6 +44,7 @@ const getCart = async (userId: string): Promise<Cart> => {
       id: newCart.id,
       userId: newCart.userId,
       products: [],
+      validatedProducts: [],
     };
   }
 
@@ -65,6 +66,7 @@ const getCart = async (userId: string): Promise<Cart> => {
         quantity: quantity,
       }
     )),
+    validatedProducts: [],
   };
 
   return cart;

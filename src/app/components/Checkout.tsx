@@ -32,25 +32,19 @@ import CartList from './CartList';
 import CartSummary from './CartSummary';
 import PaymentForm from './PaymentForm';
 
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
+import { getUserDefaultValuesAction } from '../actions';
 
 import {
-  createPaymentIntentAction,
-  getUserDefaultValuesAction,
-} from '../actions';
-import { useCart } from '@/hooks';
-import { convertToCurrency } from '@/lib/utils';
+  PaymentElement,
+  useElements,
+  useStripe,
+} from '@stripe/react-stripe-js';
 
 interface Props {
   user: (User & { isAdmin: boolean; isVerified: boolean }) | undefined;
 }
 
 type SchemaCheckout = SchemaBase | (SchemaBase & SchemaShip);
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-);
 
 // Dynamically combine schemas based on delivery method
 const createDynamicSchema = (deliveryMethod: string | undefined) => {
@@ -59,14 +53,16 @@ const createDynamicSchema = (deliveryMethod: string | undefined) => {
   });
 };
 
-export default function Checkout({ user }: Props) {
-  const cart = useCart();
-
+export default function Checkout({ user }: Readonly<Props>) {
   const [deliveryMethod, setDeliveryMethod] = useState<'ship' | 'pickup'>(
     'ship',
   );
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [clientSecret, setClientSecret] = useState('');
+
+  // Stripe payments
+  const stripe = useStripe();
+  const elements = useElements();
 
   // Initialize form with dynamic validation
   const form = useForm<SchemaCheckout>({
@@ -112,16 +108,6 @@ export default function Checkout({ user }: Props) {
     mode: 'onChange',
   });
 
-  const subtotal = cart.products.reduce(
-    (a, b) => a + b.productPrice * b.quantity,
-    0,
-  );
-  const shipping = subtotal >= 75 || subtotal === 0 ? 0 : 9.99;
-
-  const tax = (subtotal + shipping) * 0.13;
-
-  const total = subtotal + shipping + tax;
-
   // Watch delivery method to trigger form updates
   const watchDeliveryMethod = form.watch('deliveryMethod');
 
@@ -136,16 +122,7 @@ export default function Checkout({ user }: Props) {
   const onSubmit = async (values: SchemaCheckout) => {
     setIsSubmitting(true);
     try {
-      const res = await createPaymentIntentAction(
-        convertToCurrency(total),
-        `Payment for ${values.firstName} ${values.lastName}`,
-      );
-
-      if (!res) {
-        throw new Error('Failed to create payment intent');
-      }
-
-      setClientSecret(res);
+      console.log(values);
     } catch (error) {
       console.error('Checkout error:', error);
       form.setError('root', {
@@ -427,7 +404,7 @@ export default function Checkout({ user }: Props) {
                                 className='flex items-center gap-2'
                               >
                                 <CreditCard className='h-4 w-4' />
-                                Credit Card
+                                Card
                               </FormLabel>
                             </div>
                             <div className='flex items-center space-x-2 rounded-lg border p-4'>
@@ -445,14 +422,15 @@ export default function Checkout({ user }: Props) {
                       </FormItem>
                     )}
                   />
-
-                  {clientSecret && (
-                    <Elements stripe={stripePromise} options={{ clientSecret }}>
-                      <PaymentForm />
-                    </Elements>
+                  {/* Ensure PaymentElement is rendered only when Stripe is selected */}
+                  {form.watch('paymentMethod') === 'stripe' && (
+                    <PaymentElement
+                      options={{
+                        layout: 'accordion',
+                      }}
+                    />
                   )}
                 </div>
-
                 {/* Promo Code */}
                 <FormField
                   control={form.control}

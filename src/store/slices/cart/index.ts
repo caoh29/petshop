@@ -1,4 +1,4 @@
-import { Cart, SelectedProduct } from "@/api/types";
+import { Cart, SelectedProduct, ValidProduct } from "@/api/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartState {
@@ -71,7 +71,7 @@ export const cartSlice = createSlice({
       state.cart = initialState.cart;
     },
 
-    setValidatedProducts: (state, action: PayloadAction<{ productId: string; isAvailable: boolean; }[]>) => {
+    setValidatedProducts: (state, action: PayloadAction<ValidProduct[]>) => {
       state.cart.validatedProducts = action.payload;
     }
   }

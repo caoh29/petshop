@@ -30,15 +30,14 @@ import { ScrollArea } from '@/app/components/ui/scroll-area';
 import { Checkbox } from './ui/checkbox';
 import CartList from './CartList';
 import CartSummary from './CartSummary';
-import PaymentForm from './PaymentForm';
+// import PaymentForm from './PaymentForm';
+
+// import { useCart } from '@/hooks';
 
 import { getUserDefaultValuesAction } from '../actions';
 
-import {
-  PaymentElement,
-  useElements,
-  useStripe,
-} from '@stripe/react-stripe-js';
+import { PaymentElement } from '@stripe/react-stripe-js';
+// import StripeContext from './StripeContext';
 
 interface Props {
   user: (User & { isAdmin: boolean; isVerified: boolean }) | undefined;
@@ -60,10 +59,6 @@ export default function Checkout({ user }: Readonly<Props>) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Stripe payments
-  const stripe = useStripe();
-  const elements = useElements();
-
   // Initialize form with dynamic validation
   const form = useForm<SchemaCheckout>({
     resolver: zodResolver(createDynamicSchema(deliveryMethod)),
@@ -76,7 +71,6 @@ export default function Checkout({ user }: Readonly<Props>) {
           phone: '',
           deliveryMethod: 'ship',
           paymentMethod: 'stripe',
-          promoCode: '',
           // Shipping-specific fields
           address: '',
           address2: '',
@@ -101,7 +95,6 @@ export default function Checkout({ user }: Readonly<Props>) {
         country: userData?.country ?? '',
         deliveryMethod: 'ship',
         paymentMethod: 'stripe',
-        promoCode: '',
         saveAddress: true,
       } satisfies SchemaCheckout;
     },
@@ -397,16 +390,25 @@ export default function Checkout({ user }: Readonly<Props>) {
                             value={field.value}
                             className='grid gap-4'
                           >
-                            <div className='flex items-center space-x-2 rounded-lg border p-4'>
-                              <RadioGroupItem value='stripe' id='stripe' />
-                              <FormLabel
-                                htmlFor='stripe'
-                                className='flex items-center gap-2'
-                              >
-                                <CreditCard className='h-4 w-4' />
-                                Card
-                              </FormLabel>
-                            </div>
+                            {form.watch('paymentMethod') !== 'stripe' && (
+                              <div className='flex items-center space-x-2 rounded-lg border p-4'>
+                                <RadioGroupItem value='stripe' id='stripe' />
+                                <FormLabel
+                                  htmlFor='stripe'
+                                  className='flex items-center gap-2'
+                                >
+                                  <CreditCard className='h-4 w-4' />
+                                  Card
+                                </FormLabel>
+                              </div>
+                            )}
+                            {form.watch('paymentMethod') === 'stripe' && (
+                              <PaymentElement
+                                options={{
+                                  layout: 'accordion',
+                                }}
+                              />
+                            )}
                             <div className='flex items-center space-x-2 rounded-lg border p-4'>
                               <RadioGroupItem value='paypal' id='paypal' />
                               <FormLabel
@@ -422,30 +424,7 @@ export default function Checkout({ user }: Readonly<Props>) {
                       </FormItem>
                     )}
                   />
-                  {/* Ensure PaymentElement is rendered only when Stripe is selected */}
-                  {form.watch('paymentMethod') === 'stripe' && (
-                    <PaymentElement
-                      options={{
-                        layout: 'accordion',
-                      }}
-                    />
-                  )}
                 </div>
-                {/* Promo Code */}
-                <FormField
-                  control={form.control}
-                  name='promoCode'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Promo Code</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 {/* Submit Button */}
                 <Button
                   type='submit'

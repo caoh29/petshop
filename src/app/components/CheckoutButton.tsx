@@ -54,7 +54,6 @@ export default function CheckoutButton() {
           </Link>
         </>
       )}
-      <Button>PayPal</Button>
     </>
   );
 }

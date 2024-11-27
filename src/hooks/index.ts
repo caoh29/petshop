@@ -9,5 +9,8 @@ export const useReviews = () =>
 export const useUser = () =>
   useSelector((state: RootState) => state.user);
 
+export const useCheckout = () =>
+  useSelector((state: RootState) => state.checkout);
+
 
 export const useAppDispatch: () => AppDispatch = useDispatch;

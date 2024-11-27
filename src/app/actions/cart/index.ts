@@ -1,6 +1,6 @@
 'use server';
 
-import { Cart, SelectedProduct } from '@/api/types';
+import { Cart, SelectedProduct, ValidProduct } from '@/api/types';
 import prisma from "../../../../prisma/db";
 
 const getCart = async (userId: string): Promise<Cart> => {
@@ -285,7 +285,7 @@ export const deleteProductCartAction = async (
   throw new Error('Product not found in cart');
 }
 
-export const validateStockAction = async (selectedProducts: SelectedProduct[]): Promise<{ productId: string; isAvailable: boolean }[]> => {
+export const validateStockAction = async (selectedProducts: SelectedProduct[]): Promise<ValidProduct[]> => {
   const stockValidation = await Promise.all(
     selectedProducts.map(async (item) => {
       const product = await prisma.product.findUnique({
@@ -298,7 +298,8 @@ export const validateStockAction = async (selectedProducts: SelectedProduct[]): 
 
       return {
         productId: item.productId,
-        isAvailable: product.stock >= item.quantity
+        isAvailable: product.stock >= item.quantity,
+        quantity: item.quantity
       };
     })
   );

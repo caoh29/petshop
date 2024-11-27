@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface ProductImageGalleryProps {
+interface Props {
   images: string[];
   productName: string;
   productImage: string;
@@ -14,7 +14,7 @@ export default function ProductImageGallery({
   images,
   productName,
   productImage,
-}: Readonly<ProductImageGalleryProps>) {
+}: Readonly<Props>) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handlePrevImage = () => {

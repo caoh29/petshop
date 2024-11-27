@@ -10,9 +10,10 @@ import CartDeleteSelector from './CartDeleteSelector';
 
 interface Props {
   variant?: boolean;
+  userId: string | null;
 }
 
-export default function CartList({ variant = false }: Readonly<Props>) {
+export default function CartList({ variant = false, userId }: Readonly<Props>) {
   const cart = useCart();
 
   return (
@@ -85,11 +86,13 @@ export default function CartList({ variant = false }: Readonly<Props>) {
                     id={item.productId}
                     size={item.size}
                     color={item.color}
+                    userId={userId}
                   />
                   <CartDeleteSelector
                     id={item.productId}
                     size={item.size}
                     color={item.color}
+                    userId={userId}
                   />
                 </>
               )}

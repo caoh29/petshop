@@ -13,10 +13,10 @@ export default function ShoppingCart({
   cart,
   showCartPopup,
   setShowCartPopup,
-}: Props) {
+}: Readonly<Props>) {
   return (
-    <button
-      className='relative order-4'
+    <div
+      className='relative order-4 hover:cursor-pointer'
       onClick={() => {
         setShowCartPopup(!showCartPopup);
       }}
@@ -26,6 +26,6 @@ export default function ShoppingCart({
       </span>
       {showCartPopup && <CartPopup setShowCartPopup={setShowCartPopup} />}
       <ShoppingCartIcon color='#ffffff' />
-    </button>
+    </div>
   );
 }

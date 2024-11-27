@@ -4,9 +4,9 @@ import { useDispatch, useStore } from 'react-redux';
 
 import { Review } from '@/api/types';
 import { setReviews, RootState } from '../../store/store';
-import { useReviews, useUser } from '../../hooks';
+import { useReviews } from '../../hooks';
 
-interface ReviewsProps {
+interface Props {
   productId: string;
   reviews: Review[];
   addReviewAction: (
@@ -15,13 +15,15 @@ interface ReviewsProps {
     rating: number,
     userId: string,
   ) => Promise<Review[]>;
+  userId: string | null;
 }
 
 export default function Reviews({
   reviews: initialReviews,
   addReviewAction,
   productId,
-}: Readonly<ReviewsProps>) {
+  userId,
+}: Readonly<Props>) {
   const store = useStore<RootState>();
   const initialized = useRef(false);
   if (!initialized.current) {
@@ -31,8 +33,6 @@ export default function Reviews({
   const reviews = useReviews();
   const [reviewText, setReviewText] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
-
-  const { isAuthenticated, userId } = useUser();
 
   const dispatch = useDispatch();
 
@@ -51,6 +51,8 @@ export default function Reviews({
       <form
         onSubmit={async (e) => {
           e.preventDefault();
+          if (!userId) return;
+
           dispatch(
             setReviews(
               await addReviewAction(
@@ -87,7 +89,7 @@ export default function Reviews({
         </div>
         <div className='flex justify-end'>
           <button
-            disabled={!reviewText || !isAuthenticated}
+            disabled={!reviewText || !userId}
             className='mt-6 px-8 py-2 text-lg font-bold text-white bg-blue-800 rounded-lg disabled:bg-gray-500 disabled:cursor-not-allowed'
           >
             Submit Review

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+
 import { signIn } from 'next-auth/react';
 
 import { useState } from 'react';
@@ -28,7 +28,6 @@ import { Input } from './ui/input';
 import { Button } from './ui/button';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUser } from '@/hooks';
 
 import { useForm } from 'react-hook-form';
 
@@ -41,9 +40,6 @@ import {
 } from '@/lib/schemas/login-user';
 
 export function SigninForm() {
-  const router = useRouter();
-  const { redirectToPath } = useUser();
-
   const [loading, setLoading] = useState(false);
 
   // Define form
@@ -87,8 +83,7 @@ export function SigninForm() {
       }
     } else {
       form.reset();
-      router.push(redirectToPath);
-      router.refresh();
+      window.location.replace('/');
     }
   }
   return (
@@ -153,7 +148,7 @@ export function SigninForm() {
               <Button
                 onClick={() =>
                   signIn('google', {
-                    redirectTo: redirectToPath,
+                    redirectTo: '/',
                   })
                 }
               >

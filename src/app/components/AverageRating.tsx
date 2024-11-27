@@ -6,11 +6,13 @@ import { Review } from '@/api/types';
 import { setReviews, RootState } from '../../store/store';
 import { useReviews } from '../../hooks';
 
+interface Props {
+  reviews: Review[];
+}
+
 export default function AverageRating({
   reviews: initialReviews,
-}: {
-  reviews: Review[];
-}) {
+}: Readonly<Props>) {
   const store = useStore<RootState>();
   const initialized = useRef(false);
   if (!initialized.current) {

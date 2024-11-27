@@ -5,13 +5,12 @@ import Image from 'next/image';
 import { Card, CardContent } from './ui/card';
 import { capitalizeString } from '@/lib/utils';
 
-export default function PetCard({
-  name,
-  image,
-}: {
+interface Props {
   name: string;
   image: string | null;
-}) {
+}
+
+export default function PetCard({ name, image }: Readonly<Props>) {
   const [hovered, setHovered] = useState(false);
 
   return (

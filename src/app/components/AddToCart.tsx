@@ -6,17 +6,12 @@ import { Button } from './ui/button';
 
 import { addProductToCart } from '../../store/store';
 
-import { useAppDispatch, useUser } from '@/hooks';
+import { useAppDispatch } from '@/hooks';
 
-import { Product, SelectedProduct, type Cart } from '@/api/types';
+import { Product, SelectedProduct } from '@/api/types';
 
-export default function AddToCart({
-  addProductToCartAction,
-  disabled,
-  product,
-  sizes,
-  colors,
-}: Readonly<{
+interface Props {
+  userId: string | null;
   addProductToCartAction: (
     id: string,
     quantity: number,
@@ -27,9 +22,17 @@ export default function AddToCart({
   product: Product;
   sizes?: string[];
   colors?: string[];
-}>) {
+}
+
+export default function AddToCart({
+  userId,
+  addProductToCartAction,
+  disabled,
+  product,
+  sizes,
+  colors,
+}: Readonly<Props>) {
   const dispatch = useAppDispatch();
-  const { userId, isAuthenticated } = useUser();
 
   const router = useRouter();
   const params = useParams();
@@ -54,7 +57,7 @@ export default function AddToCart({
 
     let selectedProduct: SelectedProduct;
 
-    if (isAuthenticated) {
+    if (userId) {
       selectedProduct = await addProductToCartAction(
         product.id,
         quantity,

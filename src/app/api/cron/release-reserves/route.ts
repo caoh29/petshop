@@ -12,8 +12,8 @@ export async function GET() {
       const productsWithReservedStock = await tx.product.findMany({
         where: {
           reservedStock: { gt: 0 },
-          updatedAt: { lte: new Date(Date.now() - 1000 * 60 * 60 * 24) } // 24 hours
-          // updatedAt: { lte: new Date(Date.now()) } // Now
+          // updatedAt: { lte: new Date(Date.now() - 1000 * 60 * 60 * 24) } // 24 hours
+          updatedAt: { lte: new Date(Date.now()) } // Now
         }
       });
 

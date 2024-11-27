@@ -95,19 +95,16 @@ export async function loginUserAction(data: SchemaLogin) {
   }
 
   try {
-    const callbackUrl = await signIn("credentials", {
+    await signIn("credentials", {
       email: validatedFields.data.email,
       password: validatedFields.data.password,
       redirect: false,
     });
 
-    // check
-    if (callbackUrl) revalidatePath(callbackUrl);
-
     return {
       data: {
         message: "User logged in successfully",
-        callbackUrl,
+        isSignedIn: true,
       },
     };
   } catch (error) {
@@ -149,9 +146,6 @@ export async function loginUserAction(data: SchemaLogin) {
 export async function logoutUserAction() {
   try {
     const isSignedOut = await signOut({ redirect: false });
-
-    // check
-    if (isSignedOut) revalidatePath("/");
     return {
       data: {
         message: "User logged out successfully",

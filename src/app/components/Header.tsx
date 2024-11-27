@@ -16,7 +16,12 @@ import Logo from './Logo';
 import ShoppingCart from './ShoppingCart';
 import AuthButton from './AuthButton';
 
-export default function Header() {
+interface Props {
+  userId: string | null;
+  isAdmin: boolean;
+}
+
+export default function Header({ userId, isAdmin }: Readonly<Props>) {
   const cart = useCart();
 
   const path = usePathname();
@@ -60,11 +65,13 @@ export default function Header() {
         // headerVisibility ? 'top-0 ' : '-top-20'
       } sticky z-10 flex items-center justify-center py-4 px-8 bg-[#2A5135] h-20 gap-8 transition-all ease-in duration-500`}
     >
-      <SideNavBar className='lg:hidden' />
+      <SideNavBar className='lg:hidden' isAdmin={isAdmin} userId={userId} />
       <Logo className='order-2 lg:order-1 lg:mx-0' />
       <NavBar
         className='hidden lg:block lg:mx-auto lg:order-2'
         isVisible={isHeaderVisible}
+        isAdmin={isAdmin}
+        userId={userId}
       />
       <SearchBar className='order-3' />
       <ShoppingCart
@@ -72,7 +79,7 @@ export default function Header() {
         setShowCartPopup={setShowCartPopup}
         cart={cart}
       />
-      <AuthButton />
+      <AuthButton userId={userId} />
     </header>
   );
 }

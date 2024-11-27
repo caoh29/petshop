@@ -8,9 +8,9 @@ import { useCart } from '../../hooks';
 
 export default function CartPopup({
   setShowCartPopup,
-}: {
+}: Readonly<{
   setShowCartPopup: Dispatch<SetStateAction<boolean>>;
-}) {
+}>) {
   const cart = useCart();
 
   return (

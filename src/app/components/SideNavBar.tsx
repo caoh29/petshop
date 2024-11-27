@@ -5,19 +5,24 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet';
-import { useUser } from '@/hooks';
+
+interface Props {
+  className?: string;
+  isAdmin: boolean;
+  userId: string | null;
+}
 
 export default function SideNavBar({
   className,
-}: Readonly<{ className?: string }>) {
+  isAdmin,
+  userId,
+}: Readonly<Props>) {
   const [showCategoryList, setShowCategoryList] = useState<
     Record<string, boolean>
   >({});
   const [showSubcategoryList, setShowSubcategoryList] = useState<
     Record<string, boolean>
   >({});
-
-  const { isAdmin, isAuthenticated } = useUser();
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({
@@ -39,7 +44,7 @@ export default function SideNavBar({
   };
 
   const filterRoutes = () => {
-    if (!isAuthenticated) return ROUTES.filter((route) => !route.isProtected);
+    if (!userId) return ROUTES.filter((route) => !route.isProtected);
     if (isAdmin) return ROUTES;
     return ROUTES.filter((route) => route.href !== '/admin');
   };
@@ -59,7 +64,7 @@ export default function SideNavBar({
             <li key={component.title} className='mx-4'>
               {component.href && (
                 <Link onClick={resetStates} href={component.href}>
-                  {component.title}
+                  <SheetClose> {component.title}</SheetClose>
                 </Link>
               )}
               {component.children && (
@@ -96,7 +101,7 @@ export default function SideNavBar({
                                     onClick={resetStates}
                                     href={`${child.href}${subchild.href}`}
                                   >
-                                    {subchild.title}
+                                    <SheetClose>{subchild.title}</SheetClose>
                                   </Link>
                                 </li>
                               ))}

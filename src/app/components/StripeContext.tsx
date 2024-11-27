@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -20,8 +20,10 @@ const stripePromise = loadStripe(
 );
 
 export default function StripeContext({ children }: Readonly<Props>) {
-  const [clientSecret, setClientSecret] = useState<string | null>();
+  console.log('TEST DESDE STRIPE CONTEXT');
   const cart = useCart();
+  const [clientSecret, setClientSecret] = useState<string | null>();
+  const prevClientSecretRef = useRef<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -29,7 +31,10 @@ export default function StripeContext({ children }: Readonly<Props>) {
       const { clientSecret } = await createPaymentIntentAction(
         cart.validatedProducts,
       );
-      setClientSecret(clientSecret);
+      if (clientSecret !== prevClientSecretRef.current) {
+        prevClientSecretRef.current = clientSecret;
+        setClientSecret(clientSecret);
+      }
     })();
   }, [cart]);
 

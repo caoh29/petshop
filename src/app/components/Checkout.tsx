@@ -1,8 +1,8 @@
 'use client';
 
-import { User } from 'next-auth';
+// import { User } from 'next-auth';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   SchemaBase,
@@ -34,13 +34,20 @@ import CartSummary from './CartSummary';
 
 // import { useCart } from '@/hooks';
 
-import { getUserDefaultValuesAction } from '../actions';
+import {
+  createPaymentIntentAction,
+  getUserDefaultValuesAction,
+} from '../actions';
 
-import { PaymentElement } from '@stripe/react-stripe-js';
+import { useCart } from '@/hooks';
+
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement } from '@stripe/react-stripe-js';
+import { convertToCurrency } from '@/lib/utils';
 // import StripeContext from './StripeContext';
 
 interface Props {
-  user: (User & { isAdmin: boolean; isVerified: boolean }) | undefined;
+  userId: string | null;
 }
 
 type SchemaCheckout = SchemaBase | (SchemaBase & SchemaShip);
@@ -52,18 +59,44 @@ const createDynamicSchema = (deliveryMethod: string | undefined) => {
   });
 };
 
-export default function Checkout({ user }: Readonly<Props>) {
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+);
+
+// export default function Checkout({ user }: Readonly<Props>) {
+export default function Checkout({ userId }: Readonly<Props>) {
+  console.log('TEST DESDE CHECKOUT');
+
+  const cart = useCart();
+
+  const [clientSecret, setClientSecret] = useState<string | null>();
+  const prevClientSecretRef = useRef<string | null>(null);
+
   const [deliveryMethod, setDeliveryMethod] = useState<'ship' | 'pickup'>(
     'ship',
   );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    (async () => {
+      if (!cart || cart.validatedProducts.length === 0) return null;
+      const { clientSecret } = await createPaymentIntentAction(
+        cart.validatedProducts,
+      );
+      if (clientSecret !== prevClientSecretRef.current) {
+        prevClientSecretRef.current = clientSecret;
+        setClientSecret(clientSecret);
+      }
+    })();
+  }, [cart]);
+
   // Initialize form with dynamic validation
   const form = useForm<SchemaCheckout>({
     resolver: zodResolver(createDynamicSchema(deliveryMethod)),
     defaultValues: async () => {
-      if (!user?.id)
+      // if (!user?.id)
+      if (!userId)
         return {
           email: '',
           firstName: '',
@@ -81,7 +114,8 @@ export default function Checkout({ user }: Readonly<Props>) {
           saveAddress: false,
         } satisfies SchemaCheckout;
 
-      const userData = await getUserDefaultValuesAction(user.id);
+      // const userData = await getUserDefaultValuesAction(user.id);
+      const userData = await getUserDefaultValuesAction(userId);
       return {
         email: userData?.email ?? '',
         firstName: userData?.firstName ?? '',
@@ -136,7 +170,7 @@ export default function Checkout({ user }: Readonly<Props>) {
           <div className='rounded-lg bg-white p-8 shadow-sm lg:sticky lg:top-4'>
             <h1 className='text-2xl font-semibold'>Order Summary</h1>
             <ScrollArea className='h-[300px] p-4'>
-              <CartList variant />
+              <CartList variant userId={userId} />
             </ScrollArea>
             <Separator className='my-4' />
             <CartSummary variant />
@@ -402,13 +436,21 @@ export default function Checkout({ user }: Readonly<Props>) {
                                 </FormLabel>
                               </div>
                             )}
-                            {form.watch('paymentMethod') === 'stripe' && (
-                              <PaymentElement
-                                options={{
-                                  layout: 'accordion',
-                                }}
-                              />
-                            )}
+                            {form.watch('paymentMethod') === 'stripe' &&
+                              clientSecret && (
+                                <Elements
+                                  options={{
+                                    clientSecret: clientSecret,
+                                  }}
+                                  stripe={stripePromise}
+                                >
+                                  <PaymentElement
+                                    options={{
+                                      layout: 'accordion',
+                                    }}
+                                  />
+                                </Elements>
+                              )}
                             <div className='flex items-center space-x-2 rounded-lg border p-4'>
                               <RadioGroupItem value='paypal' id='paypal' />
                               <FormLabel

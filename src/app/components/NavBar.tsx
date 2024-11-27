@@ -4,14 +4,22 @@ import Link from 'next/link';
 
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
-import { useUser } from '@/hooks';
 
 // import { useHeaderVisibility } from '../../hooks';
 
+interface Props {
+  className?: string;
+  userId: string | null;
+  isVisible: boolean;
+  isAdmin: boolean;
+}
+
 export default function NavBar({
   className,
+  userId,
   isVisible,
-}: Readonly<{ className?: string; isVisible: boolean }>) {
+  isAdmin,
+}: Readonly<Props>) {
   // export function NavBar({ className }: Readonly<{ className?: string }>) {
   const [showCategoryList, setShowCategoryList] = useState<
     Record<string, boolean>
@@ -21,8 +29,6 @@ export default function NavBar({
   >({});
 
   // const isVisible = useHeaderVisibility();
-
-  const { isAdmin, isAuthenticated } = useUser();
 
   const toggleCategory = (category: string) => {
     setShowCategoryList({
@@ -58,7 +64,7 @@ export default function NavBar({
   }, [isVisible]);
 
   const filterRoutes = () => {
-    if (!isAuthenticated) return ROUTES.filter((route) => !route.isProtected);
+    if (!userId) return ROUTES.filter((route) => !route.isProtected);
     if (isAdmin) return ROUTES;
     return ROUTES.filter((route) => route.href !== '/admin');
   };

@@ -5,17 +5,20 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from './ui/button';
 
-import { useAppDispatch, useCart, useUser } from '../../hooks';
+import { useAppDispatch, useCart } from '../../hooks';
 // import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 
 import { validateStockAction, reserveStockAction } from '../actions';
 
 import { setValidatedProducts } from '@/store/store';
 
-export default function CheckoutButton() {
+interface Props {
+  userId: string | null;
+}
+
+export default function CheckoutButton({ userId }: Readonly<Props>) {
   const dispatch = useAppDispatch();
   const cart = useCart();
-  const { isAuthenticated } = useUser();
 
   const router = useRouter();
 
@@ -39,7 +42,7 @@ export default function CheckoutButton() {
 
   return (
     <>
-      {isAuthenticated ? (
+      {userId ? (
         <Button className='w-full' onClick={handleClick}>
           Checkout
         </Button>

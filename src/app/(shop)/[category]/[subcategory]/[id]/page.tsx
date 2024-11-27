@@ -12,6 +12,8 @@ import ProductDetails from '@/app/components/ProductDetails';
 import RelatedProducts from '@/app/components/RelatedProducts';
 import Reviews from '@/app/components/Reviews';
 
+import { auth } from '@/auth';
+
 export const dynamic = 'force-dynamic';
 
 interface Props {
@@ -41,6 +43,9 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params: { id } }: Readonly<Props>) {
+  const session = await auth();
+  const userId = session?.user?.id ?? null;
+
   const product = await getProductByIdAction({ id });
 
   if (!product) {
@@ -58,12 +63,14 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
       <ProductDetails
         product={product}
         addProductToCartAction={addProductToCartAction}
+        userId={userId}
       />
 
       <Reviews
         productId={product.id}
         reviews={product.reviews}
         addReviewAction={addReviewAction}
+        userId={userId}
       />
 
       <RelatedProducts

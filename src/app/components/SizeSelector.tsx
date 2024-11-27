@@ -1,8 +1,5 @@
 'use client';
 
-// import { useDispatch, useSelector } from 'react-redux';
-// import { RootState, setSize } from '../../store/store';
-
 import { ToggleGroup, ToggleGroupItem } from '@/app/components/ui/toggle-group';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
@@ -15,12 +12,6 @@ export default function SizeSelector({
   sizes,
   availableSizes,
 }: Readonly<Props>) {
-  // const sizeState = useSelector(
-  //   (state: RootState) => state.selectedProduct.selectedProduct.size,
-  // );
-  // const dispatch = useDispatch();
-  //
-  // if (sizes.length === 0) return null;
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();

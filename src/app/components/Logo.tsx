@@ -1,4 +1,8 @@
-export default function Logo({ className }: { className: string }) {
+interface Props {
+  className?: string;
+}
+
+export default function Logo({ className }: Readonly<Props>) {
   return (
     <h2
       className={`${className} scroll-m-20 text-3xl font-semibold text-amber-500 tracking-tight mx-auto`}

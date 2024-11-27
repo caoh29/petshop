@@ -8,7 +8,7 @@ import { capitalizeString } from '@/lib/utils';
 
 import { Product, SelectedProduct } from '@/api/types';
 
-interface ProductDetailsProps {
+interface Props {
   product: Product;
   addProductToCartAction: (
     id: string,
@@ -16,12 +16,14 @@ interface ProductDetailsProps {
     options: { size?: string; color?: string },
     userId?: string,
   ) => Promise<SelectedProduct>;
+  userId: string | null;
 }
 
 export default function ProductDetails({
   product,
   addProductToCartAction,
-}: Readonly<ProductDetailsProps>) {
+  userId,
+}: Readonly<Props>) {
   return (
     <div className='w-full md:w-1/2 p-4'>
       <h1 className='text-3xl font-bold leading-10 text-black'>
@@ -69,6 +71,7 @@ export default function ProductDetails({
           disabled={product.isOutOfStock}
           sizes={product.sizes ?? []}
           colors={product.colors ?? []}
+          userId={userId}
         />
       </div>
     </div>

@@ -18,12 +18,6 @@ export default function StoreProvider({
   userId: string | null;
   children: React.ReactNode;
 }>) {
-  console.log('TEST STORE PROVIDER');
-  console.log(
-    new Date().toLocaleTimeString('en-US', { hour12: false }) +
-      '.' +
-      new Date().getMilliseconds(),
-  );
   const storeRef = useRef<AppStore>();
   const persistorRef = useRef<Persistor>();
   if (!storeRef.current) {

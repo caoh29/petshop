@@ -8,8 +8,7 @@ export default async function CheckoutPage() {
   const userId = session?.user?.id ?? null;
   return (
     // <StripeContext>
-    //   {/* <Checkout user={session?.user} /> */}
-    //   <Checkout />
+    //   <Checkout userId={userId} />
     // </StripeContext>
     <Checkout userId={userId} />
   );

@@ -13,7 +13,7 @@ export default function Shipping({
         {variant ? 'Delivery Fee' : 'Estimate Delivery & Handling'}
       </h5>
       <p className={variant ? 'font-medium' : 'font-light'}>
-        {shipping ? `$${shipping.toFixed(2)}` : variant ? '$0.00' : 'Free'}
+        {shipping ? `$${shipping.toFixed(2)}` : 'Free'}
       </p>
     </div>
   );

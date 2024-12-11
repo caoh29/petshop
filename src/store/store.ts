@@ -15,6 +15,7 @@ import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
 import { cartSlice } from "./slices/cart";
 import { reviewsSlice } from "./slices/reviews";
+import { checkoutSlice } from "./slices/checkout";
 
 
 const createNoopStorage = () => {
@@ -37,12 +38,13 @@ const persistConfig = {
   key: 'store',
   storage: storage,
   whiteList: ['cart'],
-  blacklist: ['reviews'],
+  blacklist: ['reviews', 'checkout'],
 };
 
 const rootReducer = combineReducers({
   cart: cartSlice.reducer,
   reviews: reviewsSlice.reducer,
+  checkout: checkoutSlice.reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -61,6 +63,14 @@ export const makeStore = () => {
 
 export const { setCart, addProductToCart, updateProductInCart, deleteProductFromCart, clearCart, setValidatedProducts } = cartSlice.actions;
 export const { setReviews } = reviewsSlice.actions;
+export const {
+  setDeliveryMethod,
+  setShippingInfo,
+  setBillingInfo,
+  setEmail,
+  checkIfProceedToPayment,
+  resetCheckout
+} = checkoutSlice.actions;
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore["getState"]>;

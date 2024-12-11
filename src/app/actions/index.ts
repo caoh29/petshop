@@ -1,6 +1,6 @@
 export { getPaginatedProductsAction, getProductByIdAction, getFiltersAction, searchProductAction } from './products';
 
-export { updateProductCartAction, deleteProductCartAction, addProductToCartAction, validateStockAction, reserveStockAction, releaseReservedStockAction } from './cart';
+export { updateProductCartAction, deleteProductCartAction, addProductToCartAction, validateStockAction, reserveStockAction, releaseReservedStockAction, getCartSummaryAction } from './cart';
 
 export { addReviewAction } from './reviews';
 

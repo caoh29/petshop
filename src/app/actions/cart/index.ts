@@ -364,3 +364,83 @@ export const releaseReservedStockAction = async (selectedProducts: SelectedProdu
     timeout: 10000
   });
 }
+
+interface CartSummaryParams {
+  cart: Cart;
+  isCheckout: boolean;
+  deliveryMethod?: 'ship' | 'pickup';
+  zip?: string;
+  country?: string;
+}
+
+const FREE_SHIPPING_THRESHOLD = 75;
+const SHIPPING_COST = 9.99;
+
+export async function getCartSummaryAction({ cart,
+  isCheckout,
+  deliveryMethod,
+  zip,
+  country
+}: CartSummaryParams) {
+
+  // Calculate subtotal
+  const subtotal = await getSubtotal(cart);
+
+  // Calculate shipping
+  let shipping = 0;
+  if (isCheckout && deliveryMethod === 'ship' && subtotal < FREE_SHIPPING_THRESHOLD || !isCheckout && subtotal < FREE_SHIPPING_THRESHOLD) {
+    shipping = SHIPPING_COST;
+  }
+
+  // Calculate tax (only if in checkout and billing address is provided)
+  let tax = 0;
+  if (isCheckout && country && country.length > 0 && zip && zip.length > 0) {
+    // Fetch tax rate based on billing address (this is a placeholder)
+    const taxRate = await getTaxRate(zip, country);
+    tax = subtotal * taxRate;
+  }
+
+
+  // Calculate total
+  let total = 0;
+  if (isCheckout && tax > 0) {
+    total = subtotal + shipping + tax;
+  } else if (!isCheckout) {
+    total = subtotal + shipping;
+  }
+
+  return { subtotal, shipping, tax, total };
+}
+
+async function getSubtotal(cart: Cart) {
+  if (cart.validatedProducts.length === 0) {
+    const prices = await Promise.all(cart.products.map(async (product) => {
+      const prod = await prisma.product.findUnique({
+        where: { id: product.productId },
+        select: { price: true }
+      });
+
+      if (!prod) return 0;
+
+      return prod.price * product.quantity;
+    }));
+    return prices.reduce((a, b) => a + b, 0);
+  }
+  const prices = await Promise.all(cart.validatedProducts.map(async (product) => {
+    const prod = await prisma.product.findUnique({
+      where: { id: product.productId },
+      select: { price: true }
+    });
+
+    if (!prod) return 0;
+
+    return prod.price * product.quantity;
+  }));
+  return prices.reduce((a, b) => a + b, 0);
+}
+
+async function getTaxRate(zip: string, country: string) {
+  // This is a placeholder function. In a real application, you would fetch
+  // the tax rate from a database or tax service based on the location.
+  return 0.13; // 8% tax rate as an example
+}

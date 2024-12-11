@@ -11,6 +11,9 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
 
+const FREE_SHIPPING_THRESHOLD = 75;
+const SHIPPING_COST = 9.99;
+
 export const getUserDefaultValuesAction = async (userId: string) => {
   try {
     const user = await prisma.user.findUnique({
@@ -52,30 +55,8 @@ export const getUserDefaultValuesAction = async (userId: string) => {
   }
 }
 
-// export const getTaxRateAction = async (country: string, state: string) => {
-//   try {
-//     const taxRate = await prisma.taxRate.findFirst({
-//       where: {
-//         country,
-//         state
-//       },
-//       select: {
-//         rate: true,
-//       }
-//     });
-
-//     if (!taxRate) {
-//       return 0;
-//     }
-
-//     return taxRate.rate;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
-
-const getAmount = async (products: ValidProduct[], extraCharges: number): Promise<number> => {
-  const prices = await Promise.all(products.map(async (item) => {
+const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship' | 'pickup', zip: string, country: string): Promise<number> => {
+  const productPrices = await Promise.all(products.map(async (item) => {
     const product = await prisma.product.findUnique({
       where: {
         id: item.productId
@@ -92,11 +73,30 @@ const getAmount = async (products: ValidProduct[], extraCharges: number): Promis
     return product.price * item.quantity
   }));
 
-  return convertToCurrency(prices.reduce((acc, price) => acc + price, 0) + extraCharges);
+  const subtotal = productPrices.reduce((acc, price) => acc + price, 0);
+
+  const shippingCharges = deliveryMethod === 'ship' ? subtotal > FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST : 0;
+
+  const tax = getTaxes(subtotal, zip, country, shippingCharges);
+
+  return convertToCurrency(subtotal + shippingCharges + tax);
 }
 
-export const createPaymentIntentAction = async (products: ValidProduct[], extraCharges: number = 0) => {
-  const amount = await getAmount(products, extraCharges);
+const getTaxes = (subtotal: number, zip: string, country: string, shippingCharges: number): number => {
+  // This is a placeholder function. In a real application, you would fetch
+  // the tax rate from a database or tax service based on the location.
+  return subtotal * 0.13; // 8% tax rate as an example
+}
+
+interface CreatePaymentIntentParams {
+  products: ValidProduct[];
+  deliveryMethod: 'ship' | 'pickup';
+  zip: string;
+  country: string;
+}
+
+export const createPaymentIntentAction = async ({ products, deliveryMethod, zip, country }: CreatePaymentIntentParams) => {
+  const amount = await getAmount(products, deliveryMethod, zip, country);
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount,
@@ -108,4 +108,3 @@ export const createPaymentIntentAction = async (products: ValidProduct[], extraC
 
   return { clientSecret: paymentIntent.client_secret };
 }
-

@@ -20,7 +20,6 @@ export default function StripePaymentContext({
   children,
   stripePromise,
 }: Readonly<Props>) {
-  console.log('TEST FROM STRIPE CONTEXT');
   const cart = useCart();
   const {
     deliveryMethod,

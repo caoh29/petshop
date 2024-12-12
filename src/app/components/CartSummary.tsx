@@ -24,7 +24,6 @@ interface CartSummary {
 }
 
 export default function CartSummary({ isCheckout = false }: Readonly<Props>) {
-  console.log('Test desde Cart Summary');
   const cart = useCart();
   const {
     deliveryMethod,

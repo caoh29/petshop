@@ -1,25 +1,23 @@
 'use client';
 
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useCheckout } from '@/hooks';
 
 import { Stripe, StripeAddressElementChangeEvent } from '@stripe/stripe-js';
 import { AddressElement, Elements } from '@stripe/react-stripe-js';
 import { setBillingInfo } from '@/store/store';
-import { UserData } from '../(shop)/checkout/page';
 
 const COUNTRY_CODE = 'CA';
 
 interface Props {
-  userData: UserData;
   stripePromise: Promise<Stripe | null>;
   isShippingSameAsBilling: boolean;
 }
 
 export default function BillingAddressSection({
-  userData,
   stripePromise,
   isShippingSameAsBilling,
 }: Readonly<Props>) {
+  const { shippingInfo } = useCheckout();
   const dispatch = useAppDispatch();
 
   const handleChange = (event: StripeAddressElementChangeEvent) => {
@@ -45,23 +43,21 @@ export default function BillingAddressSection({
   };
 
   const getDefaultValues = () => {
-    if (userData && isShippingSameAsBilling) {
+    if (isShippingSameAsBilling) {
       const {
         firstName,
         lastName,
-        phone,
         address,
         address2,
         city,
         state,
         zip,
         country,
-      } = userData;
+      } = shippingInfo;
 
       return {
         firstName,
         lastName,
-        phone,
         address: {
           line1: address,
           line2: address2,
@@ -75,7 +71,6 @@ export default function BillingAddressSection({
     return {
       firstName: '',
       lastName: '',
-      phone: '',
       address: {
         line1: '',
         line2: '',

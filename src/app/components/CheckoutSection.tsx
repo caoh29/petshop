@@ -20,7 +20,7 @@ import {
 import { Checkbox } from './ui/checkbox';
 
 import { checkIfProceedToPayment } from '@/store/store';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useCheckout } from '@/hooks';
 
 interface Props {
   userData: UserData;
@@ -31,6 +31,7 @@ const stripePromise = loadStripe(
 );
 
 export default function CheckoutSection({ userData }: Readonly<Props>) {
+  const { deliveryMethod } = useCheckout();
   const dispatch = useAppDispatch();
   const [isShippingSameAsBilling, setIsShippingSameAsBilling] =
     useState<boolean>(false);
@@ -51,17 +52,20 @@ export default function CheckoutSection({ userData }: Readonly<Props>) {
             userData={userData}
             stripePromise={stripePromise}
           />
-          <Checkbox
-            checked={isShippingSameAsBilling}
-            onClick={() => setIsShippingSameAsBilling(!isShippingSameAsBilling)}
-          />
+          {deliveryMethod === 'ship' && (
+            <Checkbox
+              checked={isShippingSameAsBilling}
+              onClick={() =>
+                setIsShippingSameAsBilling(!isShippingSameAsBilling)
+              }
+            />
+          )}
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value='billingInfo'>
         <AccordionTrigger>Billing Information</AccordionTrigger>
         <AccordionContent>
           <BillingAddressSection
-            userData={userData}
             stripePromise={stripePromise}
             isShippingSameAsBilling={isShippingSameAsBilling}
           />

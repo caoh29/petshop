@@ -10,7 +10,31 @@ import {
 
 import { Button } from './ui/button';
 
-export default function StripePaymentForm() {
+interface Props {
+  billingInfo: {
+    firstName: string;
+    lastName: string;
+    country: string;
+    address: string;
+    address2?: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+}
+
+export default function StripePaymentForm({
+  billingInfo: {
+    firstName,
+    lastName,
+    country,
+    address,
+    address2,
+    city,
+    state,
+    zip,
+  },
+}: Readonly<Props>) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -35,6 +59,19 @@ export default function StripePaymentForm() {
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/orders`,
+        payment_method_data: {
+          billing_details: {
+            name: `${firstName} ${lastName}`,
+            address: {
+              country,
+              line1: address,
+              line2: address2,
+              city,
+              state,
+              postal_code: zip,
+            },
+          },
+        },
       },
     });
 
@@ -54,7 +91,15 @@ export default function StripePaymentForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <PaymentElement />
+      <PaymentElement
+        options={{
+          fields: {
+            billingDetails: {
+              address: 'never',
+            },
+          },
+        }}
+      />
       <Button type='submit' disabled={!stripe || loading}>
         Pay
       </Button>

@@ -12,13 +12,13 @@ interface Props {
 }
 
 export default function PaymentSection({ stripePromise }: Readonly<Props>) {
-  const { proceedToPayment } = useCheckout();
+  const { proceedToPayment, billingInfo } = useCheckout();
 
   return (
     <section className='flex flex-col flex-nowrap gap-6 rounded-lg bg-white p-8 shadow-sm'>
       {proceedToPayment ? (
         <StripePaymentContext stripePromise={stripePromise}>
-          <StripePaymentForm />
+          <StripePaymentForm billingInfo={billingInfo} />
         </StripePaymentContext>
       ) : (
         <p className='text-red-500'>Fill the above fields</p>

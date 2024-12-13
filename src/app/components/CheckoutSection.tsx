@@ -37,7 +37,12 @@ export default function CheckoutSection({ userData }: Readonly<Props>) {
     useState<boolean>(false);
 
   return (
-    <Accordion type='multiple' className='w-full'>
+    <Accordion
+      className='w-full'
+      type='single'
+      defaultValue='deliveryMethod'
+      collapsible
+    >
       <AccordionItem value='deliveryMethod'>
         <AccordionTrigger>Delivery Method</AccordionTrigger>
         <AccordionContent>

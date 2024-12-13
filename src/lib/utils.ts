@@ -33,3 +33,8 @@ export async function checkPassword(password: string, hashedPassword: string) {
 export function convertToCurrency(amount: number) {
   return Math.round(amount * 100);
 }
+
+export function isEmptyString(str: string | undefined | null) {
+  if (!str) return true;
+  return str.trim().length === 0;
+}

@@ -5,6 +5,7 @@ import { useAppDispatch, useCheckout } from '@/hooks';
 import { Stripe, StripeAddressElementChangeEvent } from '@stripe/stripe-js';
 import { AddressElement, Elements } from '@stripe/react-stripe-js';
 import { setBillingInfo } from '@/store/store';
+import { isEmptyString } from '@/lib/utils';
 
 const COUNTRY_CODE = 'CA';
 
@@ -17,7 +18,7 @@ export default function BillingAddressSection({
   stripePromise,
   isShippingSameAsBilling,
 }: Readonly<Props>) {
-  const { shippingInfo } = useCheckout();
+  const { shippingInfo, billingInfo } = useCheckout();
   const dispatch = useAppDispatch();
 
   const handleChange = (event: StripeAddressElementChangeEvent) => {
@@ -43,18 +44,64 @@ export default function BillingAddressSection({
   };
 
   const getDefaultValues = () => {
-    if (isShippingSameAsBilling) {
-      const {
-        firstName,
-        lastName,
-        address,
-        address2,
-        city,
-        state,
-        zip,
-        country,
-      } = shippingInfo;
+    const {
+      firstName,
+      lastName,
+      address,
+      address2,
+      city,
+      state,
+      zip,
+      country,
+    } = billingInfo;
 
+    if (
+      !isShippingSameAsBilling &&
+      isEmptyString(firstName) &&
+      isEmptyString(lastName) &&
+      isEmptyString(address) &&
+      isEmptyString(address2) &&
+      isEmptyString(city) &&
+      isEmptyString(state) &&
+      isEmptyString(zip) &&
+      isEmptyString(country)
+    ) {
+      return {
+        firstName: '',
+        lastName: '',
+        address: {
+          line1: '',
+          line2: '',
+          city: '',
+          state: '',
+          postal_code: '',
+          country: COUNTRY_CODE,
+        },
+      };
+    } else if (
+      isShippingSameAsBilling &&
+      isEmptyString(firstName) &&
+      isEmptyString(lastName) &&
+      isEmptyString(address) &&
+      isEmptyString(address2) &&
+      isEmptyString(city) &&
+      isEmptyString(state) &&
+      isEmptyString(zip) &&
+      isEmptyString(country)
+    ) {
+      return {
+        firstName: shippingInfo.firstName,
+        lastName: shippingInfo.lastName,
+        address: {
+          line1: shippingInfo.address,
+          line2: shippingInfo.address2,
+          city: shippingInfo.city,
+          state: shippingInfo.state,
+          postal_code: shippingInfo.zip,
+          country: shippingInfo.country,
+        },
+      };
+    } else {
       return {
         firstName,
         lastName,
@@ -68,18 +115,6 @@ export default function BillingAddressSection({
         },
       };
     }
-    return {
-      firstName: '',
-      lastName: '',
-      address: {
-        line1: '',
-        line2: '',
-        city: '',
-        state: '',
-        postal_code: '',
-        country: COUNTRY_CODE,
-      },
-    };
   };
 
   return (

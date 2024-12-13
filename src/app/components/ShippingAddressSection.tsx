@@ -5,6 +5,8 @@ import { useAppDispatch, useCheckout } from '@/hooks';
 import { Stripe, StripeAddressElementChangeEvent } from '@stripe/stripe-js';
 import { AddressElement, Elements } from '@stripe/react-stripe-js';
 import { setShippingInfo } from '@/store/store';
+import { isEmptyString } from '@/lib/utils';
+
 import { UserData } from '../(shop)/checkout/page';
 
 const COUNTRY_CODE = 'CA';
@@ -18,7 +20,7 @@ export default function ShippingAddressSection({
   userData,
   stripePromise,
 }: Readonly<Props>) {
-  const { deliveryMethod } = useCheckout();
+  const { deliveryMethod, shippingInfo } = useCheckout();
   const dispatch = useAppDispatch();
 
   if (deliveryMethod === 'pickup') {
@@ -49,7 +51,30 @@ export default function ShippingAddressSection({
   };
 
   const getDefaultValues = () => {
-    if (!userData) {
+    const {
+      firstName,
+      lastName,
+      phone,
+      address,
+      address2,
+      city,
+      state,
+      zip,
+      country,
+    } = shippingInfo;
+
+    if (
+      !userData &&
+      isEmptyString(firstName) &&
+      isEmptyString(lastName) &&
+      isEmptyString(phone) &&
+      isEmptyString(address) &&
+      isEmptyString(address2) &&
+      isEmptyString(city) &&
+      isEmptyString(state) &&
+      isEmptyString(zip) &&
+      isEmptyString(country)
+    ) {
       return {
         firstName: '',
         lastName: '',
@@ -63,19 +88,32 @@ export default function ShippingAddressSection({
           country: COUNTRY_CODE,
         },
       };
+    } else if (
+      userData &&
+      isEmptyString(firstName) &&
+      isEmptyString(lastName) &&
+      isEmptyString(phone) &&
+      isEmptyString(address) &&
+      isEmptyString(address2) &&
+      isEmptyString(city) &&
+      isEmptyString(state) &&
+      isEmptyString(zip) &&
+      isEmptyString(country)
+    ) {
+      return {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        phone: userData.phone,
+        address: {
+          line1: userData.address,
+          line2: userData.address2,
+          city: userData.city,
+          state: userData.state,
+          postal_code: userData.zip,
+          country: userData.country,
+        },
+      };
     } else {
-      const {
-        firstName,
-        lastName,
-        phone,
-        address,
-        address2,
-        city,
-        state,
-        zip,
-        country,
-      } = userData;
-
       return {
         firstName,
         lastName,

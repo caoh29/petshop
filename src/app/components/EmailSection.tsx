@@ -1,22 +1,26 @@
 'use client';
 
-import { useEffect } from 'react';
-
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useCheckout } from '@/hooks';
 import { setEmail } from '@/store/store';
+import { isEmptyString } from '@/lib/utils';
 
 interface Props {
   email: string | null;
 }
 
 export default function EmailSection({ email }: Readonly<Props>) {
+  const { email: checkoutEmail } = useCheckout();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (email) {
-      dispatch(setEmail(email));
+  const getDefaultValue = () => {
+    if (!email && isEmptyString(checkoutEmail)) {
+      return '';
+    } else if (email && isEmptyString(checkoutEmail)) {
+      return email;
+    } else {
+      return checkoutEmail;
     }
-  }, [dispatch, email]);
+  };
 
   return (
     <section className='flex flex-col flex-nowrap gap-6 rounded-lg bg-white p-8 shadow-sm'>
@@ -28,7 +32,7 @@ export default function EmailSection({ email }: Readonly<Props>) {
           name='email'
           placeholder='example@gmail.com'
           required
-          defaultValue={email ?? ''}
+          defaultValue={getDefaultValue()}
           onChange={(e) => {
             dispatch(setEmail(e.target.value));
           }}

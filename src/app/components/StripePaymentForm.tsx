@@ -58,14 +58,14 @@ export default function StripePaymentForm({
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/orders`,
+        return_url: `${window.location.origin}/checkout/payment-status`,
         payment_method_data: {
           billing_details: {
             name: `${firstName} ${lastName}`,
             address: {
               country,
               line1: address,
-              line2: address2,
+              line2: address2 ?? '',
               city,
               state,
               postal_code: zip,

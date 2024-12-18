@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import { loadStripe } from '@stripe/stripe-js';
-
 import { UserData } from '../(shop)/checkout/page';
 import DeliverySection from './DeliverySection';
 import EmailSection from './EmailSection';
@@ -25,10 +23,6 @@ import { useAppDispatch, useCheckout } from '@/hooks';
 interface Props {
   userData: UserData;
 }
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-);
 
 export default function CheckoutSection({ userData }: Readonly<Props>) {
   const { deliveryMethod } = useCheckout();
@@ -53,10 +47,7 @@ export default function CheckoutSection({ userData }: Readonly<Props>) {
         <AccordionTrigger>Contact Information</AccordionTrigger>
         <AccordionContent>
           <EmailSection email={userData?.email ?? ''} />
-          <ShippingAddressSection
-            userData={userData}
-            stripePromise={stripePromise}
-          />
+          <ShippingAddressSection userData={userData} />
           {deliveryMethod === 'ship' && (
             <Checkbox
               checked={isShippingSameAsBilling}
@@ -71,7 +62,6 @@ export default function CheckoutSection({ userData }: Readonly<Props>) {
         <AccordionTrigger>Billing Information</AccordionTrigger>
         <AccordionContent>
           <BillingAddressSection
-            stripePromise={stripePromise}
             isShippingSameAsBilling={isShippingSameAsBilling}
           />
         </AccordionContent>
@@ -81,7 +71,7 @@ export default function CheckoutSection({ userData }: Readonly<Props>) {
           Payment Information
         </AccordionTrigger>
         <AccordionContent>
-          <PaymentSection stripePromise={stripePromise} />
+          <PaymentSection />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

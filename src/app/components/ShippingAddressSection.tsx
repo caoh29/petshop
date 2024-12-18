@@ -1,27 +1,28 @@
 'use client';
 
+import { useContext } from 'react';
+
 import { useAppDispatch, useCheckout } from '@/hooks';
 
-import { Stripe, StripeAddressElementChangeEvent } from '@stripe/stripe-js';
+import { StripeAddressElementChangeEvent } from '@stripe/stripe-js';
 import { AddressElement, Elements } from '@stripe/react-stripe-js';
 import { setShippingInfo } from '@/store/store';
 import { isEmptyString } from '@/lib/utils';
 
 import { UserData } from '../(shop)/checkout/page';
+import { StripePromiseContext } from '../(shop)/checkout/layout';
 
 const COUNTRY_CODE = 'CA';
 
 interface Props {
   userData: UserData;
-  stripePromise: Promise<Stripe | null>;
 }
 
-export default function ShippingAddressSection({
-  userData,
-  stripePromise,
-}: Readonly<Props>) {
+export default function ShippingAddressSection({ userData }: Readonly<Props>) {
   const { deliveryMethod, shippingInfo } = useCheckout();
   const dispatch = useAppDispatch();
+
+  const stripePromise = useContext(StripePromiseContext);
 
   if (deliveryMethod === 'pickup') {
     return null;

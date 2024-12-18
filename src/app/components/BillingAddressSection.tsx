@@ -1,25 +1,29 @@
 'use client';
 
+import { isEmptyString } from '@/lib/utils';
+import { useContext } from 'react';
+
 import { useAppDispatch, useCheckout } from '@/hooks';
 
-import { Stripe, StripeAddressElementChangeEvent } from '@stripe/stripe-js';
+import { StripeAddressElementChangeEvent } from '@stripe/stripe-js';
 import { AddressElement, Elements } from '@stripe/react-stripe-js';
 import { setBillingInfo } from '@/store/store';
-import { isEmptyString } from '@/lib/utils';
+
+import { StripePromiseContext } from '../(shop)/checkout/layout';
 
 const COUNTRY_CODE = 'CA';
 
 interface Props {
-  stripePromise: Promise<Stripe | null>;
   isShippingSameAsBilling: boolean;
 }
 
 export default function BillingAddressSection({
-  stripePromise,
   isShippingSameAsBilling,
 }: Readonly<Props>) {
   const { shippingInfo, billingInfo } = useCheckout();
   const dispatch = useAppDispatch();
+
+  const stripePromise = useContext(StripePromiseContext);
 
   const handleChange = (event: StripeAddressElementChangeEvent) => {
     if (event.complete) {

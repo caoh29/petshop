@@ -1,28 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
-import { Stripe } from '@stripe/stripe-js';
 
 import { useCart, useCheckout } from '@/hooks';
 import { createPaymentIntentAction } from '../actions';
 
+import { StripePromiseContext } from '../(shop)/checkout/layout';
+
 interface Props {
   children: React.ReactNode;
-  stripePromise: Promise<Stripe | null>;
 }
 
 // const stripePromise = loadStripe(
 //   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 // );
 
-export default function StripePaymentContext({
-  children,
-  stripePromise,
-}: Readonly<Props>) {
+export default function StripePaymentWrapper({ children }: Readonly<Props>) {
   const cart = useCart();
   const { deliveryMethod, billingInfo } = useCheckout();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+
+  const stripePromise = useContext(StripePromiseContext);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

@@ -1,28 +1,6 @@
+import { BillingInfo, ShippingInfo } from "@/api/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface ShippingInfo {
-  phone?: string,
-
-  firstName: string;
-  lastName: string;
-  address: string;
-  address2?: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-}
-
-interface BillingInfo {
-  firstName: string;
-  lastName: string;
-  address: string;
-  address2?: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-}
 
 export interface CheckoutState {
   deliveryMethod: 'ship' | 'pickup',
@@ -30,7 +8,7 @@ export interface CheckoutState {
   proceedToPayment: boolean,
 
   shippingInfo: ShippingInfo,
-  billingInfo: BillingInfo
+  billingInfo: BillingInfo,
 }
 
 const initialState: CheckoutState = {
@@ -59,7 +37,7 @@ const initialState: CheckoutState = {
     state: "",
     zip: "",
     country: ""
-  }
+  },
 };
 
 export const checkoutSlice = createSlice({
@@ -83,8 +61,12 @@ export const checkoutSlice = createSlice({
     },
 
     checkIfProceedToPayment: (state) => {
-      if (state.deliveryMethod && state.email.length > 0 && state.billingInfo.firstName.length > 0 && state.billingInfo.lastName.length > 0 && state.billingInfo.address.length > 0 && state.billingInfo.city.length > 0 && state.billingInfo.country.length > 0 && state.billingInfo.state.length > 0 && state.billingInfo.zip.length > 0) {
+      if (!state.proceedToPayment && state.deliveryMethod && state.email.length > 0 && state.billingInfo.firstName.length > 0 && state.billingInfo.lastName.length > 0 && state.billingInfo.address.length > 0 && state.billingInfo.city.length > 0 && state.billingInfo.country.length > 0 && state.billingInfo.state.length > 0 && state.billingInfo.zip.length > 0) {
         state.proceedToPayment = true;
+      }
+
+      if (state.proceedToPayment && (state.deliveryMethod && state.email.length === 0 || state.billingInfo.firstName.length === 0 || state.billingInfo.lastName.length === 0 || state.billingInfo.address.length === 0 || state.billingInfo.city.length === 0 || state.billingInfo.country.length === 0 || state.billingInfo.state.length === 0 || state.billingInfo.zip.length === 0)) {
+        state.proceedToPayment = false;
       }
     },
 

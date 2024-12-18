@@ -21,25 +21,8 @@ export default function StripePaymentContext({
   stripePromise,
 }: Readonly<Props>) {
   const cart = useCart();
-  const {
-    deliveryMethod,
-    billingInfo: { zip, country },
-  } = useCheckout();
+  const { deliveryMethod, billingInfo } = useCheckout();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   // Only create a payment intent if the cart has validated products
-  //   const fetchPaymentIntent = async () => {
-  //     if (cart?.validatedProducts.length > 0) {
-  //       const { clientSecret } = await createPaymentIntentAction(
-  //         cart.validatedProducts,
-  //       );
-  //       setClientSecret(clientSecret);
-  //     }
-  //   };
-
-  //   fetchPaymentIntent();
-  // }, [cart]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -47,8 +30,7 @@ export default function StripePaymentContext({
         createPaymentIntentAction({
           products: cart.validatedProducts,
           deliveryMethod,
-          zip,
-          country,
+          billingInfo,
         })
           .then(({ clientSecret }) =>
             setClientSecret((prev) =>
@@ -60,7 +42,7 @@ export default function StripePaymentContext({
     }, 500); // Delay of 500ms
 
     return () => clearTimeout(timeout); // Cleanup
-  }, [cart?.validatedProducts, deliveryMethod, zip, country]);
+  }, [cart?.validatedProducts, deliveryMethod, billingInfo]);
 
   // If the clientSecret is not yet available, return null or a loading state
   if (!clientSecret) return null;

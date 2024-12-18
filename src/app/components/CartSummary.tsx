@@ -11,6 +11,7 @@ import { Separator } from './ui/separator';
 
 import { useCart, useCheckout } from '../../hooks';
 import { getCartSummaryAction } from '../actions';
+import { Skeleton } from './ui/skeleton';
 
 interface Props {
   isCheckout?: boolean;
@@ -25,10 +26,7 @@ interface CartSummary {
 
 export default function CartSummary({ isCheckout = false }: Readonly<Props>) {
   const cart = useCart();
-  const {
-    deliveryMethod,
-    billingInfo: { zip, country },
-  } = useCheckout();
+  const { deliveryMethod, billingInfo } = useCheckout();
 
   const [summary, setSummary] = useState<CartSummary>({
     subtotal: 0,
@@ -37,24 +35,29 @@ export default function CartSummary({ isCheckout = false }: Readonly<Props>) {
     total: 0,
   });
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     const fetchSummary = async () => {
       try {
+        setLoading(true);
+
         const newSummary = await getCartSummaryAction({
           cart,
           isCheckout,
           deliveryMethod,
-          zip: isCheckout ? zip : undefined,
-          country: isCheckout ? country : undefined,
+          billingInfo,
         });
         setSummary(newSummary);
+
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching cart summary:', error);
       }
     };
 
     fetchSummary();
-  }, [cart, isCheckout, deliveryMethod, zip, country]);
+  }, [cart, isCheckout, deliveryMethod, billingInfo]);
 
   return (
     <div
@@ -62,15 +65,25 @@ export default function CartSummary({ isCheckout = false }: Readonly<Props>) {
         !isCheckout && 'bg-gray-100 shadow-sm'
       }`}
     >
-      <div className='flex flex-col flex-nowrap gap-2'>
-        <Subtotal subtotal={summary.subtotal} variant={isCheckout} />
-        {(!isCheckout || (isCheckout && summary.shipping > 0)) && (
-          <Shipping shipping={summary.shipping} variant={isCheckout} />
-        )}
-        {isCheckout && <Taxes tax={summary.tax} />}
-      </div>
-      <Separator />
-      <Total total={summary.total} variant={isCheckout} />
+      {loading ? (
+        <div className='flex flex-col flex-nowrap gap-2'>
+          <Skeleton className='h-4 w-[250px]' />
+          <Skeleton className='h-4 w-[250px]' />
+          <Skeleton className='h-4 w-[250px]' />
+        </div>
+      ) : (
+        <>
+          <div className='flex flex-col flex-nowrap gap-2'>
+            <Subtotal subtotal={summary.subtotal} variant={isCheckout} />
+            {(!isCheckout || deliveryMethod !== 'pickup') && (
+              <Shipping shipping={summary.shipping} variant={isCheckout} />
+            )}
+            {isCheckout && <Taxes tax={summary.tax} />}
+          </div>
+          <Separator />
+          <Total total={summary.total} variant={isCheckout} />
+        </>
+      )}
     </div>
   );
 }

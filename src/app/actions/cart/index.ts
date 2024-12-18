@@ -1,7 +1,10 @@
 'use server';
 
-import { Cart, SelectedProduct, ValidProduct } from '@/api/types';
 import prisma from "../../../../prisma/db";
+
+import { getTaxes } from '../checkout';
+
+import { BillingInfo, Cart, SelectedProduct, ValidProduct } from '@/api/types';
 
 const getCart = async (userId: string): Promise<Cart> => {
   // Retrieve the cart from the database
@@ -369,8 +372,7 @@ interface CartSummaryParams {
   cart: Cart;
   isCheckout: boolean;
   deliveryMethod?: 'ship' | 'pickup';
-  zip?: string;
-  country?: string;
+  billingInfo: BillingInfo;
 }
 
 const FREE_SHIPPING_THRESHOLD = 75;
@@ -379,8 +381,7 @@ const SHIPPING_COST = 9.99;
 export async function getCartSummaryAction({ cart,
   isCheckout,
   deliveryMethod,
-  zip,
-  country
+  billingInfo,
 }: CartSummaryParams) {
 
   // Calculate subtotal
@@ -394,10 +395,19 @@ export async function getCartSummaryAction({ cart,
 
   // Calculate tax (only if in checkout and billing address is provided)
   let tax = 0;
-  if (isCheckout && country && country.length > 0 && zip && zip.length > 0) {
+  if (isCheckout && billingInfo.country && billingInfo.country.length > 0 && billingInfo.zip && billingInfo.zip.length > 0 && cart.validatedProducts.length > 0) {
     // Fetch tax rate based on billing address (this is a placeholder)
-    const taxRate = await getTaxRate(zip, country);
-    tax = subtotal * taxRate;
+    const products = await Promise.all(cart.validatedProducts.map(async (prod) => {
+      const productWithPrice = await prisma.product.findUnique({
+        where: { id: prod.productId },
+        select: { price: true }
+      });
+      return {
+        price: productWithPrice?.price ?? 0,
+        ...prod
+      }
+    }))
+    tax = await getTaxes({ billingInfo, shippingCharges: shipping, products });
   }
 
 
@@ -462,10 +472,4 @@ async function getSubtotal(cart: Cart, isCheckout: boolean) {
     return prod.price * product.quantity;
   }));
   return prices.reduce((a, b) => a + b, 0);
-}
-
-async function getTaxRate(zip: string, country: string) {
-  // This is a placeholder function. In a real application, you would fetch
-  // the tax rate from a database or tax service based on the location.
-  return 0.13; // 8% tax rate as an example
 }

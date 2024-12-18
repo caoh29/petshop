@@ -76,7 +76,7 @@ export default function CheckoutSection({ userData }: Readonly<Props>) {
           />
         </AccordionContent>
       </AccordionItem>
-      <AccordionItem value='review'>
+      <AccordionItem value='payment'>
         <AccordionTrigger onClick={() => dispatch(checkIfProceedToPayment())}>
           Payment Information
         </AccordionTrigger>

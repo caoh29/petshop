@@ -1,6 +1,6 @@
 "use server";
 
-import { ValidProduct } from "@/api/types";
+import { BillingInfo, ValidProduct } from "@/api/types";
 
 import { capitalizeString, convertToCurrency } from "@/lib/utils";
 
@@ -55,8 +55,8 @@ export const getUserDefaultValuesAction = async (userId: string) => {
   }
 }
 
-const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship' | 'pickup', zip: string, country: string): Promise<number> => {
-  const productPrices = await Promise.all(products.map(async (item) => {
+const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship' | 'pickup', billingInfo: BillingInfo): Promise<number> => {
+  const productsWithPrice = await Promise.all(products.map(async (item) => {
     const product = await prisma.product.findUnique({
       where: {
         id: item.productId
@@ -67,36 +67,86 @@ const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship' | 'pic
     });
 
     if (!product) {
-      return 0;
+      return {
+        ...item,
+        price: 0,
+      };
     }
 
-    return product.price * item.quantity
+    return {
+      ...item,
+      price: product.price,
+    };
   }));
 
-  const subtotal = productPrices.reduce((acc, price) => acc + price, 0);
+  const subtotal = productsWithPrice.map(prod => (prod.price * prod.quantity)).reduce((acc, price) => acc + price, 0);
 
-  const shippingCharges = deliveryMethod === 'ship' ? subtotal > FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST : 0;
+  const shippingCharges = deliveryMethod === 'ship' ? subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST : 0;
 
-  const tax = getTaxes(subtotal, zip, country, shippingCharges);
+  const tax = await getTaxes({
+    billingInfo, shippingCharges,
+    products: productsWithPrice
+  });
+
+  console.log({ subtotal, shippingCharges, tax });
 
   return convertToCurrency(subtotal + shippingCharges + tax);
 }
 
-const getTaxes = (subtotal: number, zip: string, country: string, shippingCharges: number): number => {
+export const getTaxes = async ({ billingInfo, shippingCharges, products }: { billingInfo: BillingInfo; shippingCharges: number; products: { price: number; productId: string; isAvailable: boolean; quantity: number; }[] }): Promise<number> => {
   // This is a placeholder function. In a real application, you would fetch
   // the tax rate from a database or tax service based on the location.
-  return subtotal * 0.13; // 8% tax rate as an example
+
+  // console.log({ products });
+
+  const taxCalculation = await stripe.tax.calculations.create({
+    currency: 'cad',
+    customer_details: {
+      address: {
+        line1: billingInfo.address,
+        line2: billingInfo.address2,
+        city: billingInfo.city,
+        state: billingInfo.state,
+        postal_code: billingInfo.zip,
+        country: billingInfo.country,
+      },
+      address_source: 'billing',
+    },
+    line_items: products.map((product) => ({
+      amount: convertToCurrency(product.price),
+      quantity: product.quantity,
+      reference: product.productId,
+      tax_behavior: 'exclusive',
+    })),
+    shipping_cost: {
+      amount: shippingCharges > 0 ? convertToCurrency(shippingCharges) : undefined,
+    },
+  });
+
+  // console.log(taxCalculation);
+
+  let tax = 0;
+  if (taxCalculation.id) {
+    const lineItems = await stripe.tax.calculations.listLineItems(taxCalculation.id);
+    const taxes = lineItems.data.map((item) => (item.amount_tax * item.quantity))
+    tax = taxes.reduce((acc, tax) => acc + tax, 0);
+  }
+
+  if (taxCalculation.shipping_cost) {
+    return (taxCalculation.shipping_cost.amount_tax + tax) / 100;
+  }
+
+  return tax / 100;
 }
 
 interface CreatePaymentIntentParams {
   products: ValidProduct[];
   deliveryMethod: 'ship' | 'pickup';
-  zip: string;
-  country: string;
+  billingInfo: BillingInfo
 }
 
-export const createPaymentIntentAction = async ({ products, deliveryMethod, zip, country }: CreatePaymentIntentParams) => {
-  const amount = await getAmount(products, deliveryMethod, zip, country);
+export const createPaymentIntentAction = async ({ products, deliveryMethod, billingInfo }: CreatePaymentIntentParams) => {
+  const amount = await getAmount(products, deliveryMethod, billingInfo);
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount,

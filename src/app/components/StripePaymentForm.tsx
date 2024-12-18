@@ -94,7 +94,9 @@ export default function StripePaymentForm({
       <PaymentElement
         options={{
           fields: {
-            billingDetails: 'never',
+            billingDetails: {
+              address: 'never',
+            },
           },
         }}
       />

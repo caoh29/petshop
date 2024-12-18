@@ -31,6 +31,29 @@ export interface User {
   authenticators?: Authenticator[];
 }
 
+export interface ShippingInfo {
+  phone?: string,
+
+  firstName: string;
+  lastName: string;
+  address: string;
+  address2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+export interface BillingInfo {
+  firstName: string;
+  lastName: string;
+  address: string;
+  address2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+
 // New interfaces for NextAuth-related models
 export interface Account {
   id: string;
@@ -166,3 +189,4 @@ export interface FilterGroup {
   name: string;
   options: FilterOption[];
 }
+

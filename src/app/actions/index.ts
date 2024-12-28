@@ -8,4 +8,4 @@ export { getCategoriesAction } from './categories';
 
 export { registerUserAction, loginUserAction, logoutUserAction } from './auth';
 
-export { getUserDefaultValuesAction, createPaymentIntentAction } from './checkout';
+export { getUserDefaultValuesAction, createPaymentIntentAction, createGuestUserAction, createOrderAction } from './checkout';

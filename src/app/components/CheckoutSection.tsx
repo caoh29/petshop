@@ -22,9 +22,10 @@ import { useAppDispatch, useCheckout } from '@/hooks';
 
 interface Props {
   userData: UserData;
+  userId: string | null;
 }
 
-export default function CheckoutSection({ userData }: Readonly<Props>) {
+export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
   const { deliveryMethod } = useCheckout();
   const dispatch = useAppDispatch();
   const [isShippingSameAsBilling, setIsShippingSameAsBilling] =
@@ -71,7 +72,7 @@ export default function CheckoutSection({ userData }: Readonly<Props>) {
           Payment Information
         </AccordionTrigger>
         <AccordionContent>
-          <PaymentSection />
+          <PaymentSection userId={userId} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

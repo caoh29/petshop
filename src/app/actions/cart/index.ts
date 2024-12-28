@@ -302,7 +302,9 @@ export const validateStockAction = async (selectedProducts: SelectedProduct[]): 
       return {
         productId: item.productId,
         isAvailable: product.stock >= item.quantity,
-        quantity: item.quantity
+        quantity: item.quantity,
+        size: item.size,
+        color: item.color
       };
     })
   );

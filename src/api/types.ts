@@ -102,15 +102,14 @@ export interface Authenticator {
 export interface Order {
   id: string;
   userId: string;
-  products: SelectedProduct[];
+  products: ValidProduct[];
   total: number;
   createdAt: string;
   status: string;
   shippingAddress: string;
-  billingAddress: string;
   paymentMethod: string;
-  shippingMethod: string;
-  trackingNumber: string;
+  deliveryMethod: string;
+  trackingNumber?: string;
 }
 
 
@@ -159,6 +158,8 @@ export interface ValidProduct {
   productId: string;
   isAvailable: boolean;
   quantity: number;
+  size?: string;
+  color?: string;
 }
 
 export interface Cart {

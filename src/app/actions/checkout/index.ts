@@ -1,8 +1,8 @@
 "use server";
 
-import { BillingInfo, ValidProduct } from "@/api/types";
+import { BillingInfo, Cart, ShippingInfo, ValidProduct } from "@/api/types";
 
-import { capitalizeString, convertToCurrency } from "@/lib/utils";
+import { capitalizeString, convertToCurrency, isEmptyString } from "@/lib/utils";
 
 import prisma from "../../../../prisma/db";
 
@@ -142,11 +142,14 @@ export const getTaxes = async ({ billingInfo, shippingCharges, products }: { bil
 interface CreatePaymentIntentParams {
   products: ValidProduct[];
   deliveryMethod: 'ship' | 'pickup';
-  billingInfo: BillingInfo
+  billingInfo: BillingInfo,
+  userId: string | null;
 }
 
-export const createPaymentIntentAction = async ({ products, deliveryMethod, billingInfo }: CreatePaymentIntentParams) => {
+export const createPaymentIntentAction = async ({ userId, products, deliveryMethod, billingInfo }: CreatePaymentIntentParams) => {
   const amount = await getAmount(products, deliveryMethod, billingInfo);
+
+  const timestamp = new Date().toISOString().replace(/[^0-9]/g, '');
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount,
@@ -154,7 +157,93 @@ export const createPaymentIntentAction = async ({ products, deliveryMethod, bill
     automatic_payment_methods: {
       enabled: true,
     },
+    metadata: {
+      timestamp,
+      userId: userId ?? '',
+    },
   });
 
-  return { clientSecret: paymentIntent.client_secret };
+  return { clientSecret: paymentIntent.client_secret, timestamp, };
+}
+
+interface CreateGuestUserParams extends ShippingInfo {
+  email: string;
+}
+
+export const createGuestUserAction = async ({ email, ...rest }: CreateGuestUserParams) => {
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  });
+
+  if (existingUser) {
+    return existingUser;
+  }
+
+  const newUser = await prisma.user.create({
+    data: {
+      email: email,
+      phone: rest.phone,
+
+      firstName: !isEmptyString(rest.firstName) ? rest.firstName.trim().toLowerCase() : 'unknown',
+      lastName: !isEmptyString(rest.lastName) ? rest.lastName.trim().toLowerCase() : 'unknown',
+      address: !isEmptyString(rest.address) ? rest.address.trim().toLowerCase() : undefined,
+      address2: rest.address2,
+      city: !isEmptyString(rest.city) ? rest.city.trim().toLowerCase() : undefined,
+      state: !isEmptyString(rest.state) ? rest.state.trim() : undefined,
+      zip: !isEmptyString(rest.zip) ? rest.zip.trim() : undefined,
+      country: !isEmptyString(rest.country) ? rest.zip.trim() : undefined,
+
+      isAdmin: false,
+      isVerified: false,
+    }
+  });
+
+  return newUser;
+}
+
+interface CreateOrderParams {
+  cart: Cart;
+  shippingInfo: ShippingInfo;
+  billingInfo: BillingInfo;
+  userId: string;
+  deliveryMethod: 'ship' | 'pickup';
+  paymentMethod: 'stripe' | 'paypal' | 'cash';
+  timestamp: string;
+}
+
+export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentMethod, shippingInfo, billingInfo, timestamp }: CreateOrderParams) => {
+  const amount = await getAmount(cart.validatedProducts, deliveryMethod, billingInfo);
+
+  const shippingAddress = `${shippingInfo.address2 && `${shippingInfo.address2}, `}${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
+
+  const order = await prisma.order.create({
+    data: {
+      userId,
+      total: amount,
+      status: 'CREATED',
+      shippingAddress: deliveryMethod === 'ship' ? shippingAddress : '',
+      paymentMethod,
+      deliveryMethod,
+      timestamp,
+      products: {
+        create: cart.validatedProducts.map((product) => ({
+          quantity: product.quantity,
+          productId: product.productId,
+          size: product.size,
+          color: product.color,
+        }))
+      },
+    }
+  });
+
+  // Delete all products from cart
+  await prisma.selectedProduct.deleteMany({
+    where: {
+      cartId: cart.id
+    }
+  });
+
+  return order;
 }

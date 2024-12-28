@@ -87,19 +87,20 @@ model Authenticator {
 }
 
 model Order {
-  id              String            @id @default(uuid())
+  id              String            @default(uuid())
   userId          String
   total           Float
   createdAt       DateTime          @default(now())
+  timestamp       String
   status          String
   shippingAddress String
-  billingAddress  String
   paymentMethod   String
   trackingNumber  String?
   deliveryMethod  String
-  pickupPerson    String?
   user            User              @relation(fields: [userId], references: [id])
   products        SelectedProduct[]
+
+  @@id([userId, timestamp])
 }
 
 model Review {
@@ -130,8 +131,8 @@ model Product {
   stock            Int
   isOutOfStock     Boolean
   createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
   reservedStock    Int               @default(0)
+  updatedAt        DateTime          @updatedAt
   reviews          Review[]
   selectedProducts SelectedProduct[]
   wishedBy         User[]            @relation("UserWishlist")
@@ -143,10 +144,11 @@ model SelectedProduct {
   size      String?
   color     String?
   productId String
-  orderId   String?
+  userId    String?
+  timestamp String?
   cartId    String?
   cart      Cart?   @relation(fields: [cartId], references: [id])
-  order     Order?  @relation(fields: [orderId], references: [id])
+  order     Order?  @relation(fields: [userId, timestamp], references: [userId, timestamp])
   product   Product @relation(fields: [productId], references: [id])
 }
 

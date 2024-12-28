@@ -7,6 +7,8 @@ export interface CheckoutState {
   email: string,
   proceedToPayment: boolean,
 
+  timestamp: string;
+
   shippingInfo: ShippingInfo,
   billingInfo: BillingInfo,
 }
@@ -15,6 +17,8 @@ const initialState: CheckoutState = {
   deliveryMethod: "ship",
   email: "",
   proceedToPayment: false,
+
+  timestamp: "",
 
   shippingInfo: {
     phone: "",
@@ -68,6 +72,10 @@ export const checkoutSlice = createSlice({
       if (state.proceedToPayment && (state.deliveryMethod && state.email.length === 0 || state.billingInfo.firstName.length === 0 || state.billingInfo.lastName.length === 0 || state.billingInfo.address.length === 0 || state.billingInfo.city.length === 0 || state.billingInfo.country.length === 0 || state.billingInfo.state.length === 0 || state.billingInfo.zip.length === 0)) {
         state.proceedToPayment = false;
       }
+    },
+
+    setTimestamp: (state, action: PayloadAction<string>) => {
+      state.timestamp = action.payload;
     },
 
     // Reset the checkout state (useful on order completion or cancellation)

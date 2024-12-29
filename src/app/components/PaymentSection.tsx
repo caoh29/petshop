@@ -15,7 +15,7 @@ export default function PaymentSection({ userId }: Readonly<Props>) {
   return (
     <section className='flex flex-col flex-nowrap gap-6 rounded-lg bg-white p-8 shadow-sm'>
       {proceedToPayment ? (
-        <StripePaymentWrapper userId={userId}>
+        <StripePaymentWrapper>
           <StripePaymentForm userId={userId} />
         </StripePaymentWrapper>
       ) : (

@@ -3,8 +3,10 @@ import StripePaymentStatusWrapper from '@/app/components/StripePaymentStatusWrap
 
 export default function PaymentStatusPage() {
   return (
-    <StripePaymentStatusWrapper>
-      <StripePaymentStatus />
-    </StripePaymentStatusWrapper>
+    <main className='bg-gray-50 min-h-screen'>
+      <StripePaymentStatusWrapper>
+        <StripePaymentStatus />
+      </StripePaymentStatusWrapper>
+    </main>
   );
 }

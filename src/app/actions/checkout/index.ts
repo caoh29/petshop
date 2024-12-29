@@ -55,7 +55,7 @@ export const getUserDefaultValuesAction = async (userId: string) => {
   }
 }
 
-const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship' | 'pickup', billingInfo: BillingInfo): Promise<number> => {
+export const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship' | 'pickup', billingInfo: BillingInfo): Promise<number> => {
   const productsWithPrice = await Promise.all(products.map(async (item) => {
     const product = await prisma.product.findUnique({
       where: {
@@ -144,12 +144,11 @@ interface CreatePaymentIntentParams {
   deliveryMethod: 'ship' | 'pickup';
   billingInfo: BillingInfo,
   userId: string | null;
+  orderId: string;
 }
 
-export const createPaymentIntentAction = async ({ userId, products, deliveryMethod, billingInfo }: CreatePaymentIntentParams) => {
+export const createPaymentIntentAction = async ({ userId, orderId, products, deliveryMethod, billingInfo }: CreatePaymentIntentParams) => {
   const amount = await getAmount(products, deliveryMethod, billingInfo);
-
-  const timestamp = new Date().toISOString().replace(/[^0-9]/g, '');
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount,
@@ -158,12 +157,16 @@ export const createPaymentIntentAction = async ({ userId, products, deliveryMeth
       enabled: true,
     },
     metadata: {
-      timestamp,
+      orderId,
       userId: userId ?? '',
     },
   });
 
-  return { clientSecret: paymentIntent.client_secret, timestamp, };
+  if (!paymentIntent.client_secret) {
+    throw new Error('No client secret');
+  }
+
+  return { clientSecret: paymentIntent.client_secret };
 }
 
 interface CreateGuestUserParams extends ShippingInfo {
@@ -210,10 +213,9 @@ interface CreateOrderParams {
   userId: string;
   deliveryMethod: 'ship' | 'pickup';
   paymentMethod: 'stripe' | 'paypal' | 'cash';
-  timestamp: string;
 }
 
-export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentMethod, shippingInfo, billingInfo, timestamp }: CreateOrderParams) => {
+export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentMethod, shippingInfo, billingInfo }: CreateOrderParams) => {
   const amount = await getAmount(cart.validatedProducts, deliveryMethod, billingInfo);
 
   const shippingAddress = `${shippingInfo.address2 && `${shippingInfo.address2}, `}${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
@@ -226,7 +228,6 @@ export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentM
       shippingAddress: deliveryMethod === 'ship' ? shippingAddress : '',
       paymentMethod,
       deliveryMethod,
-      timestamp,
       products: {
         create: cart.validatedProducts.map((product) => ({
           quantity: product.quantity,

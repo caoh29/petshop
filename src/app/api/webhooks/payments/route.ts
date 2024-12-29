@@ -29,19 +29,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
   }
 
+  let response;
+
   switch (event.type) {
     case 'payment_intent.processing':
-      return await handlePaymentProcessing(event);
-
-
+      response = await handlePaymentProcessing(event);
+      break;
     case 'payment_intent.succeeded':
-      return await handlePaymentSucceeded(event);
+      response = await handlePaymentSucceeded(event);
+      break;
 
     case 'payment_intent.payment_failed':
-      return await handlePaymentFailed(event);
+      response = await handlePaymentFailed(event);
+      break
 
     default:
-      console.log(`Unhandled event type ${event.type}`);
+      response = `Unhandled event type ${event.type}`;
+      break;
+  }
+
+  if (response) {
+    return NextResponse.json(response, { status: 200 });
+  } else {
+    return NextResponse.json({ error: 'No response' }, { status: 500 });
   }
 }
 
@@ -50,10 +60,7 @@ const handlePaymentProcessing = async (event: Stripe.PaymentIntentProcessingEven
 
   const order = await prisma.order.update({
     where: {
-      userId_timestamp: {
-        userId: metadata.userId,
-        timestamp: metadata.timestamp,
-      }
+      id: metadata.orderId
     },
     data: {
       status: 'PROCESSING',
@@ -61,10 +68,10 @@ const handlePaymentProcessing = async (event: Stripe.PaymentIntentProcessingEven
   })
 
   if (!order) {
-    return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    return { error: 'Order not found' };
   }
 
-  return NextResponse.json({ orderId: order.id, status: order.status }, { status: 200 });
+  return { orderId: order.id, status: order.status };
 }
 
 
@@ -73,10 +80,7 @@ const handlePaymentSucceeded = async (event: Stripe.PaymentIntentSucceededEvent)
 
   const order = await prisma.order.update({
     where: {
-      userId_timestamp: {
-        userId: metadata.userId,
-        timestamp: metadata.timestamp,
-      }
+      id: metadata.orderId
     },
     data: {
       status: 'SUCCEEDED',
@@ -84,10 +88,10 @@ const handlePaymentSucceeded = async (event: Stripe.PaymentIntentSucceededEvent)
   })
 
   if (!order) {
-    return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    return { error: 'Order not found' };
   }
 
-  return NextResponse.json({ orderId: order.id, status: order.status }, { status: 200 });
+  return { orderId: order.id, status: order.status };
 }
 
 const handlePaymentFailed = async (event: Stripe.PaymentIntentPaymentFailedEvent) => {
@@ -95,10 +99,7 @@ const handlePaymentFailed = async (event: Stripe.PaymentIntentPaymentFailedEvent
 
   const order = await prisma.order.update({
     where: {
-      userId_timestamp: {
-        userId: metadata.userId,
-        timestamp: metadata.timestamp,
-      }
+      id: metadata.orderId
     },
     data: {
       status: 'FAILED',
@@ -106,9 +107,9 @@ const handlePaymentFailed = async (event: Stripe.PaymentIntentPaymentFailedEvent
   })
 
   if (!order) {
-    return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    return { error: 'Order not found' };
   }
 
-  return NextResponse.json({ orderId: order.id, status: order.status }, { status: 200 });
+  return { orderId: order.id, status: order.status };
 }
 

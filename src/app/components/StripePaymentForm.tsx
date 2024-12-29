@@ -12,38 +12,54 @@ import { Button } from './ui/button';
 
 import { useCart, useCheckout } from '@/hooks';
 
-import { createGuestUserAction, createOrderAction } from '../actions';
+import {
+  createGuestUserAction,
+  createOrderAction,
+  createPaymentIntentAction,
+} from '../actions';
 
 interface Props {
   userId: string | null;
 }
 
 export default function StripePaymentForm({ userId }: Readonly<Props>) {
-  const stripe = useStripe();
-  const elements = useElements();
-
   const cart = useCart();
   const { shippingInfo, billingInfo, email, deliveryMethod, timestamp } =
     useCheckout();
 
+  const stripe = useStripe();
+  const elements = useElements();
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const handleError = (error: any) => {
+    setLoading(false);
+    setErrorMessage(error.message);
+  };
 
   const handleSubmit = async (event: any) => {
     // We don't want to let default form submission happen here,
     // which would refresh the page.
     event.preventDefault();
 
-    setLoading(true);
-
+    // if (!stripe || !elements) {
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
-    // If guest user, then create user
+    setLoading(true);
 
+    // Trigger form validation and wallet collection
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      handleError(submitError);
+      return;
+    }
+
+    // If guest user, then create user
     let newUserId = userId;
 
     if (!newUserId) {
@@ -71,17 +87,27 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       paymentMethod: 'stripe',
       shippingInfo,
       billingInfo,
-      timestamp,
     });
 
     if (!order) {
       setLoading(false);
+      setErrorMessage('Error creating order');
       return;
     }
+
+    // Create the PaymentIntent and obtain clientSecret
+    const { clientSecret } = await createPaymentIntentAction({
+      products: cart.validatedProducts,
+      deliveryMethod,
+      billingInfo,
+      userId: newUserId,
+      orderId: order.id,
+    });
 
     const { error } = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
+      clientSecret,
       confirmParams: {
         return_url: `${window.location.origin}/checkout/payment-status`,
         payment_method_data: {
@@ -104,14 +130,12 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       // This point will only be reached if there is an immediate error when
       // confirming the payment. Show error to your customer (for example, payment
       // details incomplete)
-      setErrorMessage(error.message ?? null);
-      throw new Error(error.message);
+      handleError(error);
     } else {
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
     }
-    setLoading(false);
   };
 
   return (

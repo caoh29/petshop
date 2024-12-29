@@ -87,11 +87,10 @@ model Authenticator {
 }
 
 model Order {
-  id              String            @default(uuid())
+  id              String            @unique @default(uuid())
   userId          String
   total           Float
   createdAt       DateTime          @default(now())
-  timestamp       String
   status          String
   shippingAddress String
   paymentMethod   String
@@ -100,7 +99,7 @@ model Order {
   user            User              @relation(fields: [userId], references: [id])
   products        SelectedProduct[]
 
-  @@id([userId, timestamp])
+  @@id([id])
 }
 
 model Review {
@@ -144,11 +143,10 @@ model SelectedProduct {
   size      String?
   color     String?
   productId String
-  userId    String?
-  timestamp String?
+  orderId   String?
   cartId    String?
   cart      Cart?   @relation(fields: [cartId], references: [id])
-  order     Order?  @relation(fields: [userId, timestamp], references: [userId, timestamp])
+  order     Order?  @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 }
 

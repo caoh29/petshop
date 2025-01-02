@@ -24,18 +24,15 @@ interface Props {
 
 export default function StripePaymentForm({ userId }: Readonly<Props>) {
   const cart = useCart();
-  const { shippingInfo, billingInfo, email, deliveryMethod, timestamp } =
-    useCheckout();
+  const { shippingInfo, billingInfo, email, deliveryMethod } = useCheckout();
 
   const stripe = useStripe();
   const elements = useElements();
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleError = (error: any) => {
     setLoading(false);
-    setErrorMessage(error.message);
   };
 
   const handleSubmit = async (event: any) => {
@@ -91,7 +88,7 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
 
     if (!order) {
       setLoading(false);
-      setErrorMessage('Error creating order');
+      alert('Error creating order');
       return;
     }
 
@@ -152,7 +149,6 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       <Button type='submit' disabled={!stripe || loading}>
         Pay
       </Button>
-      {errorMessage && <div>{errorMessage}</div>}
     </form>
   );
 }

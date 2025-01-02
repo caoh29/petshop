@@ -88,7 +88,7 @@ export const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship'
     products: productsWithPrice
   });
 
-  console.log({ subtotal, shippingCharges, tax });
+  // console.log({ subtotal, shippingCharges, tax });
 
   return convertToCurrency(subtotal + shippingCharges + tax);
 }
@@ -196,10 +196,11 @@ export const createGuestUserAction = async ({ email, ...rest }: CreateGuestUserP
       city: !isEmptyString(rest.city) ? rest.city.trim().toLowerCase() : undefined,
       state: !isEmptyString(rest.state) ? rest.state.trim() : undefined,
       zip: !isEmptyString(rest.zip) ? rest.zip.trim() : undefined,
-      country: !isEmptyString(rest.country) ? rest.zip.trim() : undefined,
+      country: !isEmptyString(rest.country) ? rest.country.trim() : undefined,
 
       isAdmin: false,
       isVerified: false,
+      isGuest: true,
     }
   });
 
@@ -218,12 +219,17 @@ interface CreateOrderParams {
 export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentMethod, shippingInfo, billingInfo }: CreateOrderParams) => {
   const amount = await getAmount(cart.validatedProducts, deliveryMethod, billingInfo);
 
-  const shippingAddress = `${shippingInfo.address2 && `${shippingInfo.address2}, `}${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
+  let shippingAddress;
+  if (isEmptyString(shippingInfo.address2)) {
+    shippingAddress = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
+  } else {
+    shippingAddress = `${shippingInfo.address2}, ${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
+  }
 
   const order = await prisma.order.create({
     data: {
       userId,
-      total: amount,
+      total: amount / 100,
       status: 'CREATED',
       shippingAddress: deliveryMethod === 'ship' ? shippingAddress : '',
       paymentMethod,

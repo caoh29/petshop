@@ -27,6 +27,7 @@ model User {
   phone          String?
   isAdmin        Boolean?        @default(false)
   isVerified     Boolean?        @default(false)
+  isGuest        Boolean?        @default(false)
   accounts       Account[]
   Authenticators Authenticator[]
   cart           Cart?

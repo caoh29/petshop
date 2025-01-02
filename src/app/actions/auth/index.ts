@@ -9,10 +9,12 @@ import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth"
 
 import { saltAndHashPassword } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 
 export async function registerUserAction(data: SchemaRegister) {
   const validatedFields = await schemaRegister.safeParseAsync(data);
+
+  let existingUser;
 
   if (!validatedFields.success) {
     return {
@@ -22,11 +24,11 @@ export async function registerUserAction(data: SchemaRegister) {
   }
 
   try {
-    const existingUser = await prisma.user.findUnique({
+    existingUser = await prisma.user.findUnique({
       where: { email: validatedFields.data.email },
     });
 
-    if (existingUser) {
+    if (existingUser && !existingUser.isGuest) {
       return {
         errors: {
           email: ["Email already exists"],
@@ -34,6 +36,7 @@ export async function registerUserAction(data: SchemaRegister) {
         message: "Email already exists. Failed to Register.",
       };
     }
+
   } catch (error) {
     console.error("Error checking for existing user:", error);
     return {
@@ -47,16 +50,29 @@ export async function registerUserAction(data: SchemaRegister) {
   try {
     const pwHash = await saltAndHashPassword(validatedFields.data.password);
 
-    const user = await prisma.user.create({
-      data: {
-        firstName: validatedFields.data.firstName,
-        lastName: validatedFields.data.lastName,
-        email: validatedFields.data.email,
-        password: pwHash,
-        isAdmin: false,
-        isVerified: false,
-      },
-    });
+    let user;
+    if (existingUser && existingUser.isGuest === true) {
+      user = await prisma.user.update({
+        where: { email: existingUser.email },
+        data: {
+          firstName: validatedFields.data.firstName,
+          lastName: validatedFields.data.lastName,
+          password: pwHash,
+          isGuest: false,
+        },
+      })
+    } else {
+      user = await prisma.user.create({
+        data: {
+          firstName: validatedFields.data.firstName,
+          lastName: validatedFields.data.lastName,
+          email: validatedFields.data.email,
+          password: pwHash,
+          isAdmin: false,
+          isVerified: false,
+        },
+      });
+    }
 
     if (user) {
       return {

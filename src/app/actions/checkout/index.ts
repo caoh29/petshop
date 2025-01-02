@@ -181,7 +181,7 @@ export const createGuestUserAction = async ({ email, ...rest }: CreateGuestUserP
   });
 
   if (existingUser) {
-    return existingUser;
+    return existingUser.id;
   }
 
   const newUser = await prisma.user.create({
@@ -204,7 +204,7 @@ export const createGuestUserAction = async ({ email, ...rest }: CreateGuestUserP
     }
   });
 
-  return newUser;
+  return newUser.id;
 }
 
 interface CreateOrderParams {
@@ -252,5 +252,5 @@ export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentM
     }
   });
 
-  return order;
+  return order.id;
 }

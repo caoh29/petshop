@@ -60,7 +60,7 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
     let newUserId = userId;
 
     if (!newUserId) {
-      const user = await createGuestUserAction({
+      newUserId = await createGuestUserAction({
         email,
         phone: shippingInfo.phone,
 
@@ -73,11 +73,10 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
         zip: shippingInfo.zip,
         country: shippingInfo.country,
       });
-      newUserId = user.id;
     }
 
     // Create order
-    const order = await createOrderAction({
+    const orderId = await createOrderAction({
       userId: newUserId,
       cart,
       deliveryMethod,
@@ -86,7 +85,7 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       billingInfo,
     });
 
-    if (!order) {
+    if (!orderId) {
       setLoading(false);
       alert('Error creating order');
       return;
@@ -98,9 +97,10 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       deliveryMethod,
       billingInfo,
       userId: newUserId,
-      orderId: order.id,
+      orderId,
     });
 
+    // Confirm payment with stripe
     const { error } = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,

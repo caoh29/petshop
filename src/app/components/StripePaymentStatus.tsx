@@ -87,7 +87,7 @@ export default function StripePaymentStatus() {
           break;
       }
     });
-  }, [stripe]);
+  }, [stripe, dispatch]);
 
   const getStatusIcon = () => {
     switch (status) {

@@ -425,30 +425,6 @@ export async function getCartSummaryAction({ cart,
 }
 
 async function getSubtotal(cart: Cart, isCheckout: boolean) {
-  // if (cart.validatedProducts.length === 0) {
-  //   const prices = await Promise.all(cart.products.map(async (product) => {
-  //     const prod = await prisma.product.findUnique({
-  //       where: { id: product.productId },
-  //       select: { price: true }
-  //     });
-
-  //     if (!prod) return 0;
-
-  //     return prod.price * product.quantity;
-  //   }));
-  //   return prices.reduce((a, b) => a + b, 0);
-  // }
-  // const prices = await Promise.all(cart.validatedProducts.map(async (product) => {
-  //   const prod = await prisma.product.findUnique({
-  //     where: { id: product.productId },
-  //     select: { price: true }
-  //   });
-
-  //   if (!prod) return 0;
-
-  //   return prod.price * product.quantity;
-  // }));
-  // return prices.reduce((a, b) => a + b, 0);
   if (!isCheckout) {
     const prices = await Promise.all(cart.products.map(async (product) => {
       const prod = await prisma.product.findUnique({

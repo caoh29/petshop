@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import bcrypt from "bcryptjs"
+import { Pagination } from "@/api/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -37,4 +38,21 @@ export function convertToCurrency(amount: number) {
 export function isEmptyString(str: string | undefined | null) {
   if (!str) return true;
   return str.trim().length === 0;
+}
+
+export const getPagination = ({ page = 1, take = 9 }: Pagination) => {
+  page = Number(page);
+  take = Number(take);
+  if (isNaN(page) || isNaN(take)) return { skip: 0, take: 9 };
+  const skip = (page - 1) * take;
+  return { skip, take };
+};
+
+export const checkSearchParam = (searchParam: string | string[] | undefined): string[] | undefined => {
+  if (Array.isArray(searchParam)) {
+    return searchParam;
+  } else if (typeof searchParam === 'string') {
+    return [searchParam];
+  }
+  return undefined;
 }

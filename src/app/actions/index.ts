@@ -9,3 +9,5 @@ export { getCategoriesAction } from './categories';
 export { registerUserAction, loginUserAction, logoutUserAction } from './auth';
 
 export { getUserDefaultValuesAction, createPaymentIntentAction, createGuestUserAction, createOrderAction, getAmount } from './checkout';
+
+export { getPaginatedOrdersByUserAction } from './orders';

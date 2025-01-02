@@ -10,7 +10,7 @@ export default function Shipping({
   return (
     <div className='flex justify-between'>
       <h5 className={variant ? 'font-normal' : 'font-medium'}>
-        {variant ? 'Delivery Fee' : 'Estimate Delivery & Handling'}
+        {variant ? 'Delivery' : 'Estimate Delivery & Handling'}
       </h5>
       <p className={variant ? 'font-medium' : 'font-light'}>
         {shipping ? `$${shipping.toFixed(2)}` : 'Free'}

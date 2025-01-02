@@ -191,3 +191,8 @@ export interface FilterGroup {
   options: FilterOption[];
 }
 
+
+export interface Pagination {
+  page?: number;
+  take?: number;
+}

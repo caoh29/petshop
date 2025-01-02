@@ -3,6 +3,8 @@
 import { FilterGroup, Product } from "@/api/types";
 import prisma from "../../../../prisma/db";
 
+import { checkSearchParam, getPagination } from "@/lib/utils";
+
 interface GetProducts {
   category?: string;
   subcategory?: string;
@@ -11,27 +13,6 @@ interface GetProducts {
   }
 }
 
-interface Pagination {
-  page?: number;
-  take?: number;
-}
-
-const getPagination = ({ page = 1, take = 9 }: Pagination) => {
-  page = Number(page);
-  take = Number(take);
-  if (isNaN(page) || isNaN(take)) return { skip: 0, take: 9 };
-  const skip = (page - 1) * take;
-  return { skip, take };
-};
-
-const checkSearchParam = (searchParam: string | string[] | undefined): string[] | undefined => {
-  if (Array.isArray(searchParam)) {
-    return searchParam;
-  } else if (typeof searchParam === 'string') {
-    return [searchParam];
-  }
-  return undefined;
-}
 
 const checkSorting = (sortBy: string | undefined): { price: "asc" | "desc" } | { createdAt: "asc" | "desc" } | undefined => {
   if (sortBy === 'price_asc') {
@@ -46,7 +27,6 @@ const checkSorting = (sortBy: string | undefined): { price: "asc" | "desc" } | {
     return undefined;
   }
 }
-
 
 export const getPaginatedProductsAction = async ({ category, subcategory, searchParams }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
   try {

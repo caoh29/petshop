@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useAppDispatch, useCheckout } from '@/hooks';
 import { setEmail } from '@/store/store';
 import { isEmptyString } from '@/lib/utils';
@@ -22,6 +23,15 @@ export default function EmailSection({ email }: Readonly<Props>) {
     }
   };
 
+  const defaultValue = getDefaultValue();
+
+  useEffect(() => {
+    // Dispatch the default email value to the state management store
+    if (!isEmptyString(defaultValue)) {
+      dispatch(setEmail(defaultValue));
+    }
+  }, [defaultValue, dispatch]);
+
   return (
     <section className='flex flex-col flex-nowrap gap-6 rounded-lg bg-white p-8 shadow-sm'>
       <h1 className='text-2xl font-semibold'>Contact</h1>
@@ -32,7 +42,7 @@ export default function EmailSection({ email }: Readonly<Props>) {
           name='email'
           placeholder='example@gmail.com'
           required
-          value={getDefaultValue()}
+          defaultValue={defaultValue}
           onChange={(e) => {
             dispatch(setEmail(e.target.value));
           }}

@@ -33,17 +33,19 @@ export default function StoreProvider({
     persistorRef.current?.pause();
   }
 
-  // If userId or cart changes, it set the cart to the new cart
-  useEffect(() => {
-    if (userId !== null && cart !== null) {
-      storeRef.current?.dispatch(
-        setCart({
-          ...cart,
-          validatedProducts: [],
-        }),
-      );
-    }
-  }, [cart, userId]);
+  // THIS BLOCK COMMENTED WAS CAUSING A BUG ON THE CHECKOUT FOR AUTHENTICATED USERS
+
+  // // If userId or cart changes, it set the cart to the new cart
+  // useEffect(() => {
+  //   if (userId !== null && cart !== null) {
+  //     storeRef.current?.dispatch(
+  //       setCart({
+  //         ...cart,
+  //         validatedProducts: [],
+  //       }),
+  //     );
+  //   }
+  // }, [cart, userId]);
 
   return (
     <Provider store={storeRef.current}>

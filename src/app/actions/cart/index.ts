@@ -346,29 +346,6 @@ export const reserveStockAction = async (selectedProducts: SelectedProduct[]) =>
   });
 }
 
-export const releaseReservedStockAction = async (selectedProducts: SelectedProduct[]) => {
-  return prisma.$transaction(async (tx) => {
-    const updateResults = await Promise.all(
-      selectedProducts.map(async (item) => {
-        return await tx.product.update({
-          where: { id: item.productId },
-          data: {
-            reservedStock: { decrement: item.quantity }
-          }
-        });
-
-      })
-    );
-
-    return {
-      message: 'Reserved stock released',
-      productsUpdated: updateResults.length
-    };
-  }, {
-    maxWait: 5000,
-    timeout: 10000
-  });
-}
 
 interface CartSummaryParams {
   cart: Cart;

@@ -112,6 +112,35 @@ export interface Order {
   trackingNumber?: string;
 }
 
+export interface DetailedOrder {
+  id: string;
+  userId: string;
+  total: number;
+  createdAt: Date;
+  status: string;
+  shippingAddress: string;
+  paymentMethod: string;
+  trackingNumber?: string;
+  deliveryMethod: string;
+  products: {
+    id: string;
+    image: string;
+    name: string;
+    category: string;
+    subcategory: string;
+    price: number;
+    quantity: number;
+    size?: string;
+    color?: string;
+  }[];
+  user: {
+    id: string;
+    name?: string;
+    email: string;
+    phone?: string;
+  };
+}
+
 
 export interface Review {
   id: string;

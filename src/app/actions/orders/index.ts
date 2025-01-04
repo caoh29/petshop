@@ -1,5 +1,6 @@
 'use server';
 
+import { DetailedOrder } from "@/api/types";
 import prisma from "../../../../prisma/db";
 
 import { getPagination } from "@/lib/utils";
@@ -89,5 +90,55 @@ export const getPaginatedOrdersByUserAction = async ({ userId, searchParams }: G
       pages: 0, // Return 0 pages in case of error
       currentPage: 1 // Return 1 as the current page in case of error
     };
+  }
+}
+
+export const getOrderByIdAction = async ({ orderId, userId }: { orderId: string; userId: string; }) => {
+  try {
+    const order = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+        userId, // Ensure the order belongs to the user
+      },
+      include: {
+        products: {
+          include: {
+            product: true,
+          },
+        },
+        user: true,
+      },
+    });
+
+    if (!order) {
+      return { order: null };
+    }
+
+    const detailedOrder: DetailedOrder = {
+      ...order,
+      trackingNumber: order.trackingNumber ?? undefined,
+      products: order.products.map((item) => ({
+        id: item.productId,
+        image: item.product.image,
+        name: item.product.name,
+        category: item.product.category,
+        subcategory: item.product.subcategory,
+        price: item.price ?? 0,
+        quantity: item.quantity,
+        size: item.size ?? undefined,
+        color: item.color ?? undefined,
+      })),
+      user: {
+        id: order.user.id,
+        name: order.user.name ?? undefined,
+        email: order.user.email,
+        phone: order.user.phone ?? undefined,
+      },
+    };
+
+    return { order: detailedOrder };
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    return { order: null };
   }
 }

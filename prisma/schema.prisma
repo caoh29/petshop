@@ -143,6 +143,7 @@ model SelectedProduct {
   quantity  Int
   size      String?
   color     String?
+  price     Float?
   productId String
   orderId   String?
   cartId    String?

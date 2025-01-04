@@ -32,7 +32,7 @@ export default function EmailSection({ email }: Readonly<Props>) {
           name='email'
           placeholder='example@gmail.com'
           required
-          defaultValue={getDefaultValue()}
+          value={getDefaultValue()}
           onChange={(e) => {
             dispatch(setEmail(e.target.value));
           }}

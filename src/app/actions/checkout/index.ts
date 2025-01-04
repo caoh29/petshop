@@ -88,17 +88,10 @@ export const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship'
     products: productsWithPrice
   });
 
-  // console.log({ subtotal, shippingCharges, tax });
-
   return convertToCurrency(subtotal + shippingCharges + tax);
 }
 
 export const getTaxes = async ({ billingInfo, shippingCharges, products }: { billingInfo: BillingInfo; shippingCharges: number; products: { price: number; productId: string; isAvailable: boolean; quantity: number; }[] }): Promise<number> => {
-  // This is a placeholder function. In a real application, you would fetch
-  // the tax rate from a database or tax service based on the location.
-
-  // console.log({ products });
-
   const taxCalculation = await stripe.tax.calculations.create({
     currency: 'cad',
     customer_details: {
@@ -122,8 +115,6 @@ export const getTaxes = async ({ billingInfo, shippingCharges, products }: { bil
       amount: shippingCharges > 0 ? convertToCurrency(shippingCharges) : undefined,
     },
   });
-
-  // console.log(taxCalculation);
 
   let tax = 0;
   if (taxCalculation.id) {
@@ -226,6 +217,29 @@ export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentM
     shippingAddress = `${shippingInfo.address2}, ${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
   }
 
+  const prices = await Promise.all(cart.validatedProducts.map(async (product) => {
+    const price = await prisma.product.findUnique({
+      where: {
+        id: product.productId
+      },
+      select: {
+        price: true,
+      }
+    });
+
+    if (!price) {
+      return {
+        id: product.productId,
+        price: 0,
+      };
+    }
+
+    return {
+      id: product.productId,
+      price: price.price,
+    };
+  }))
+
   const order = await prisma.order.create({
     data: {
       userId,
@@ -240,8 +254,9 @@ export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentM
           productId: product.productId,
           size: product.size,
           color: product.color,
-        }))
-      },
+          price: prices.find((price) => price.id === product.productId)?.price ?? 0,
+        })),
+      }
     }
   });
 

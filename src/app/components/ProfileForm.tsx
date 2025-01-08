@@ -1,11 +1,25 @@
 'use client';
 
+import { useState } from 'react';
+
+import { useForm } from 'react-hook-form';
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from './ui/form';
+
 import { Button } from '@/app/components/ui/button';
-import { Label } from '@/app/components/ui/label';
 import { Input } from '@/app/components/ui/input';
 import { Avatar, AvatarImage } from '@/app/components/ui/avatar';
 
-import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { schemaProfile, SchemaProfile } from '@/lib/schemas/profile-user';
+
+import { updateUserAction } from '../actions';
 
 interface Props {
   user: {
@@ -44,6 +58,38 @@ export default function ProfileForm({
   },
 }: Readonly<Props>) {
   const [isEditable, setIsEditable] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const defaultValues: SchemaProfile = {
+    firstName: firstName ?? '',
+    lastName: lastName ?? '',
+    address: address ?? '',
+    address2: address2 ?? '',
+    city: city ?? '',
+    state: state ?? '',
+    zip: zip ?? '',
+    country: country ?? '',
+    phone: phone ?? '',
+  };
+
+  // Define form
+  const form = useForm<SchemaProfile>({
+    resolver: zodResolver(schemaProfile),
+    defaultValues,
+  });
+
+  // Handle submission.
+  async function onSubmit(data: SchemaProfile) {
+    setLoading(true);
+    const res = await updateUserAction({ data });
+    setLoading(false);
+    if (res.errors) {
+      form.setError('root', { message: res.message });
+    } else {
+      form.reset();
+      window.location.reload();
+    }
+  }
 
   return (
     <div className='flex flex-col flex-nowrap gap-6 p-8'>
@@ -64,114 +110,182 @@ export default function ProfileForm({
         </Button>
       </div>
 
-      <form
-        className='flex flex-col flex-nowrap gap-4 items-center justify-center'
-        onSubmit={(e) => console.log({ e })}
-      >
-        <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
-          <div className='flex flex-col flex-nowrap gap-2 w-full'>
-            <Label htmlFor='firstName'>First Name</Label>
-            <Input
-              id='firstName'
-              name='firstName'
-              disabled={!isEditable}
-              defaultValue={firstName}
-            />
+      <Form {...form}>
+        <form
+          className='flex flex-col flex-nowrap gap-4 items-center justify-center'
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
+            <div className='flex flex-col flex-nowrap gap-2 w-full'>
+              <FormField
+                control={form.control}
+                name='firstName'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input type='text' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* <Label htmlFor='firstName'>First Name</Label>
+              <Input
+                id='firstName'
+                name='firstName'
+                disabled={!isEditable}
+                defaultValue={firstName}
+              /> */}
+            </div>
+            <div className='flex flex-col flex-nowrap gap-2 w-full'>
+              <FormField
+                control={form.control}
+                name='lastName'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input type='text' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          <div className='flex flex-col flex-nowrap gap-2 w-full'>
-            <Label htmlFor='lastName'>Last Name</Label>
-            <Input
-              id='lastName'
-              name='lastName'
-              disabled={!isEditable}
-              defaultValue={lastName}
-            />
+          <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
+            <div className='flex flex-col flex-nowrap gap-2 w-full'>
+              <FormField
+                control={form.control}
+                name='address'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input type='text' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className='flex flex-col flex-nowrap gap-2 w-full'>
+              <FormField
+                control={form.control}
+                name='address2'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Address 2 (Optional)</FormLabel>
+                    <FormControl>
+                      <Input type='text' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-        </div>
-        <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
-          <div className='flex flex-col flex-nowrap gap-2 w-full'>
-            <Label htmlFor='address'>Address</Label>
-            <Input
-              id='address'
-              name='address'
-              disabled={!isEditable}
-              defaultValue={address}
-            />
+          <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
+            <div className='flex flex-col flex-nowrap gap-2 w-full'>
+              <FormField
+                control={form.control}
+                name='city'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input type='text' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className='flex flex-col flex-nowrap gap-2 w-full'>
+              <FormField
+                control={form.control}
+                name='state'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>State/Province</FormLabel>
+                    <FormControl>
+                      <Input type='text' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          <div className='flex flex-col flex-nowrap gap-2 w-full'>
-            <Label htmlFor='address2'>Address 2</Label>
-            <Input
-              id='address2'
-              name='address2'
-              disabled={!isEditable}
-              defaultValue={address2}
-            />
+          <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
+            <div className='flex flex-col flex-nowrap gap-2 w-full'>
+              <FormField
+                control={form.control}
+                name='zip'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Postal Code</FormLabel>
+                    <FormControl>
+                      <Input type='text' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className='flex flex-col flex-nowrap gap-2 w-full'>
+              <FormField
+                control={form.control}
+                name='country'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <FormControl>
+                      <Input type='text' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-        </div>
-        <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
-          <div className='flex flex-col flex-nowrap gap-2 w-full'>
-            <Label htmlFor='city'>City</Label>
-            <Input
-              id='city'
-              name='city'
-              disabled={!isEditable}
-              defaultValue={city}
-            />
+          <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
+            <div className='flex flex-col flex-nowrap gap-2 w-1/2'>
+              <FormField
+                control={form.control}
+                name='phone'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <Input type='tel' disabled={!isEditable} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          <div className='flex flex-col flex-nowrap gap-2 w-full'>
-            <Label htmlFor='state'>State</Label>
-            <Input
-              id='state'
-              name='state'
-              disabled={!isEditable}
-              defaultValue={state}
-            />
-          </div>
-        </div>
-        <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
-          <div className='flex flex-col flex-nowrap gap-2 w-full'>
-            <Label htmlFor='zip'>Zip</Label>
-            <Input
-              id='zip'
-              name='zip'
-              disabled={!isEditable}
-              defaultValue={zip}
-            />
-          </div>
-          <div className='flex flex-col flex-nowrap gap-2 w-full'>
-            <Label htmlFor='country'>Country</Label>
-            <Input
-              id='country'
-              name='country'
-              disabled={!isEditable}
-              defaultValue={country}
-            />
-          </div>
-        </div>
-        <div className='flex flex-row flex-nowrap gap-4 w-full justify-between'>
-          <div className='flex flex-col flex-nowrap gap-2 w-1/2'>
-            <Label htmlFor='phone'>Phone</Label>
-            <Input
-              id='phone'
-              name='phone'
-              type='tel'
-              pattern=''
-              disabled={!isEditable}
-              defaultValue={phone}
-            />
-          </div>
-        </div>
-        {isEditable && (
-          <>
-            <Button className='w-1/4 mt-4' type='submit'>
-              Save
-            </Button>
-            <Button className='w-1/4 mt-4' onClick={() => setIsEditable(false)}>
-              Discard
-            </Button>
-          </>
-        )}
-      </form>
+          {isEditable && (
+            <div className='flex flex-row flex-nowrap gap-6 w-full justify-center'>
+              <Button className='w-1/4 mt-4' type='submit' disabled={loading}>
+                Save
+              </Button>
+              <Button
+                className='w-1/4 mt-4'
+                onClick={() => {
+                  form.reset();
+                  setIsEditable(false);
+                }}
+                disabled={loading}
+              >
+                Discard
+              </Button>
+            </div>
+          )}
+        </form>
+      </Form>
     </div>
   );
 }

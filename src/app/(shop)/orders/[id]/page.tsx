@@ -13,7 +13,6 @@ export default async function OrderByIdPage({ params }: Readonly<Props>) {
   if (!session?.user || !session.user.id) redirect('/auth/signin');
 
   const { order } = await getOrderByIdAction({
-    userId: session.user.id,
     orderId: params.id,
   });
 

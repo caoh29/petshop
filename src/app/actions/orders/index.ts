@@ -4,10 +4,10 @@ import { DetailedOrder } from "@/api/types";
 import prisma from "../../../../prisma/db";
 
 import { getPagination } from "@/lib/utils";
+import { auth } from "@/auth";
 
 
 interface GetOrders {
-  userId?: string;
   searchParams?: {
     [key: string]: string | string[] | undefined;
   }
@@ -41,11 +41,16 @@ const checkSorting = (sortBy: string | undefined): { total: "asc" | "desc" } | {
 }
 
 
-export const getPaginatedOrdersByUserAction = async ({ userId, searchParams }: GetOrders): Promise<PaginatedOrders> => {
+export const getPaginatedOrdersByUserAction = async ({ searchParams }: GetOrders): Promise<PaginatedOrders> => {
   try {
-    if (!userId) {
-      throw new Error('User ID is required');
-    }
+    const session = await auth();
+
+    const userId = session?.user?.id ?? undefined;
+
+    // if (!session) return {
+    //   errors: ["Unauthorized"],
+    //   message: "You are Unauthorized",
+    // };
 
     const page = Number(searchParams?.page) ?? 1;
 
@@ -93,8 +98,17 @@ export const getPaginatedOrdersByUserAction = async ({ userId, searchParams }: G
   }
 }
 
-export const getOrderByIdAction = async ({ orderId, userId }: { orderId: string; userId: string; }) => {
+export const getOrderByIdAction = async ({ orderId }: { orderId: string; }) => {
   try {
+    const session = await auth();
+
+    const userId = session?.user?.id ?? undefined;
+
+    // if (!session) return {
+    //   errors: ["Unauthorized"],
+    //   message: "You are Unauthorized",
+    // };
+
     const order = await prisma.order.findUnique({
       where: {
         id: orderId,

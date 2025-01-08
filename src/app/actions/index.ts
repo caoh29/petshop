@@ -11,3 +11,5 @@ export { registerUserAction, loginUserAction, logoutUserAction } from './auth';
 export { getUserDefaultValuesAction, createPaymentIntentAction, createGuestUserAction, createOrderAction, getAmount } from './checkout';
 
 export { getPaginatedOrdersByUserAction, getOrderByIdAction } from './orders';
+
+export { updateUserAction } from './profile'

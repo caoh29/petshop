@@ -224,16 +224,16 @@ export const ROUTES: Route[] = [
     isProtected: false,
     href: '/new-arrivals',
   },
-  {
-    title: 'Rewards',
-    isProtected: false,
-    href: '/rewards',
-  },
-  {
-    title: 'Gift Cards',
-    isProtected: false,
-    href: '/gift-cards',
-  },
+  // {
+  //   title: 'Rewards',
+  //   isProtected: false,
+  //   href: '/rewards',
+  // },
+  // {
+  //   title: 'Gift Cards',
+  //   isProtected: false,
+  //   href: '/gift-cards',
+  // },
   {
     title: 'Contact',
     isProtected: false,

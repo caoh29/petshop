@@ -15,13 +15,19 @@ import Link from 'next/link';
 import Pagination from '@/app/components/Pagination';
 import SortDropdown from '@/app/components/SortDropdown';
 
-export default async function OrdersPage() {
+interface Props {
+  searchParams?: {
+    [key: string]: string | string[] | undefined;
+  };
+}
+
+export default async function OrdersPage({ searchParams }: Readonly<Props>) {
   const session = await auth();
 
   if (!session?.user) redirect('/auth/signin');
 
   const { orders, pages, currentPage } = await getPaginatedOrdersByUserAction({
-    userId: session.user.id,
+    searchParams,
   });
 
   return (

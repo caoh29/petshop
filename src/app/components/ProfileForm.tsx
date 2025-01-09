@@ -72,9 +72,14 @@ export default function ProfileForm({
 
   const [loading, setLoading] = useState(false);
 
+  const [currentCountry, setCurrentCountry] = useState<string | undefined>(
+    country,
+  );
   const [countries, setCountries] = useState<{ code: string; name: string }[]>(
     [],
   );
+
+  const [currentState, setCurrentState] = useState<string | undefined>(state);
   const [states, setStates] = useState<{ code: string; name: string }[]>([]);
 
   const defaultValues: SchemaProfile = {
@@ -111,17 +116,21 @@ export default function ProfileForm({
   useEffect(() => {
     const fetchCountries = async () => {
       setCountries(await getCountriesAction());
+      if (currentCountry) {
+        setStates(await getStatesByCountryCodeAction(currentCountry));
+      }
     };
 
     if (isEditable && countries.length === 0) {
       fetchCountries();
     }
-  }, [isEditable, countries.length]);
+  }, [isEditable, countries.length, currentCountry]);
 
   const handleCountryChange = async (countryCode: string) => {
     form.setValue('state', ''); // Reset state field
     const statesData = await getStatesByCountryCodeAction(countryCode);
     setStates(statesData);
+    setCurrentState(undefined);
   };
 
   return (
@@ -246,15 +255,13 @@ export default function ProfileForm({
                       onValueChange={(value) => {
                         field.onChange(value);
                         handleCountryChange(value);
+                        setCurrentCountry(value);
                       }}
-                      value={field.value}
-                      defaultValue={defaultValues.country}
+                      defaultValue={field.value}
                       disabled={!isEditable}
                     >
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={country} />
-                        </SelectTrigger>
+                        <SelectTrigger>{currentCountry}</SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {countries.map((country) => (
@@ -279,15 +286,15 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>State/Province</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setCurrentState(value);
+                      }}
                       defaultValue={field.value}
-                      value={field.value}
                       disabled={!isEditable}
                     >
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder='Select state' />
-                        </SelectTrigger>
+                        <SelectTrigger>{currentState}</SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {states.map((state) => (
@@ -327,7 +334,12 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>Phone</FormLabel>
                     <FormControl>
-                      <Input type='tel' disabled={!isEditable} {...field} />
+                      <Input
+                        type='tel'
+                        placeholder='111-222-3333'
+                        disabled={!isEditable}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -345,6 +357,8 @@ export default function ProfileForm({
                 onClick={() => {
                   form.reset();
                   setIsEditable(false);
+                  setCurrentState(state);
+                  setCurrentCountry(country);
                 }}
                 disabled={loading}
               >

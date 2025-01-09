@@ -170,3 +170,18 @@ model SubCategory {
   name  String
   image String
 }
+
+model Country {
+  id     Int     @id @default(autoincrement())
+  name   String
+  code   String  @unique
+  states State[]
+}
+
+model State {
+  id        Int     @id @default(autoincrement())
+  name      String
+  code      String
+  countryId Int
+  country   Country @relation(fields: [countryId], references: [id])
+}

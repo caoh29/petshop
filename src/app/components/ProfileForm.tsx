@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import {
@@ -15,11 +15,22 @@ import {
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Avatar, AvatarImage } from '@/app/components/ui/avatar';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/app/components/ui/select';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemaProfile, SchemaProfile } from '@/lib/schemas/profile-user';
 
-import { updateUserAction } from '../actions';
+import {
+  getCountriesAction,
+  getStatesByCountryCodeAction,
+  updateUserAction,
+} from '../actions';
 
 interface Props {
   user: {
@@ -58,7 +69,13 @@ export default function ProfileForm({
   },
 }: Readonly<Props>) {
   const [isEditable, setIsEditable] = useState(false);
+
   const [loading, setLoading] = useState(false);
+
+  const [countries, setCountries] = useState<{ code: string; name: string }[]>(
+    [],
+  );
+  const [states, setStates] = useState<{ code: string; name: string }[]>([]);
 
   const defaultValues: SchemaProfile = {
     firstName: firstName ?? '',
@@ -90,6 +107,22 @@ export default function ProfileForm({
       window.location.reload();
     }
   }
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      setCountries(await getCountriesAction());
+    };
+
+    if (isEditable && countries.length === 0) {
+      fetchCountries();
+    }
+  }, [isEditable, countries.length]);
+
+  const handleCountryChange = async (countryCode: string) => {
+    form.setValue('state', ''); // Reset state field
+    const statesData = await getStatesByCountryCodeAction(countryCode);
+    setStates(statesData);
+  };
 
   return (
     <div className='flex flex-col flex-nowrap gap-6 p-8'>
@@ -205,13 +238,32 @@ export default function ProfileForm({
             <div className='flex flex-col flex-nowrap gap-2 w-full'>
               <FormField
                 control={form.control}
-                name='state'
+                name='country'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>State/Province</FormLabel>
-                    <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
-                    </FormControl>
+                    <FormLabel>Country</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        handleCountryChange(value);
+                      }}
+                      value={field.value}
+                      defaultValue={defaultValues.country}
+                      disabled={!isEditable}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={country} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {countries.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -222,13 +274,29 @@ export default function ProfileForm({
             <div className='flex flex-col flex-nowrap gap-2 w-full'>
               <FormField
                 control={form.control}
-                name='zip'
+                name='state'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Postal Code</FormLabel>
-                    <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
-                    </FormControl>
+                    <FormLabel>State/Province</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      value={field.value}
+                      disabled={!isEditable}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select state' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {states.map((state) => (
+                          <SelectItem key={state.code} value={state.code}>
+                            {state.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -237,10 +305,10 @@ export default function ProfileForm({
             <div className='flex flex-col flex-nowrap gap-2 w-full'>
               <FormField
                 control={form.control}
-                name='country'
+                name='zip'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Country</FormLabel>
+                    <FormLabel>Postal Code</FormLabel>
                     <FormControl>
                       <Input type='text' disabled={!isEditable} {...field} />
                     </FormControl>

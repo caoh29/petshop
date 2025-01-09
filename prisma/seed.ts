@@ -1,6 +1,7 @@
 import prisma from "./db";
 import PRODUCTS from '../src/mocks/MOCK_PRODUCTS.json';
 import CATEGORIES from '../src/mocks/MOCK_CATEGORIES.json';
+import COUNTRIES from '../src/mocks/MOCK_COUNTRIES.json';
 
 
 async function main() {
@@ -12,6 +13,8 @@ async function main() {
   await prisma.selectedProduct.deleteMany();
   await prisma.subCategory.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.country.deleteMany();
+  await prisma.state.deleteMany();
 
 
   const createdProducts = await prisma.product.createMany({
@@ -55,6 +58,21 @@ async function main() {
   })
 
   console.log({ createdCategories })
+
+  for (const country of COUNTRIES) {
+    await prisma.country.create({
+      data: {
+        name: country.name,
+        code: country.code,
+        states: {
+          create: country.states.map((state) => ({
+            name: state.name,
+            code: state.code,
+          })),
+        },
+      },
+    });
+  }
 }
 main()
   .then(async () => {

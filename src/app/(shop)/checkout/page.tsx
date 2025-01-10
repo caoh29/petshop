@@ -47,7 +47,7 @@ export default async function CheckoutPage() {
             <CartSummary isCheckout />
           </div>
           {/* Checkout Section */}
-          <div className='flex flex-col flex-nowrap gap-8'>
+          <div className='flex flex-col flex-nowrap gap-8 rounded-lg bg-white p-8 shadow-sm'>
             <CheckoutSection userData={userData} userId={userId} />
           </div>
         </div>

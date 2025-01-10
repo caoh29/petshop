@@ -317,7 +317,16 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>Postal Code</FormLabel>
                     <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
+                      <Input
+                        type='text'
+                        disabled={!isEditable}
+                        {...field}
+                        pattern={
+                          currentCountry === 'CA'
+                            ? '^[A-Za-z]d[A-Za-z][ -]?d[A-Za-z]d$'
+                            : '^d{5}(-d{4})?$'
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -336,7 +345,8 @@ export default function ProfileForm({
                     <FormControl>
                       <Input
                         type='tel'
-                        placeholder='111-222-3333'
+                        placeholder='+12223334444'
+                        pattern='^\+[1-9][0-9]{1,3}[0-9]{6,14}$'
                         disabled={!isEditable}
                         {...field}
                       />

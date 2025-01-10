@@ -19,6 +19,7 @@ import { Checkbox } from './ui/checkbox';
 
 import { checkIfProceedToPayment } from '@/store/store';
 import { useAppDispatch, useCheckout } from '@/hooks';
+import { Label } from './ui/label';
 
 interface Props {
   userData: UserData;
@@ -50,12 +51,15 @@ export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
           <EmailSection email={userData?.email ?? ''} />
           <ShippingAddressSection userData={userData} />
           {deliveryMethod === 'ship' && (
-            <Checkbox
-              checked={isShippingSameAsBilling}
-              onClick={() =>
-                setIsShippingSameAsBilling(!isShippingSameAsBilling)
-              }
-            />
+            <div className='flex flex-row flex-nowrap gap-2 mt-4'>
+              <Checkbox
+                checked={isShippingSameAsBilling}
+                onClick={() =>
+                  setIsShippingSameAsBilling(!isShippingSameAsBilling)
+                }
+              />
+              <Label>Is billing address same a shipping address?</Label>
+            </div>
           )}
         </AccordionContent>
       </AccordionItem>

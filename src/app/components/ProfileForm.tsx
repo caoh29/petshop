@@ -20,7 +20,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  // SelectValue,
 } from '@/app/components/ui/select';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -72,14 +72,9 @@ export default function ProfileForm({
 
   const [loading, setLoading] = useState(false);
 
-  const [currentCountry, setCurrentCountry] = useState<string | undefined>(
-    country,
-  );
   const [countries, setCountries] = useState<{ code: string; name: string }[]>(
     [],
   );
-
-  const [currentState, setCurrentState] = useState<string | undefined>(state);
   const [states, setStates] = useState<{ code: string; name: string }[]>([]);
 
   const defaultValues: SchemaProfile = {
@@ -116,21 +111,21 @@ export default function ProfileForm({
   useEffect(() => {
     const fetchCountries = async () => {
       setCountries(await getCountriesAction());
-      if (currentCountry) {
-        setStates(await getStatesByCountryCodeAction(currentCountry));
+      if (country) {
+        setStates(await getStatesByCountryCodeAction(country));
       }
     };
 
     if (isEditable && countries.length === 0) {
       fetchCountries();
     }
-  }, [isEditable, countries.length, currentCountry]);
+  }, [isEditable, countries.length, country]);
 
   const handleCountryChange = async (countryCode: string) => {
     form.setValue('state', ''); // Reset state field
+    form.setValue('zip', '');
     const statesData = await getStatesByCountryCodeAction(countryCode);
     setStates(statesData);
-    setCurrentState(undefined);
   };
 
   return (
@@ -251,26 +246,26 @@ export default function ProfileForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Country</FormLabel>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        handleCountryChange(value);
-                        setCurrentCountry(value);
-                      }}
-                      defaultValue={field.value}
-                      disabled={!isEditable}
-                    >
-                      <FormControl>
-                        <SelectTrigger>{currentCountry}</SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {countries.map((country) => (
-                          <SelectItem key={country.code} value={country.code}>
-                            {country.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          handleCountryChange(value);
+                        }}
+                        defaultValue={field.value}
+                        disabled={!isEditable}
+                      >
+                        <SelectTrigger>{field.value}</SelectTrigger>
+
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem key={country.code} value={country.code}>
+                              {country.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -285,25 +280,26 @@ export default function ProfileForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>State/Province</FormLabel>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setCurrentState(value);
-                      }}
-                      defaultValue={field.value}
-                      disabled={!isEditable}
-                    >
-                      <FormControl>
-                        <SelectTrigger>{currentState}</SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {states.map((state) => (
-                          <SelectItem key={state.code} value={state.code}>
-                            {state.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          form.setValue('state', value);
+                        }}
+                        defaultValue={field.value}
+                        disabled={!isEditable}
+                      >
+                        <SelectTrigger>{field.value}</SelectTrigger>
+
+                        <SelectContent>
+                          {states.map((state) => (
+                            <SelectItem key={state.code} value={state.code}>
+                              {state.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -317,16 +313,7 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>Postal Code</FormLabel>
                     <FormControl>
-                      <Input
-                        type='text'
-                        disabled={!isEditable}
-                        {...field}
-                        pattern={
-                          currentCountry === 'CA'
-                            ? '^[A-Za-z]d[A-Za-z][ -]?d[A-Za-z]d$'
-                            : '^d{5}(-d{4})?$'
-                        }
-                      />
+                      <Input type='text' disabled={!isEditable} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -346,7 +333,6 @@ export default function ProfileForm({
                       <Input
                         type='tel'
                         placeholder='+12223334444'
-                        pattern='^\+[1-9][0-9]{1,3}[0-9]{6,14}$'
                         disabled={!isEditable}
                         {...field}
                       />
@@ -367,8 +353,6 @@ export default function ProfileForm({
                 onClick={() => {
                   form.reset();
                   setIsEditable(false);
-                  setCurrentState(state);
-                  setCurrentCountry(country);
                 }}
                 disabled={loading}
               >

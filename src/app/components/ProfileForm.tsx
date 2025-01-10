@@ -282,10 +282,7 @@ export default function ProfileForm({
                     <FormLabel>State/Province</FormLabel>
                     <FormControl>
                       <Select
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          form.setValue('state', value);
-                        }}
+                        onValueChange={field.onChange}
                         defaultValue={field.value}
                         disabled={!isEditable}
                       >

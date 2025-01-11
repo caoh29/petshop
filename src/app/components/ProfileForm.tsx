@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import {
@@ -11,6 +11,8 @@ import {
   FormControl,
   FormMessage,
 } from './ui/form';
+
+import { Skeleton } from './ui/skeleton';
 
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
@@ -52,25 +54,20 @@ interface Props {
   };
 }
 
-export default function ProfileForm({
-  user: {
-    name,
-    email,
-    image,
-    firstName,
-    lastName,
-    address,
-    address2,
-    city,
-    state,
-    zip,
-    country,
-    phone,
-  },
-}: Readonly<Props>) {
-  const [isEditable, setIsEditable] = useState(false);
+// Cache for countries and states data
+const cache = {
+  countries: null as { code: string; name: string }[] | null,
+  states: {} as Record<string, { code: string; name: string }[]>,
+};
 
+export default function ProfileForm({ user }: Readonly<Props>) {
+  const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Separate loading states for better UX
+  const [loadingCountries, setLoadingCountries] = useState(false);
+  const [loadingStates, setLoadingStates] = useState(false);
 
   const [countries, setCountries] = useState<{ code: string; name: string }[]>(
     [],
@@ -78,15 +75,15 @@ export default function ProfileForm({
   const [states, setStates] = useState<{ code: string; name: string }[]>([]);
 
   const defaultValues: SchemaProfile = {
-    firstName: firstName ?? '',
-    lastName: lastName ?? '',
-    address: address ?? '',
-    address2: address2 ?? '',
-    city: city ?? '',
-    state: state ?? '',
-    zip: zip ?? '',
-    country: country ?? '',
-    phone: phone ?? '',
+    firstName: user.firstName ?? '',
+    lastName: user.lastName ?? '',
+    address: user.address ?? '',
+    address2: user.address2 ?? '',
+    city: user.city ?? '',
+    state: user.state ?? '',
+    zip: user.zip ?? '',
+    country: user.country ?? '',
+    phone: user.phone ?? '',
   };
 
   // Define form
@@ -103,38 +100,99 @@ export default function ProfileForm({
     if (res.errors) {
       form.setError('root', { message: res.message });
     } else {
-      form.reset();
-      window.location.reload();
+      setIsEditable(false);
     }
   }
 
+  // Memoized fetch functions with caching
+  const fetchCountries = useCallback(async () => {
+    if (cache.countries) {
+      setCountries(cache.countries);
+      return;
+    }
+
+    try {
+      setLoadingCountries(true);
+      setError(null);
+      const data = await getCountriesAction();
+      cache.countries = data;
+      setCountries(data);
+    } catch (err) {
+      setError('Failed to load countries. Please try again.');
+    } finally {
+      setLoadingCountries(false);
+    }
+  }, []);
+
+  const fetchStates = useCallback(async (countryCode: string) => {
+    if (cache.states[countryCode]) {
+      setStates(cache.states[countryCode]);
+      return;
+    }
+
+    try {
+      setLoadingStates(true);
+      setError(null);
+      const data = await getStatesByCountryCodeAction(countryCode);
+      cache.states[countryCode] = data;
+      setStates(data);
+    } catch (err) {
+      setError('Failed to load states/provinces. Please try again.');
+    } finally {
+      setLoadingStates(false);
+    }
+  }, []);
+
+  // Initial data fetch
   useEffect(() => {
-    const fetchCountries = async () => {
-      setCountries(await getCountriesAction());
-      if (country) {
-        setStates(await getStatesByCountryCodeAction(country));
-      }
-    };
+    if (!countries.length) {
+      fetchCountries();
+    }
+    if (user.country && !states.length) {
+      fetchStates(user.country);
+    }
+  }, [
+    fetchCountries,
+    fetchStates,
+    user.country,
+    countries.length,
+    states.length,
+  ]);
 
-    fetchCountries();
-  }, [country]);
-
+  // handle different events
   const handleCountryChange = async (countryCode: string) => {
+    await fetchStates(countryCode);
     form.setValue('state', '');
     form.setValue('zip', '');
-    const statesData = await getStatesByCountryCodeAction(countryCode);
-    setStates(statesData);
+  };
+
+  const handleStateChange = () => {
+    form.setValue('zip', '');
+  };
+
+  const handleReset = async () => {
+    if (defaultValues.country) {
+      await fetchStates(defaultValues.country);
+    }
+    form.reset(defaultValues);
+    setIsEditable(false);
   };
 
   return (
     <div className='flex flex-col flex-nowrap gap-6 p-8'>
+      {error && (
+        <div className='text-red-500 bg-red-50 p-4 rounded'>{error}</div>
+      )}
       <div className='flex flex-row flex-nowrap gap-8'>
         <Avatar className='h-20 w-20'>
-          <AvatarImage src={image ?? '/default-contact.png'} alt='user icon' />
+          <AvatarImage
+            src={user.image ?? '/default-contact.png'}
+            alt='user icon'
+          />
         </Avatar>
         <div className='flex flex-col flex-nowrap gap-4'>
-          <h3>{name}</h3>
-          <p className='text-gray-400'>{email}</p>
+          <h3>{user.name}</h3>
+          <p className='text-gray-400'>{user.email}</p>
         </div>
         <Button
           className='ml-auto'
@@ -243,11 +301,15 @@ export default function ProfileForm({
                           field.onChange(value);
                           handleCountryChange(value);
                         }}
-                        disabled={!isEditable}
+                        disabled={!isEditable || loadingCountries}
                         {...field}
                       >
                         <SelectTrigger>
-                          <SelectValue />
+                          {loadingCountries ? (
+                            <Skeleton className='h-8 w-full' />
+                          ) : (
+                            <SelectValue />
+                          )}
                         </SelectTrigger>
                         <SelectContent>
                           {countries.map((country) => (
@@ -274,12 +336,19 @@ export default function ProfileForm({
                     <FormLabel>State/Province</FormLabel>
                     <FormControl>
                       <Select
-                        disabled={!isEditable}
-                        onValueChange={field.onChange}
+                        disabled={!isEditable || loadingStates}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          handleStateChange();
+                        }}
                         {...field}
                       >
                         <SelectTrigger>
-                          <SelectValue />
+                          {loadingStates ? (
+                            <Skeleton className='h-8 w-full' />
+                          ) : (
+                            <SelectValue />
+                          )}
                         </SelectTrigger>
                         <SelectContent>
                           {states.map((state) => (
@@ -303,7 +372,12 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>Postal Code</FormLabel>
                     <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
+                      <Input
+                        className='uppercase'
+                        type='text'
+                        disabled={!isEditable}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -340,10 +414,7 @@ export default function ProfileForm({
               </Button>
               <Button
                 className='w-1/4 mt-4'
-                onClick={() => {
-                  form.reset();
-                  setIsEditable(false);
-                }}
+                onClick={handleReset}
                 disabled={loading}
               >
                 Discard

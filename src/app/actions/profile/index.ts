@@ -3,6 +3,7 @@
 import { auth } from '@/auth';
 import { schemaProfile, SchemaProfile } from '@/lib/schemas/profile-user';
 import prisma from '../../../../prisma/db';
+import { revalidatePath } from 'next/cache';
 
 export async function updateUserAction({ data }: { data: SchemaProfile }) {
   const session = await auth();
@@ -34,6 +35,8 @@ export async function updateUserAction({ data }: { data: SchemaProfile }) {
         zip: data.zip?.trim().toUpperCase(),
       }
     });
+
+    revalidatePath('/profile');
 
     return {
       data: {

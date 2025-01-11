@@ -20,7 +20,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  // SelectValue,
+  SelectValue,
 } from '@/app/components/ui/select';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -116,13 +116,11 @@ export default function ProfileForm({
       }
     };
 
-    if (isEditable && countries.length === 0) {
-      fetchCountries();
-    }
-  }, [isEditable, countries.length, country]);
+    fetchCountries();
+  }, [country]);
 
   const handleCountryChange = async (countryCode: string) => {
-    form.setValue('state', ''); // Reset state field
+    form.setValue('state', '');
     form.setValue('zip', '');
     const statesData = await getStatesByCountryCodeAction(countryCode);
     setStates(statesData);
@@ -167,13 +165,6 @@ export default function ProfileForm({
                   </FormItem>
                 )}
               />
-              {/* <Label htmlFor='firstName'>First Name</Label>
-              <Input
-                id='firstName'
-                name='firstName'
-                disabled={!isEditable}
-                defaultValue={firstName}
-              /> */}
             </div>
             <div className='flex flex-col flex-nowrap gap-2 w-full'>
               <FormField
@@ -252,11 +243,12 @@ export default function ProfileForm({
                           field.onChange(value);
                           handleCountryChange(value);
                         }}
-                        defaultValue={field.value}
                         disabled={!isEditable}
+                        {...field}
                       >
-                        <SelectTrigger>{field.value}</SelectTrigger>
-
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
                           {countries.map((country) => (
                             <SelectItem key={country.code} value={country.code}>
@@ -282,12 +274,13 @@ export default function ProfileForm({
                     <FormLabel>State/Province</FormLabel>
                     <FormControl>
                       <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
                         disabled={!isEditable}
+                        onValueChange={field.onChange}
+                        {...field}
                       >
-                        <SelectTrigger>{field.value}</SelectTrigger>
-
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
                           {states.map((state) => (
                             <SelectItem key={state.code} value={state.code}>

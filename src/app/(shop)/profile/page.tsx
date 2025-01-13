@@ -5,15 +5,31 @@ import { auth } from '@/auth';
 import { getUserDefaultValuesAction } from '@/app/actions';
 
 import ProfileForm from '@/app/components/ProfileForm';
+import ChangePasswordForm from '@/app/components/ChangePasswordForm';
+import AccountPreferencesForm from '@/app/components/AccountPreferencesForm';
 
 export default async function ProfilePage() {
   const session = await auth();
+  const userId = session?.user?.id ?? null;
 
-  if (!session?.user || !session.user.id) redirect('/auth/signin');
+  if (!userId) redirect('/auth/signin');
 
-  const defaultValues = await getUserDefaultValuesAction(session.user.id);
+  const defaultValues = await getUserDefaultValuesAction(userId);
 
-  const user = { ...session.user, ...defaultValues };
+  if (!defaultValues) redirect('/auth/signin');
 
-  return <ProfileForm user={user} />;
+  return (
+    <div className='flex flex-col flex-nowrap gap-6 p-8'>
+      <ProfileForm defaultValues={defaultValues} />
+      <div className='mt-8'>
+        <h2 className='text-2xl font-bold mb-4'>Change Password</h2>
+        <ChangePasswordForm />
+      </div>
+
+      <div className='mt-8'>
+        <h2 className='text-2xl font-bold mb-4'>Account Preferences</h2>
+        <AccountPreferencesForm />
+      </div>
+    </div>
+  );
 }

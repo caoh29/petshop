@@ -16,7 +16,7 @@ import { Skeleton } from './ui/skeleton';
 
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
-import { Avatar, AvatarImage } from '@/app/components/ui/avatar';
+
 import {
   Select,
   SelectContent,
@@ -35,13 +35,7 @@ import {
 } from '../actions';
 
 interface Props {
-  user: {
-    id?: string;
-    email?: string | null;
-    name?: string | null;
-    image?: string | null;
-    isVerified: boolean;
-
+  defaultValues: {
     firstName?: string;
     lastName?: string;
     address?: string;
@@ -60,7 +54,9 @@ const cache = {
   states: {} as Record<string, { code: string; name: string }[]>,
 };
 
-export default function ProfileForm({ user }: Readonly<Props>) {
+export default function ProfileForm({
+  defaultValues: userDefaultValues,
+}: Readonly<Props>) {
   const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,15 +71,15 @@ export default function ProfileForm({ user }: Readonly<Props>) {
   const [states, setStates] = useState<{ code: string; name: string }[]>([]);
 
   const defaultValues: SchemaProfile = {
-    firstName: user.firstName ?? '',
-    lastName: user.lastName ?? '',
-    address: user.address ?? '',
-    address2: user.address2 ?? '',
-    city: user.city ?? '',
-    state: user.state ?? '',
-    zip: user.zip ?? '',
-    country: user.country ?? '',
-    phone: user.phone ?? '',
+    firstName: userDefaultValues.firstName ?? '',
+    lastName: userDefaultValues.lastName ?? '',
+    address: userDefaultValues.address ?? '',
+    address2: userDefaultValues.address2 ?? '',
+    city: userDefaultValues.city ?? '',
+    state: userDefaultValues.state ?? '',
+    zip: userDefaultValues.zip ?? '',
+    country: userDefaultValues.country ?? '',
+    phone: userDefaultValues.phone ?? '',
   };
 
   // Define form
@@ -148,13 +144,13 @@ export default function ProfileForm({ user }: Readonly<Props>) {
     if (!countries.length) {
       fetchCountries();
     }
-    if (user.country && !states.length) {
-      fetchStates(user.country);
+    if (userDefaultValues.country && !states.length) {
+      fetchStates(userDefaultValues.country);
     }
   }, [
     fetchCountries,
     fetchStates,
-    user.country,
+    userDefaultValues.country,
     countries.length,
     states.length,
   ]);
@@ -179,21 +175,12 @@ export default function ProfileForm({ user }: Readonly<Props>) {
   };
 
   return (
-    <div className='flex flex-col flex-nowrap gap-6 p-8'>
+    <>
       {error && (
         <div className='text-red-500 bg-red-50 p-4 rounded'>{error}</div>
       )}
       <div className='flex flex-row flex-nowrap gap-8'>
-        <Avatar className='h-20 w-20'>
-          <AvatarImage
-            src={user.image ?? '/default-contact.png'}
-            alt='user icon'
-          />
-        </Avatar>
-        <div className='flex flex-col flex-nowrap gap-4'>
-          <h3>{user.name}</h3>
-          <p className='text-gray-400'>{user.email}</p>
-        </div>
+        <h2 className='text-2xl font-bold mb-4'>Shipping Information</h2>
         <Button
           className='ml-auto'
           disabled={isEditable}
@@ -423,6 +410,6 @@ export default function ProfileForm({ user }: Readonly<Props>) {
           )}
         </form>
       </Form>
-    </div>
+    </>
   );
 }

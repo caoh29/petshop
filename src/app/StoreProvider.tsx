@@ -38,15 +38,23 @@ export default function StoreProvider({
   // // If userId or cart changes, it set the cart to the new cart
   // useEffect(() => {
   //   if (userId !== null && cart !== null) {
-  //     // storeRef.current?.dispatch(
-  //     //   setCart({
-  //     //     ...cart,
-  //     //     validatedProducts: [],
-  //     //   }),
-  //     // );
+  //     storeRef.current?.dispatch(
+  //       setCart({
+  //         ...cart,
+  //         validatedProducts: [],
+  //       }),
+  //     );
   //     console.log({ userId, cart });
   //   }
   // }, [cart, userId]);
+
+  // If userId or cart changes, it set the cart to the new cart
+  useEffect(() => {
+    if (userId !== null && cart !== null) {
+      storeRef.current?.dispatch(setCart(cart));
+      console.log(cart);
+    }
+  }, [cart, userId]);
 
   return (
     <Provider store={storeRef.current}>

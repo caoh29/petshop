@@ -12,6 +12,6 @@ export { getUserDefaultValuesAction, createPaymentIntentAction, createGuestUserA
 
 export { getPaginatedOrdersByUserAction, getOrderByIdAction } from './orders';
 
-export { updateUserAction } from './profile';
+export { updateUserAction, changePasswordAction } from './profile';
 
 export { getCountriesAction, getStatesByCountryCodeAction } from './location';

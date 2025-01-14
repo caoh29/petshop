@@ -173,7 +173,7 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
           },
         }}
       />
-      <Button type='submit' disabled={!stripe || loading}>
+      <Button className='mt-4' type='submit' disabled={!stripe || loading}>
         Pay
       </Button>
     </form>

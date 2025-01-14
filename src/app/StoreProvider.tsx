@@ -20,6 +20,7 @@ export default function StoreProvider({
 }>) {
   const storeRef = useRef<AppStore>();
   const persistorRef = useRef<Persistor>();
+  const sessionRef = useRef<boolean | undefined>();
   if (!storeRef.current) {
     // Create the store instance the first time this renders
     storeRef.current = makeStore();
@@ -33,26 +34,16 @@ export default function StoreProvider({
     persistorRef.current?.pause();
   }
 
-  // THIS BLOCK COMMENTED WAS CAUSING A BUG ON THE CHECKOUT FOR AUTHENTICATED USERS
-
-  // // If userId or cart changes, it set the cart to the new cart
-  // useEffect(() => {
-  //   if (userId !== null && cart !== null) {
-  //     storeRef.current?.dispatch(
-  //       setCart({
-  //         ...cart,
-  //         validatedProducts: [],
-  //       }),
-  //     );
-  //     console.log({ userId, cart });
-  //   }
-  // }, [cart, userId]);
-
   // If userId or cart changes, it set the cart to the new cart
   useEffect(() => {
-    if (userId !== null && cart !== null) {
-      storeRef.current?.dispatch(setCart(cart));
-      console.log(cart);
+    if (userId !== null && cart !== null && !sessionRef.current) {
+      storeRef.current?.dispatch(
+        setCart({
+          ...cart,
+          validatedProducts: [],
+        }),
+      );
+      sessionRef.current = true;
     }
   }, [cart, userId]);
 

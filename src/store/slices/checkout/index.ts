@@ -6,6 +6,7 @@ export interface CheckoutState {
   deliveryMethod: 'ship' | 'pickup',
   email: string,
   proceedToPayment: boolean,
+  saveAddress: boolean,
 
   shippingInfo: ShippingInfo,
   billingInfo: BillingInfo,
@@ -15,6 +16,7 @@ const initialState: CheckoutState = {
   deliveryMethod: "ship",
   email: "",
   proceedToPayment: false,
+  saveAddress: false,
 
   shippingInfo: {
     phone: "",
@@ -70,6 +72,9 @@ export const checkoutSlice = createSlice({
       }
     },
 
+    toggleSaveAddress: (state) => {
+      state.saveAddress = !state.saveAddress;
+    },
 
     // Reset the checkout state (useful on order completion or cancellation)
     resetCheckout: () => initialState

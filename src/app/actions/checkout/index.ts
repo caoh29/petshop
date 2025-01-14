@@ -198,6 +198,25 @@ export const createGuestUserAction = async ({ email, ...rest }: CreateGuestUserP
   return newUser.id;
 }
 
+export const updateUserAddressAction = async ({ userId, shippingInfo }: { userId: string, shippingInfo: ShippingInfo }) => {
+  try {
+    await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        address: !isEmptyString(shippingInfo.address) ? shippingInfo.address.trim().toLowerCase() : undefined,
+        address2: !isEmptyString(shippingInfo.address2) ? shippingInfo.address2!.trim().toLowerCase() : undefined,
+        city: !isEmptyString(shippingInfo.city) ? shippingInfo.city.trim().toLowerCase() : undefined,
+        state: !isEmptyString(shippingInfo.state) ? shippingInfo.state.trim() : undefined,
+        zip: !isEmptyString(shippingInfo.zip) ? shippingInfo.zip.trim() : undefined,
+        country: !isEmptyString(shippingInfo.country) ? shippingInfo.country.trim() : undefined,
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
 interface CreateOrderParams {
   cart: Cart;
   shippingInfo: ShippingInfo;

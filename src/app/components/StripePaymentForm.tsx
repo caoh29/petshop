@@ -16,6 +16,7 @@ import {
   createGuestUserAction,
   createOrderAction,
   createPaymentIntentAction,
+  updateUserAddressAction,
 } from '../actions';
 
 interface Props {
@@ -24,7 +25,8 @@ interface Props {
 
 export default function StripePaymentForm({ userId }: Readonly<Props>) {
   const cart = useCart();
-  const { shippingInfo, billingInfo, email, deliveryMethod } = useCheckout();
+  const { shippingInfo, billingInfo, email, deliveryMethod, saveAddress } =
+    useCheckout();
 
   const stripe = useStripe();
   const elements = useElements();
@@ -56,22 +58,47 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       return;
     }
 
+    let isSaveAddressHandled = false;
+
     // If guest user, then create user
     let newUserId = userId;
 
     if (!newUserId) {
-      newUserId = await createGuestUserAction({
-        email,
-        phone: shippingInfo.phone,
+      if (saveAddress) {
+        newUserId = await createGuestUserAction({
+          email,
+          phone: shippingInfo.phone,
 
-        firstName: shippingInfo.firstName,
-        lastName: shippingInfo.lastName,
-        address: shippingInfo.address,
-        address2: shippingInfo.address2,
-        city: shippingInfo.city,
-        state: shippingInfo.state,
-        zip: shippingInfo.zip,
-        country: shippingInfo.country,
+          firstName: shippingInfo.firstName,
+          lastName: shippingInfo.lastName,
+          address: shippingInfo.address,
+          address2: shippingInfo.address2,
+          city: shippingInfo.city,
+          state: shippingInfo.state,
+          zip: shippingInfo.zip,
+          country: shippingInfo.country,
+        });
+      } else {
+        newUserId = await createGuestUserAction({
+          email,
+          phone: '',
+          firstName: '',
+          lastName: '',
+          address: '',
+          address2: '',
+          city: '',
+          state: '',
+          zip: '',
+          country: '',
+        });
+      }
+      isSaveAddressHandled = true;
+    }
+
+    if (!isSaveAddressHandled && saveAddress && newUserId) {
+      await updateUserAddressAction({
+        userId: newUserId,
+        shippingInfo,
       });
     }
 

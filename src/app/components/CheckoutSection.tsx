@@ -17,7 +17,7 @@ import {
 } from './ui/accordion';
 import { Checkbox } from './ui/checkbox';
 
-import { checkIfProceedToPayment } from '@/store/store';
+import { checkIfProceedToPayment, toggleSaveAddress } from '@/store/store';
 import { useAppDispatch, useCheckout } from '@/hooks';
 import { Label } from './ui/label';
 
@@ -27,7 +27,7 @@ interface Props {
 }
 
 export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
-  const { deliveryMethod } = useCheckout();
+  const { deliveryMethod, saveAddress } = useCheckout();
   const dispatch = useAppDispatch();
   const [isShippingSameAsBilling, setIsShippingSameAsBilling] =
     useState<boolean>(false);
@@ -59,6 +59,15 @@ export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
                 }
               />
               <Label>Is billing address same a shipping address?</Label>
+            </div>
+          )}
+          {deliveryMethod === 'ship' && userId && (
+            <div className='flex flex-row flex-nowrap gap-2 mt-4'>
+              <Checkbox
+                checked={saveAddress}
+                onClick={() => dispatch(toggleSaveAddress())}
+              />
+              <Label>Do you want to save the address?</Label>
             </div>
           )}
         </AccordionContent>

@@ -69,6 +69,7 @@ export const {
   setBillingInfo,
   setEmail,
   checkIfProceedToPayment,
+  toggleSaveAddress,
   resetCheckout
 } = checkoutSlice.actions;
 

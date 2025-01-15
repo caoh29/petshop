@@ -77,6 +77,7 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       billingInfo,
       userId: order.userId,
       orderId: order.id,
+      email,
     });
 
     // Confirm payment with stripe

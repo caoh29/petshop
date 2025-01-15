@@ -136,9 +136,10 @@ interface CreatePaymentIntentParams {
   billingInfo: BillingInfo,
   userId: string | null;
   orderId: string;
+  email: string;
 }
 
-export const createPaymentIntentAction = async ({ userId, orderId, products, deliveryMethod, billingInfo }: CreatePaymentIntentParams) => {
+export const createPaymentIntentAction = async ({ userId, orderId, products, deliveryMethod, billingInfo, email }: CreatePaymentIntentParams) => {
   const amount = await getAmount(products, deliveryMethod, billingInfo);
 
   const paymentIntent = await stripe.paymentIntents.create({
@@ -149,6 +150,7 @@ export const createPaymentIntentAction = async ({ userId, orderId, products, del
     },
     metadata: {
       orderId,
+      email,
       userId: userId ?? '',
     },
   });
@@ -162,10 +164,9 @@ export const createPaymentIntentAction = async ({ userId, orderId, products, del
 
 interface CreateGuestUserParams extends ShippingInfo {
   email: string;
-  saveAddress: boolean;
 }
 
-const createGuestUser = async ({ email, saveAddress, ...rest }: CreateGuestUserParams) => {
+const createGuestUser = async ({ email, ...rest }: CreateGuestUserParams) => {
   const existingUser = await prisma.user.findUnique({
     where: {
       email: email
@@ -176,41 +177,16 @@ const createGuestUser = async ({ email, saveAddress, ...rest }: CreateGuestUserP
     return existingUser.id;
   }
 
-  let newUser;
-
-  if (saveAddress) {
-    newUser = await prisma.user.create({
-      data: {
-        email: email,
-        phone: rest.phone,
-
-        firstName: !isEmptyString(rest.firstName) ? rest.firstName.trim().toLowerCase() : 'unknown',
-        lastName: !isEmptyString(rest.lastName) ? rest.lastName.trim().toLowerCase() : 'unknown',
-        address: !isEmptyString(rest.address) ? rest.address.trim().toLowerCase() : undefined,
-        address2: rest.address2,
-        city: !isEmptyString(rest.city) ? rest.city.trim().toLowerCase() : undefined,
-        state: !isEmptyString(rest.state) ? rest.state.trim() : undefined,
-        zip: !isEmptyString(rest.zip) ? rest.zip.trim() : undefined,
-        country: !isEmptyString(rest.country) ? rest.country.trim() : undefined,
-
-        isAdmin: false,
-        isVerified: false,
-        isGuest: true,
-      }
-    });
-  }
-  else {
-    newUser = await prisma.user.create({
-      data: {
-        email: email,
-        firstName: 'unknown',
-        lastName: 'unknown',
-        isAdmin: false,
-        isVerified: false,
-        isGuest: true,
-      }
-    });
-  }
+  const newUser = await prisma.user.create({
+    data: {
+      email: email,
+      firstName: !isEmptyString(rest.firstName) ? rest.firstName.trim().toLowerCase() : 'unknown',
+      lastName: !isEmptyString(rest.lastName) ? rest.lastName.trim().toLowerCase() : 'unknown',
+      isAdmin: false,
+      isVerified: false,
+      isGuest: true,
+    }
+  });
 
   return newUser.id;
 }
@@ -290,7 +266,6 @@ export const createOrderAction = async ({ userId, email, cart, deliveryMethod, p
   if (!newUserId) {
     newUserId = await createGuestUser({
       email,
-      saveAddress,
       ...shippingInfo
     });
   }

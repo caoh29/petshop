@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import Stripe from "stripe";
+
+import { Resend } from 'resend';
+
 import prisma from "../../../../../prisma/db";
 
-import Stripe from "stripe";
+import EmailTemplate from "@/app/components/EmailTemplate";
 
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 
 export async function POST(req: NextRequest) {
@@ -89,6 +95,18 @@ const handlePaymentSucceeded = async (event: Stripe.PaymentIntentSucceededEvent)
 
   if (!order) {
     return { error: 'Order not found' };
+  }
+  const { data, error } = await resend.emails.send({
+    // from: 'PetShop <ordersg@petshop.com>',
+    from: 'PetShop <onboarding@resend.dev>',
+    // to: [metadata.email],
+    to: ['cronox20@hotmail.com'],
+    subject: 'Thanks for your order with PetShop',
+    react: EmailTemplate({ orderId: metadata.orderId }),
+  });
+
+  if (error) {
+    return { error: 'Error sending order confirmation email' };
   }
 
   return { orderId: order.id, status: order.status };

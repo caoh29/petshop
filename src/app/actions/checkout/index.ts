@@ -162,9 +162,10 @@ export const createPaymentIntentAction = async ({ userId, orderId, products, del
 
 interface CreateGuestUserParams extends ShippingInfo {
   email: string;
+  saveAddress: boolean;
 }
 
-export const createGuestUserAction = async ({ email, ...rest }: CreateGuestUserParams) => {
+const createGuestUser = async ({ email, saveAddress, ...rest }: CreateGuestUserParams) => {
   const existingUser = await prisma.user.findUnique({
     where: {
       email: email
@@ -175,30 +176,46 @@ export const createGuestUserAction = async ({ email, ...rest }: CreateGuestUserP
     return existingUser.id;
   }
 
-  const newUser = await prisma.user.create({
-    data: {
-      email: email,
-      phone: rest.phone,
+  let newUser;
 
-      firstName: !isEmptyString(rest.firstName) ? rest.firstName.trim().toLowerCase() : 'unknown',
-      lastName: !isEmptyString(rest.lastName) ? rest.lastName.trim().toLowerCase() : 'unknown',
-      address: !isEmptyString(rest.address) ? rest.address.trim().toLowerCase() : undefined,
-      address2: rest.address2,
-      city: !isEmptyString(rest.city) ? rest.city.trim().toLowerCase() : undefined,
-      state: !isEmptyString(rest.state) ? rest.state.trim() : undefined,
-      zip: !isEmptyString(rest.zip) ? rest.zip.trim() : undefined,
-      country: !isEmptyString(rest.country) ? rest.country.trim() : undefined,
+  if (saveAddress) {
+    newUser = await prisma.user.create({
+      data: {
+        email: email,
+        phone: rest.phone,
 
-      isAdmin: false,
-      isVerified: false,
-      isGuest: true,
-    }
-  });
+        firstName: !isEmptyString(rest.firstName) ? rest.firstName.trim().toLowerCase() : 'unknown',
+        lastName: !isEmptyString(rest.lastName) ? rest.lastName.trim().toLowerCase() : 'unknown',
+        address: !isEmptyString(rest.address) ? rest.address.trim().toLowerCase() : undefined,
+        address2: rest.address2,
+        city: !isEmptyString(rest.city) ? rest.city.trim().toLowerCase() : undefined,
+        state: !isEmptyString(rest.state) ? rest.state.trim() : undefined,
+        zip: !isEmptyString(rest.zip) ? rest.zip.trim() : undefined,
+        country: !isEmptyString(rest.country) ? rest.country.trim() : undefined,
+
+        isAdmin: false,
+        isVerified: false,
+        isGuest: true,
+      }
+    });
+  }
+  else {
+    newUser = await prisma.user.create({
+      data: {
+        email: email,
+        firstName: 'unknown',
+        lastName: 'unknown',
+        isAdmin: false,
+        isVerified: false,
+        isGuest: true,
+      }
+    });
+  }
 
   return newUser.id;
 }
 
-export const updateUserAddressAction = async ({ userId, shippingInfo }: { userId: string, shippingInfo: ShippingInfo }) => {
+const updateUserAddress = async ({ userId, shippingInfo }: { userId: string, shippingInfo: ShippingInfo }) => {
   try {
     await prisma.user.update({
       where: {
@@ -217,26 +234,9 @@ export const updateUserAddressAction = async ({ userId, shippingInfo }: { userId
     console.error(error);
   }
 }
-interface CreateOrderParams {
-  cart: Cart;
-  shippingInfo: ShippingInfo;
-  billingInfo: BillingInfo;
-  userId: string;
-  deliveryMethod: 'ship' | 'pickup';
-  paymentMethod: 'stripe' | 'paypal' | 'cash';
-}
 
-export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentMethod, shippingInfo, billingInfo }: CreateOrderParams) => {
-  const amount = await getAmount(cart.validatedProducts, deliveryMethod, billingInfo);
-
-  let shippingAddress;
-  if (isEmptyString(shippingInfo.address2)) {
-    shippingAddress = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
-  } else {
-    shippingAddress = `${shippingInfo.address2}, ${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
-  }
-
-  const prices = await Promise.all(cart.validatedProducts.map(async (product) => {
+const getPrices = async (products: ValidProduct[]) => {
+  const prices = await Promise.all(products.map(async (product) => {
     const price = await prisma.product.findUnique({
       where: {
         id: product.productId
@@ -258,10 +258,57 @@ export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentM
       price: price.price,
     };
   }))
+  return prices;
+}
+
+const deleteCartProducts = async (cartId: string) => {
+  await prisma.selectedProduct.deleteMany({
+    where: {
+      cartId
+    }
+  });
+}
+
+interface CreateOrderParams {
+  cart: Cart;
+  email: string;
+  shippingInfo: ShippingInfo;
+  billingInfo: BillingInfo;
+  userId: string | null;
+  deliveryMethod: 'ship' | 'pickup';
+  paymentMethod: 'stripe' | 'paypal' | 'cash';
+  saveAddress: boolean;
+}
+
+export const createOrderAction = async ({ userId, email, cart, deliveryMethod, paymentMethod, shippingInfo, billingInfo, saveAddress }: CreateOrderParams) => {
+  if (saveAddress && userId) {
+    await updateUserAddress({ userId, shippingInfo })
+  }
+
+  let newUserId = userId;
+
+  if (!newUserId) {
+    newUserId = await createGuestUser({
+      email,
+      saveAddress,
+      ...shippingInfo
+    });
+  }
+
+  const amount = await getAmount(cart.validatedProducts, deliveryMethod, billingInfo);
+
+  const prices = await getPrices(cart.validatedProducts);
+
+  let shippingAddress;
+  if (isEmptyString(shippingInfo.address2)) {
+    shippingAddress = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
+  } else {
+    shippingAddress = `${shippingInfo.address2}, ${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.zip}, ${shippingInfo.country}`
+  }
 
   const order = await prisma.order.create({
     data: {
-      userId,
+      userId: newUserId,
       total: amount / 100,
       status: 'CREATED',
       shippingAddress: deliveryMethod === 'ship' ? shippingAddress : '',
@@ -280,11 +327,11 @@ export const createOrderAction = async ({ userId, cart, deliveryMethod, paymentM
   });
 
   // Delete all products from cart
-  await prisma.selectedProduct.deleteMany({
-    where: {
-      cartId: cart.id
-    }
-  });
+  await deleteCartProducts(cart.id);
 
-  return order.id;
+
+  return {
+    id: order.id,
+    userId: newUserId
+  };
 }

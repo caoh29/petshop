@@ -12,12 +12,7 @@ import { Button } from './ui/button';
 
 import { useCart, useCheckout } from '@/hooks';
 
-import {
-  createGuestUserAction,
-  createOrderAction,
-  createPaymentIntentAction,
-  updateUserAddressAction,
-} from '../actions';
+import { createOrderAction, createPaymentIntentAction } from '../actions';
 
 interface Props {
   userId: string | null;
@@ -42,7 +37,6 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
     // which would refresh the page.
     event.preventDefault();
 
-    // if (!stripe || !elements) {
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
@@ -58,61 +52,19 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       return;
     }
 
-    let isSaveAddressHandled = false;
-
-    // If guest user, then create user
-    let newUserId = userId;
-
-    if (!newUserId) {
-      if (saveAddress) {
-        newUserId = await createGuestUserAction({
-          email,
-          phone: shippingInfo.phone,
-
-          firstName: shippingInfo.firstName,
-          lastName: shippingInfo.lastName,
-          address: shippingInfo.address,
-          address2: shippingInfo.address2,
-          city: shippingInfo.city,
-          state: shippingInfo.state,
-          zip: shippingInfo.zip,
-          country: shippingInfo.country,
-        });
-      } else {
-        newUserId = await createGuestUserAction({
-          email,
-          phone: '',
-          firstName: '',
-          lastName: '',
-          address: '',
-          address2: '',
-          city: '',
-          state: '',
-          zip: '',
-          country: '',
-        });
-      }
-      isSaveAddressHandled = true;
-    }
-
-    if (!isSaveAddressHandled && saveAddress && newUserId) {
-      await updateUserAddressAction({
-        userId: newUserId,
-        shippingInfo,
-      });
-    }
-
     // Create order
-    const orderId = await createOrderAction({
-      userId: newUserId,
+    const order = await createOrderAction({
+      userId,
       cart,
       deliveryMethod,
+      email,
       paymentMethod: 'stripe',
       shippingInfo,
       billingInfo,
+      saveAddress,
     });
 
-    if (!orderId) {
+    if (!order) {
       setLoading(false);
       alert('Error creating order');
       return;
@@ -123,8 +75,8 @@ export default function StripePaymentForm({ userId }: Readonly<Props>) {
       products: cart.validatedProducts,
       deliveryMethod,
       billingInfo,
-      userId: newUserId,
-      orderId,
+      userId: order.userId,
+      orderId: order.id,
     });
 
     // Confirm payment with stripe

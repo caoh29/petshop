@@ -124,7 +124,6 @@ export async function loginUserAction(data: SchemaLogin) {
       },
     };
   } catch (error) {
-    console.error("Error logging in user:", error);
     if (error instanceof AuthError) {
       // console.log(error.cause?.err?.message);
       if (error.cause?.err?.message === "No user was found") {

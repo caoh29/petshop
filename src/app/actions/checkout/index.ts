@@ -285,7 +285,7 @@ export const createOrderAction = async ({ userId, email, cart, deliveryMethod, p
     data: {
       userId: newUserId,
       total: amount / 100,
-      status: 'CREATED',
+      status: 'PENDING',
       shippingAddress: deliveryMethod === 'ship' ? shippingAddress : '',
       paymentMethod,
       deliveryMethod,

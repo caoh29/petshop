@@ -15,24 +15,28 @@ export default function PetCard({ name, image }: Readonly<Props>) {
 
   return (
     <button
-      className='flex flex-col p-2 w-[320px]'
+      className='flex flex-col p-2 w-full'
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <Card className='overflow-hidden'>
         <CardContent className='p-0'>
           <Image
-            className={`aspect-[2/2] rounded-md object-cover ${
+            className={`aspect-square rounded-md object-cover ${
               hovered && 'scale-105'
             }`}
             src={image ?? ''}
             alt={`${name} image`}
-            width={1024}
-            height={1024}
+            width={320}
+            height={320}
           />
         </CardContent>
       </Card>
-      <h3 className={`font-bold ${hovered ? 'text-amber-500' : ''}`}>
+      <h3
+        className={`font-bold text-xs sm:text-base ${
+          hovered ? 'text-amber-500' : ''
+        }`}
+      >
         {capitalizeString(name)}{' '}
         <span className={hovered ? 'text-amber-500' : ''}>&rarr;</span>
       </h3>

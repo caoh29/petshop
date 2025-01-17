@@ -4,19 +4,21 @@ import { ShoppingCart as ShoppingCartIcon } from 'lucide-react';
 import { Cart } from '@/api/types';
 
 interface Props {
+  className?: string;
   showCartPopup: boolean;
   setShowCartPopup: React.Dispatch<React.SetStateAction<boolean>>;
   cart: Cart;
 }
 
 export default function ShoppingCart({
+  className,
   cart,
   showCartPopup,
   setShowCartPopup,
 }: Readonly<Props>) {
   return (
-    <div
-      className='relative order-4 hover:cursor-pointer'
+    <button
+      className={`${className} relative hover:cursor-pointer`}
       onClick={() => {
         setShowCartPopup(!showCartPopup);
       }}
@@ -26,6 +28,6 @@ export default function ShoppingCart({
       </span>
       {showCartPopup && <CartPopup setShowCartPopup={setShowCartPopup} />}
       <ShoppingCartIcon color='#ffffff' />
-    </div>
+    </button>
   );
 }

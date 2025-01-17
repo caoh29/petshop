@@ -63,7 +63,7 @@ export default function Header({ userId, isAdmin }: Readonly<Props>) {
       className={`${
         isHeaderVisible ? 'top-0 ' : '-top-20'
         // headerVisibility ? 'top-0 ' : '-top-20'
-      } sticky z-10 flex items-center justify-center py-4 px-8 bg-[#2A5135] h-20 gap-8 transition-all ease-in duration-500`}
+      } sticky z-10 flex items-center justify-center py-4 px-4 sm:px-8 gap-4 sm:gap-8 bg-[#2A5135] h-20 w-full transition-all ease-in duration-500`}
     >
       <SideNavBar className='lg:hidden' isAdmin={isAdmin} userId={userId} />
       <Logo className='order-2 lg:order-1 lg:mx-0' />
@@ -75,11 +75,15 @@ export default function Header({ userId, isAdmin }: Readonly<Props>) {
       />
       <SearchBar className='order-3' />
       <ShoppingCart
+        className='order-4'
         showCartPopup={showCartPopup}
         setShowCartPopup={setShowCartPopup}
         cart={cart}
       />
-      <AuthButton userId={userId} />
+      <AuthButton
+        className='order-5 text-white hidden sm:block'
+        userId={userId}
+      />
     </header>
   );
 }

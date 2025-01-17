@@ -8,9 +8,10 @@ import { Button } from './ui/button';
 
 interface Props {
   userId: string | null;
+  className?: string;
 }
 
-export default function AuthButton({ userId }: Readonly<Props>) {
+export default function AuthButton({ userId, className }: Readonly<Props>) {
   const handleSignOut = async () => {
     const res = await logoutUserAction();
     if (res.data?.isSignedOut) {
@@ -21,7 +22,7 @@ export default function AuthButton({ userId }: Readonly<Props>) {
   };
 
   return (
-    <div className='order-5 text-white'>
+    <div className={className}>
       {userId ? (
         <Button onClick={handleSignOut}>Sign Out</Button>
       ) : (

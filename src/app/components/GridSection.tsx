@@ -36,18 +36,21 @@ export default function GridSection({
   };
 
   return (
-    <section className='bg-slate-400 py-10'>
-      <div className='max-w-screen-lg flex flex-col gap-6 mx-auto'>
-        {title && <h2 className='text-4xl px-4'>{capitalizeString(title)}</h2>}
-        <ul className='grid justify-items-center sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-          {items &&
-            items.map((item) => (
-              <li key={item.name}>
-                <Link href={getItemPath(item)}>
-                  <PetCard {...item} />
-                </Link>
-              </li>
-            ))}
+    <section className=' bg-slate-400 py-10 px-4 flex justify-center'>
+      <div className='max-w-screen-lg flex flex-col gap-6'>
+        {title && (
+          <h2 className='text-3xl sm:text-4xl px-4 text-amber-500'>
+            {capitalizeString(title)}
+          </h2>
+        )}
+        <ul className='grid grid-cols-2 lg:grid-cols-3'>
+          {items.map((item) => (
+            <li key={item.name}>
+              <Link href={getItemPath(item)}>
+                <PetCard {...item} />
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </section>

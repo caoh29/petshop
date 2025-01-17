@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/api/routes';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet';
+import AuthButton from './AuthButton';
 
 interface Props {
   className?: string;
@@ -61,7 +62,7 @@ export default function SideNavBar({
       <SheetContent side='left' onCloseAutoFocus={resetStates}>
         <ul className='flex flex-col flex-nowrap list-none text-black'>
           {filterRoutes().map((component) => (
-            <li key={component.title} className='mx-4'>
+            <li key={component.title} className='mx-4 my-1'>
               {component.href && (
                 <Link onClick={resetStates} href={component.href}>
                   <SheetClose> {component.title}</SheetClose>
@@ -82,7 +83,7 @@ export default function SideNavBar({
                   {showCategoryList[component.title] && (
                     <ul className='flex flex-col list-none absolute border-2 border-solid border-orange-400 bg-orange-400'>
                       {component.children.map((child) => (
-                        <li key={child.title} className='my-1 mx-4'>
+                        <li key={child.title} className='my-2 mx-4'>
                           <button
                             className='flex items-center'
                             onClick={() => toggleSubcategory(child.title)}
@@ -116,6 +117,7 @@ export default function SideNavBar({
             </li>
           ))}
         </ul>
+        <AuthButton userId={userId} className='ml-4 my-4 block sm:hidden' />
       </SheetContent>
     </Sheet>
   );

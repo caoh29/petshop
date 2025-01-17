@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import PetCard from '../components/PetCard';
+import ProductCard from '../components/ProductCard';
 import { Category, Product, SubCategory } from '@/api/types';
 import { capitalizeString } from '@/lib/utils';
 
@@ -47,7 +47,7 @@ export default function GridSection({
           {items.map((item) => (
             <li key={item.name}>
               <Link href={getItemPath(item)}>
-                <PetCard {...item} />
+                <ProductCard {...item} />
               </Link>
             </li>
           ))}

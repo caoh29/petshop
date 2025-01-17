@@ -11,6 +11,7 @@ import {
 
 import { Product } from '@/api/types';
 import { capitalizeString } from '@/lib/utils';
+import ProductCard from './ProductCard';
 
 interface Props {
   title: string;
@@ -34,7 +35,7 @@ export default function CarouselSection({
           className={`w-full max-w-sm self-center md:max-w-xl lg:max-w-4xl`}
         >
           <CarouselContent>
-            {products.map((product, index) => (
+            {products.map((product) => (
               <CarouselItem
                 key={product.name}
                 className='md:basis-1/2 lg:basis-1/3'
@@ -42,13 +43,7 @@ export default function CarouselSection({
                 <Link
                   href={`/${product.category}/${product.subcategory}/${product.id}`}
                 >
-                  <Card>
-                    <CardContent className='flex aspect-square items-center justify-center p-6'>
-                      <span className='text-4xl font-semibold'>
-                        {index + 1}
-                      </span>
-                    </CardContent>
-                  </Card>
+                  <ProductCard name={product.name} image={product.image} />
                 </Link>
               </CarouselItem>
             ))}

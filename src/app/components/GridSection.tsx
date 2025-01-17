@@ -45,7 +45,14 @@ export default function GridSection({
         )}
         <ul className='grid grid-cols-2 lg:grid-cols-3'>
           {items.map((item) => (
-            <li key={item.name}>
+            <li
+              key={item.name}
+              className={
+                isProduct(item) && !basePath
+                  ? 'last-of-type:hidden lg:last-of-type:block'
+                  : ''
+              }
+            >
               <Link href={getItemPath(item)}>
                 <ProductCard {...item} />
               </Link>

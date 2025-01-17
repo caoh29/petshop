@@ -81,11 +81,11 @@ export default function SideNavBar({
                     />
                   </button>
                   {showCategoryList[component.title] && (
-                    <ul className='flex flex-col list-none absolute border-2 border-solid border-orange-400 bg-orange-400'>
+                    <ul className='flex flex-col list-none relative bg-slate-100'>
                       {component.children.map((child) => (
                         <li key={child.title} className='my-2 mx-4'>
                           <button
-                            className='flex items-center'
+                            className='flex items-center pb-1'
                             onClick={() => toggleSubcategory(child.title)}
                           >
                             {child.title}
@@ -95,9 +95,12 @@ export default function SideNavBar({
                             />
                           </button>
                           {showSubcategoryList[child.title] && (
-                            <ul className='flex flex-row list-none bg-black'>
+                            <ul className='flex flex-col list-non bg-slate-200 border-2 border-solid border-slate-300'>
                               {child.children?.map((subchild) => (
-                                <li key={subchild.title} className='my-2 mx-4'>
+                                <li
+                                  key={subchild.title}
+                                  className='py-2 px-4 border-t-2 first-of-type:border-t-0 border-solid border-slate-300'
+                                >
                                   <Link
                                     onClick={resetStates}
                                     href={`${child.href}${subchild.href}`}

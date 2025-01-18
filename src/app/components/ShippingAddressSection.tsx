@@ -1,7 +1,5 @@
 'use client';
 
-import { useContext } from 'react';
-
 import { useAppDispatch, useCheckout } from '@/hooks';
 
 import { StripeAddressElementChangeEvent } from '@stripe/stripe-js';
@@ -10,7 +8,6 @@ import { setShippingInfo } from '@/store/store';
 import { isEmptyString } from '@/lib/utils';
 
 import { UserData } from '../(shop)/checkout/page';
-import { StripePromiseContext } from '../(shop)/checkout/layout';
 
 const COUNTRY_CODE = 'CA';
 
@@ -19,10 +16,8 @@ interface Props {
 }
 
 export default function ShippingAddressSection({ userData }: Readonly<Props>) {
-  const { deliveryMethod, shippingInfo } = useCheckout();
+  const { deliveryMethod, shippingInfo, stripePromise } = useCheckout();
   const dispatch = useAppDispatch();
-
-  const stripePromise = useContext(StripePromiseContext);
 
   if (deliveryMethod === 'pickup') {
     return null;

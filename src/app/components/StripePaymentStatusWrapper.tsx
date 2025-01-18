@@ -1,10 +1,8 @@
 'use client';
 
-import { useContext } from 'react';
-
 import { Elements } from '@stripe/react-stripe-js';
 
-import { StripePromiseContext } from '../(shop)/checkout/layout';
+import { useCheckout } from '@/hooks';
 
 interface Props {
   children: React.ReactNode;
@@ -13,6 +11,7 @@ interface Props {
 export default function StripePaymentStatusWrapper({
   children,
 }: Readonly<Props>) {
-  const stripePromise = useContext(StripePromiseContext);
+  const { stripePromise } = useCheckout();
+
   return <Elements stripe={stripePromise}>{children}</Elements>;
 }

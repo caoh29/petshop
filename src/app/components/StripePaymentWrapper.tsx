@@ -1,12 +1,10 @@
 'use client';
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 
 import { useCart, useCheckout } from '@/hooks';
 import { getAmount } from '../actions';
-
-import { StripePromiseContext } from '../(shop)/checkout/layout';
 
 interface Props {
   children: React.ReactNode;
@@ -19,10 +17,8 @@ interface Props {
 
 export default function StripePaymentWrapper({ children }: Readonly<Props>) {
   const cart = useCart();
-  const { deliveryMethod, billingInfo } = useCheckout();
+  const { deliveryMethod, billingInfo, stripePromise } = useCheckout();
   const [amount, setAmount] = useState<number>();
-
-  const stripePromise = useContext(StripePromiseContext);
 
   useEffect(() => {
     if (cart?.validatedProducts.length > 0) {

@@ -17,20 +17,32 @@ import {
 } from './ui/accordion';
 import { Checkbox } from './ui/checkbox';
 
-import { checkIfProceedToPayment, toggleSaveAddress } from '@/store/store';
+import {
+  checkIfProceedToPayment,
+  setStripePromise,
+  toggleSaveAddress,
+} from '@/store/store';
 import { useAppDispatch, useCheckout } from '@/hooks';
 import { Label } from './ui/label';
+
+import { loadStripe } from '@stripe/stripe-js';
 
 interface Props {
   userData: UserData;
   userId: string | null;
 }
 
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+);
+
 export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
   const { deliveryMethod, saveAddress } = useCheckout();
   const dispatch = useAppDispatch();
   const [isShippingSameAsBilling, setIsShippingSameAsBilling] =
     useState<boolean>(false);
+
+  dispatch(setStripePromise(stripePromise));
 
   return (
     <Accordion

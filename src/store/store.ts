@@ -68,6 +68,7 @@ export const {
   setShippingInfo,
   setBillingInfo,
   setEmail,
+  setStripePromise,
   checkIfProceedToPayment,
   toggleSaveAddress,
   resetCheckout

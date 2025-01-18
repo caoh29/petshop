@@ -1,5 +1,6 @@
 import { BillingInfo, ShippingInfo } from "@/api/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Stripe } from "@stripe/stripe-js";
 
 
 export interface CheckoutState {
@@ -10,6 +11,7 @@ export interface CheckoutState {
 
   shippingInfo: ShippingInfo,
   billingInfo: BillingInfo,
+  stripePromise: Promise<Stripe | null> | null;
 }
 
 const initialState: CheckoutState = {
@@ -17,6 +19,8 @@ const initialState: CheckoutState = {
   email: "",
   proceedToPayment: false,
   saveAddress: false,
+
+  stripePromise: null,
 
   shippingInfo: {
     phone: "",
@@ -74,6 +78,12 @@ export const checkoutSlice = createSlice({
 
     toggleSaveAddress: (state) => {
       state.saveAddress = !state.saveAddress;
+    },
+
+    setStripePromise: (state, action: PayloadAction<Promise<Stripe | null>>) => {
+      if (state.stripePromise === null) {
+        state.stripePromise = action.payload;
+      }
     },
 
     // Reset the checkout state (useful on order completion or cancellation)

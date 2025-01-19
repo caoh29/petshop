@@ -17,11 +17,7 @@ import {
 } from './ui/accordion';
 import { Checkbox } from './ui/checkbox';
 
-import {
-  checkIfProceedToPayment,
-  setStripePromise,
-  toggleSaveAddress,
-} from '@/store/store';
+import { checkIfProceedToPayment, toggleSaveAddress } from '@/store/store';
 import { useAppDispatch, useCheckout } from '@/hooks';
 import { Label } from './ui/label';
 
@@ -42,8 +38,6 @@ export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
   const [isShippingSameAsBilling, setIsShippingSameAsBilling] =
     useState<boolean>(false);
 
-  dispatch(setStripePromise(stripePromise));
-
   return (
     <Accordion
       className='w-full'
@@ -61,7 +55,10 @@ export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
         <AccordionTrigger>Contact Information</AccordionTrigger>
         <AccordionContent>
           <EmailSection email={userData?.email ?? ''} />
-          <ShippingAddressSection userData={userData} />
+          <ShippingAddressSection
+            userData={userData}
+            stripePromise={stripePromise}
+          />
           {deliveryMethod === 'ship' && (
             <div className='flex flex-row flex-nowrap gap-2 mt-4'>
               <Checkbox
@@ -89,6 +86,7 @@ export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
         <AccordionContent>
           <BillingAddressSection
             isShippingSameAsBilling={isShippingSameAsBilling}
+            stripePromise={stripePromise}
           />
         </AccordionContent>
       </AccordionItem>
@@ -97,7 +95,7 @@ export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
           Payment Information
         </AccordionTrigger>
         <AccordionContent>
-          <PaymentSection userId={userId} />
+          <PaymentSection userId={userId} stripePromise={stripePromise} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

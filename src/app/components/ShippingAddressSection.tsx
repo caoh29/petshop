@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useCheckout } from '@/hooks';
 
-import { StripeAddressElementChangeEvent } from '@stripe/stripe-js';
+import { Stripe, StripeAddressElementChangeEvent } from '@stripe/stripe-js';
 import { AddressElement, Elements } from '@stripe/react-stripe-js';
 import { setShippingInfo } from '@/store/store';
 import { isEmptyString } from '@/lib/utils';
@@ -13,10 +13,14 @@ const COUNTRY_CODE = 'CA';
 
 interface Props {
   userData: UserData;
+  stripePromise: Promise<Stripe | null>;
 }
 
-export default function ShippingAddressSection({ userData }: Readonly<Props>) {
-  const { deliveryMethod, shippingInfo, stripePromise } = useCheckout();
+export default function ShippingAddressSection({
+  userData,
+  stripePromise,
+}: Readonly<Props>) {
+  const { deliveryMethod, shippingInfo } = useCheckout();
   const dispatch = useAppDispatch();
 
   if (deliveryMethod === 'pickup') {

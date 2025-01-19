@@ -5,9 +5,11 @@ import { Elements } from '@stripe/react-stripe-js';
 
 import { useCart, useCheckout } from '@/hooks';
 import { getAmount } from '../actions';
+import { Stripe } from '@stripe/stripe-js';
 
 interface Props {
   children: React.ReactNode;
+  stripePromise: Promise<Stripe | null>;
   // userId: string | null;
 }
 
@@ -15,9 +17,12 @@ interface Props {
 //   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 // );
 
-export default function StripePaymentWrapper({ children }: Readonly<Props>) {
+export default function StripePaymentWrapper({
+  children,
+  stripePromise,
+}: Readonly<Props>) {
   const cart = useCart();
-  const { deliveryMethod, billingInfo, stripePromise } = useCheckout();
+  const { deliveryMethod, billingInfo } = useCheckout();
   const [amount, setAmount] = useState<number>();
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { isEmptyString } from '@/lib/utils';
 
 import { useAppDispatch, useCheckout } from '@/hooks';
 
-import { StripeAddressElementChangeEvent } from '@stripe/stripe-js';
+import { Stripe, StripeAddressElementChangeEvent } from '@stripe/stripe-js';
 import { AddressElement, Elements } from '@stripe/react-stripe-js';
 import { setBillingInfo } from '@/store/store';
 
@@ -12,12 +12,14 @@ const COUNTRY_CODE = 'CA';
 
 interface Props {
   isShippingSameAsBilling: boolean;
+  stripePromise: Promise<Stripe | null>;
 }
 
 export default function BillingAddressSection({
   isShippingSameAsBilling,
+  stripePromise,
 }: Readonly<Props>) {
-  const { shippingInfo, billingInfo, stripePromise } = useCheckout();
+  const { shippingInfo, billingInfo } = useCheckout();
   const dispatch = useAppDispatch();
 
   const handleChange = (event: StripeAddressElementChangeEvent) => {

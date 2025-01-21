@@ -23,7 +23,7 @@ export default function ShoppingCart({
         setShowCartPopup(!showCartPopup);
       }}
     >
-      <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-blue-700 text-white'>
+      <span className='absolute text-xs rounded-full px-1 font-bold -top-2 -right-2 bg-secondary text-white'>
         {cart.products.reduce((acc, product) => acc + product.quantity, 0)}
       </span>
       {showCartPopup && <CartPopup setShowCartPopup={setShowCartPopup} />}

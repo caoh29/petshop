@@ -15,7 +15,7 @@ export default function ProductCard({ name, image }: Readonly<Props>) {
 
   return (
     <button
-      className='flex flex-col p-2 w-full'
+      className='flex flex-col p-2 w-full items-center gap-2'
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -27,18 +27,18 @@ export default function ProductCard({ name, image }: Readonly<Props>) {
             }`}
             src={image ?? ''}
             alt={`${name} image`}
-            width={320}
-            height={320}
+            width={275}
+            height={275}
           />
         </CardContent>
       </Card>
       <h3
         className={`font-bold text-xs sm:text-base ${
-          hovered ? 'text-amber-500' : ''
+          hovered ? 'text-white' : 'text-white'
         }`}
       >
         {capitalizeString(name)}{' '}
-        <span className={hovered ? 'text-amber-500' : ''}>&rarr;</span>
+        <span className={hovered ? 'text-white' : 'text-white'}>&rarr;</span>
       </h3>
     </button>
   );

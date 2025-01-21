@@ -24,10 +24,12 @@ export default function AuthButton({ userId, className }: Readonly<Props>) {
   return (
     <div className={className}>
       {userId ? (
-        <Button onClick={handleSignOut}>Sign Out</Button>
+        <Button variant={'secondary'} onClick={handleSignOut}>
+          Sign Out
+        </Button>
       ) : (
         <Link href='/auth/signin'>
-          <Button>Sign In</Button>
+          <Button variant={'secondary'}>Sign In</Button>
         </Link>
       )}
       {/* <SignedOut>

@@ -36,23 +36,16 @@ export default function GridSection({
   };
 
   return (
-    <section className=' bg-slate-400 py-10 px-4 flex justify-center'>
+    <section className='flex justify-center py-10 px-4 bg-primary'>
       <div className='max-w-screen-lg flex flex-col gap-6'>
         {title && (
-          <h2 className='text-3xl sm:text-4xl px-4 text-amber-500'>
+          <h2 className='text-3xl sm:text-4xl px-4 font-bold text-white'>
             {capitalizeString(title)}
           </h2>
         )}
         <ul className='grid grid-cols-2 lg:grid-cols-3'>
           {items.map((item) => (
-            <li
-              key={item.name}
-              className={
-                isProduct(item) && !basePath
-                  ? 'last-of-type:hidden lg:last-of-type:block'
-                  : ''
-              }
-            >
+            <li key={item.name}>
               <Link href={getItemPath(item)}>
                 <ProductCard {...item} />
               </Link>

@@ -25,9 +25,9 @@ export default function CarouselSection({
   className,
 }: Readonly<Props>) {
   return (
-    <section className={`${className} bg-green-400 py-12 `}>
+    <section className={`${className} bg-accent py-12 `}>
       <div className='max-w-screen-lg flex flex-col gap-6 mx-auto'>
-        <h2 className='text-4xl px-4'>{capitalizeString(title)}</h2>
+        <h2 className='text-4xl text-muted px-4'>{capitalizeString(title)}</h2>
         <Carousel
           opts={{
             align: 'center',

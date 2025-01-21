@@ -11,7 +11,7 @@ import NotFound from '../components/PageNotFound';
 import { getCategoriesAction, getPaginatedProductsAction } from '../actions';
 
 export default async function Home() {
-  const { products } = await getPaginatedProductsAction({});
+  const { products } = await getPaginatedProductsAction({ take: 6 });
   const categories = await getCategoriesAction();
 
   if (products.length === 0 || categories.length === 0) return <NotFound />;

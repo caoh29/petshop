@@ -10,7 +10,8 @@ interface GetProducts {
   subcategory?: string;
   searchParams?: {
     [key: string]: string | string[] | undefined;
-  }
+  },
+  take?: number;
 }
 
 
@@ -28,11 +29,11 @@ const checkSorting = (sortBy: string | undefined): { price: "asc" | "desc" } | {
   }
 }
 
-export const getPaginatedProductsAction = async ({ category, subcategory, searchParams }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
+export const getPaginatedProductsAction = async ({ category, subcategory, searchParams, take: userTake }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
   try {
     const page = Number(searchParams?.page) ?? 1;
 
-    const { skip, take } = getPagination({ page });
+    const { skip, take } = getPagination({ page, take: userTake });
 
     const sizes = checkSearchParam(searchParams?.Size);
     const colors = checkSearchParam(searchParams?.Color);

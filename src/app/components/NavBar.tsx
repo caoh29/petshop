@@ -73,7 +73,10 @@ export default function NavBar({
     <nav className={`flex justify-between items-center mx-auto ${className}`}>
       <ul className='flex flex-col flex-nowrap lg:flex-row list-none text-white'>
         {filterRoutes().map((component) => (
-          <li key={component.title} className='mx-4'>
+          <li
+            key={component.title}
+            className='mx-4 first-of-type:mr-4 first-of-type:ml-0 last-of-type:ml-4 last-of-type:mr-0'
+          >
             {component.href && (
               <Link onClick={resetStates} href={component.href}>
                 {component.title}

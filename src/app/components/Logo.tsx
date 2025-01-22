@@ -4,10 +4,10 @@ interface Props {
 
 export default function Logo({ className }: Readonly<Props>) {
   return (
-    <h2
-      className={`${className} scroll-m-20 text-3xl font-semibold text-secondary tracking-tight mx-auto`}
+    <figure
+      className={`${className} text-3xl font-semibold text-secondary tracking-tight`}
     >
       PetShop
-    </h2>
+    </figure>
   );
 }

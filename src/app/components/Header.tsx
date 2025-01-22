@@ -70,7 +70,7 @@ export default function Header({ userId, isAdmin }: Readonly<Props>) {
         isAdmin={isAdmin}
         userId={userId}
       />
-      <Logo className='order-2 lg:order-1 ml-[calc(50dvw-54px-18px-32px)] lg:mx-0 mr-auto' />
+      <Logo className='order-2 lg:order-1 ml-[calc(50dvw-54px-18px-36px)] lg:mx-0 mr-auto' />
       <NavBar
         className='hidden lg:block lg:mx-auto lg:order-2'
         isVisible={isHeaderVisible}

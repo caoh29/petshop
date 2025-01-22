@@ -1,13 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+
 import Image from 'next/image';
-import { Card, CardContent } from './ui/card';
+
+import { Card, CardContent, CardFooter } from './ui/card';
+
 import { capitalizeString } from '@/lib/utils';
 
 interface Props {
   name: string;
-  image: string | null;
+  image?: string;
+  price?: number;
+  category?: string;
 }
 
 export default function ProductCard({ name, image }: Readonly<Props>) {
@@ -31,15 +36,13 @@ export default function ProductCard({ name, image }: Readonly<Props>) {
             height={275}
           />
         </CardContent>
+        <CardFooter>
+          <h3 className={`font-bold text-xs sm:text-base text-white`}>
+            {capitalizeString(name)}{' '}
+            <span className={'text-white'}>&rarr;</span>
+          </h3>
+        </CardFooter>
       </Card>
-      <h3
-        className={`font-bold text-xs sm:text-base ${
-          hovered ? 'text-white' : 'text-white'
-        }`}
-      >
-        {capitalizeString(name)}{' '}
-        <span className={hovered ? 'text-white' : 'text-white'}>&rarr;</span>
-      </h3>
     </button>
   );
 }

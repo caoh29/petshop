@@ -33,7 +33,7 @@ export default async function RootLayout({
 
   return (
     // <ClerkProvider>
-    <html lang='en'>
+    <html lang='en' className='scroll-smooth'>
       <body>
         <StoreProvider cart={cart} userId={userId}>
           <Header isAdmin={isAdmin} userId={userId} />

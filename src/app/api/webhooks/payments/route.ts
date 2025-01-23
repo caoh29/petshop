@@ -97,7 +97,7 @@ const handlePaymentSucceeded = async (event: Stripe.PaymentIntentSucceededEvent)
     return { error: 'Order not found' };
   }
   const { data, error } = await resend.emails.send({
-    // from: 'PetShop <ordersg@petshop.com>',
+    // from: 'PetShop <orders@store.caoh29.dev>',
     from: 'PetShop <onboarding@resend.dev>',
     // to: [metadata.email],
     to: ['cronox20@hotmail.com'],

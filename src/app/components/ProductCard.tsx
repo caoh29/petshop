@@ -15,7 +15,7 @@ interface Props {
 export default function ProductCard({ product }: Readonly<Props>) {
   if (!product) return null;
   return (
-    <Card className='overflow-hidden'>
+    <Card className='overflow-hidden even:hidden sm:even:block'>
       <CardContent className='p-0'>
         <div className='relative h-48 w-full'>
           <Image

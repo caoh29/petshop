@@ -5,7 +5,6 @@ export const revalidate = 60;
 
 import HeroSection from '../components/HeroSection';
 import GridSection from '../components/GridSection';
-import CarouselSection from '../components/CarouselSection';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
 
 import { getCategoriesAction } from '../actions';
@@ -20,8 +19,7 @@ export default async function Home() {
   return (
     <>
       <HeroSection />
-      <FeaturedProductsSection userId={userId} />
-      {/* <CarouselSection title='hot-deals!' products={products ?? []} /> */}
+      <FeaturedProductsSection />
       {/* <GridSection
         title='shop-by-animal'
         items={categories ?? []}

@@ -11,6 +11,7 @@ import { useAppDispatch } from '@/hooks';
 import { Product, SelectedProduct } from '@/api/types';
 
 interface Props {
+  className?: string;
   userId: string | null;
   addProductToCartAction: (
     id: string,
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export default function AddToCart({
+  className,
   userId,
   addProductToCartAction,
   disabled,
@@ -88,7 +90,7 @@ export default function AddToCart({
 
   return (
     <Button
-      className={`mt-6 text-lg font-bold`}
+      className={`${className} mt-6 text-lg font-bold`}
       onClick={() => handleClick()}
       disabled={
         disabled ||

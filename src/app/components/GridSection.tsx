@@ -9,6 +9,7 @@ interface Props {
   title?: string;
   items: Item[];
   basePath?: string;
+  userId: string | null;
 }
 
 // Type guard to check if the item is a Product
@@ -20,6 +21,7 @@ export default function GridSection({
   items,
   title,
   basePath,
+  userId,
 }: Readonly<Props>) {
   const getItemPath = (item: Item) => {
     if (isProduct(item)) {
@@ -47,7 +49,7 @@ export default function GridSection({
           {items.map((item) => (
             <li key={item.name}>
               <Link href={getItemPath(item)}>
-                <ProductCard {...item} />
+                {isProduct(item) && <ProductCard {...item} userId={userId} />}
               </Link>
             </li>
           ))}

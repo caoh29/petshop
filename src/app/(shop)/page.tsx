@@ -6,21 +6,27 @@ export const revalidate = 60;
 import HeroSection from '../components/HeroSection';
 import GridSection from '../components/GridSection';
 import CarouselSection from '../components/CarouselSection';
-import NotFound from '../components/PageNotFound';
+import FeaturedProductsSection from '../components/FeaturedProductsSection';
 
-import { getCategoriesAction, getPaginatedProductsAction } from '../actions';
+import { getCategoriesAction } from '../actions';
+import { auth } from '@/auth';
 
 export default async function Home() {
-  const { products } = await getPaginatedProductsAction({ take: 6 });
   const categories = await getCategoriesAction();
 
-  if (products.length === 0 || categories.length === 0) return <NotFound />;
+  const session = await auth();
+  const userId = session?.user?.id ?? null;
+
   return (
     <>
       <HeroSection />
-      <GridSection title='featured-products' items={products ?? []} />
-      <CarouselSection title='hot-deals!' products={products ?? []} />
-      <GridSection title='shop-by-animal' items={categories ?? []} />
+      <FeaturedProductsSection userId={userId} />
+      {/* <CarouselSection title='hot-deals!' products={products ?? []} /> */}
+      {/* <GridSection
+        title='shop-by-animal'
+        items={categories ?? []}
+        userId={userId}
+      /> */}
     </>
   );
 }

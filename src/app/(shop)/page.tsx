@@ -4,27 +4,16 @@
 export const revalidate = 60;
 
 import HeroSection from '../components/HeroSection';
-import GridSection from '../components/GridSection';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
-
-import { getCategoriesAction } from '../actions';
-import { auth } from '@/auth';
-
+import HotDealsSection from '../components/HotDealsSection';
+import ShopByCategorySection from '../components/ShopByCategorySection';
 export default async function Home() {
-  const categories = await getCategoriesAction();
-
-  const session = await auth();
-  const userId = session?.user?.id ?? null;
-
   return (
     <>
       <HeroSection />
       <FeaturedProductsSection />
-      {/* <GridSection
-        title='shop-by-animal'
-        items={categories ?? []}
-        userId={userId}
-      /> */}
+      <HotDealsSection />
+      <ShopByCategorySection />
     </>
   );
 }

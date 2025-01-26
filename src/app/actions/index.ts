@@ -1,4 +1,4 @@
-export { getPaginatedProductsAction, getProductByIdAction, getFiltersAction, searchProductAction } from './products';
+export { getPaginatedProductsAction, getPaginatedDealsAction, getProductByIdAction, getFiltersAction, searchProductAction } from './products';
 
 export { updateProductCartAction, deleteProductCartAction, addProductToCartAction, validateStockAction, reserveStockAction, getCartSummaryAction } from './cart';
 

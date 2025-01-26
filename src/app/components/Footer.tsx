@@ -6,6 +6,8 @@ import { ReactNode } from 'react';
 
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 import FooterLinks from './FooterLinks';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
 
 const socials: { title: string; icon: ReactNode; href: string }[] = [
   {
@@ -27,7 +29,7 @@ const socials: { title: string; icon: ReactNode; href: string }[] = [
 
 const links = [
   {
-    title: '2024 PetShop',
+    title: '2025 PetShop',
     href: '/',
   },
   {
@@ -49,22 +51,22 @@ export default function Footer() {
   if (path === '/auth/signin' || path === '/auth/signup') return;
 
   return (
-    <footer className='flex flex-col items-center justify-center py-10 px-8 bg-[#2A5135] gap-12'>
+    <footer className='flex flex-col items-center justify-center py-10 px-8 bg-primary gap-12 text-white'>
       <FooterLinks />
       <div className='flex flex-row flex-nowrap justify-between items-center max-w-screen-md w-full'>
         <form className='flex flex-col gap-4' action=''>
-          <label htmlFor='email' className='order-1'>
+          <Label htmlFor='email' className='order-1'>
             Subscribe to our emails
-          </label>
-          <div className='order-2 flex gap-2 items-center h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'>
-            <input
+          </Label>
+          <div className='order-2 flex gap-2 items-center h-10 w-full rounded-md bg-secondary px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50'>
+            <Input
               className='all-unset'
               type='email'
               name='email'
               placeholder='Email'
             />
             <input
-              className='cursor-pointer text-lg hover:scale-125'
+              className='cursor-pointer text-lg hover:scale-125 font-bold'
               type='submit'
               value='&rarr;'
             />
@@ -79,7 +81,7 @@ export default function Footer() {
         </ul>
       </div>
 
-      <hr className='w-full border border-input' />
+      <hr className='w-full border border-input border-secondary' />
       <p>
         &copy;
         {links.map((link) => (

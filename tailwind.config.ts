@@ -30,6 +30,12 @@ const config = {
 					light: "#f7b565",
 					dark: "#e68f2c",
 				},
+				ternary: {
+					DEFAULT: "#74B3CE",
+					foreground: "#ffffff",
+					light: "#f7b565",
+					dark: "#e68f2c",
+				},
 				destructive: {
 					DEFAULT: "#d33512",
 					foreground: "#ffffff",

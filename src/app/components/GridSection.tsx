@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import ProductCard from '../components/ProductCard';
 import { Category, Product, SubCategory } from '@/api/types';
-import { capitalizeString } from '@/lib/utils';
 
 type Item = Product | Category | SubCategory;
 
@@ -19,7 +18,6 @@ function isProduct(item: Item): item is Product {
 
 export default function GridSection({
   items,
-  title,
   basePath,
   userId,
 }: Readonly<Props>) {
@@ -38,23 +36,16 @@ export default function GridSection({
   };
 
   return (
-    <section className='flex justify-center py-10 px-4 bg-primary'>
-      <div className='max-w-screen-lg flex flex-col gap-6'>
-        {title && (
-          <h2 className='text-3xl sm:text-4xl px-4 font-bold text-white'>
-            {capitalizeString(title)}
-          </h2>
-        )}
-        <ul className='grid grid-cols-2 lg:grid-cols-3'>
-          {items.map((item) => (
-            <li key={item.name}>
-              <Link href={getItemPath(item)}>
-                {isProduct(item) && <ProductCard {...item} userId={userId} />}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+    <div className='flex justify-center max-w-screen-lg py-10 px-4 bg-primary'>
+      <ul className='grid grid-cols-2 lg:grid-cols-3'>
+        {items.map((item) => (
+          <li key={item.name} className='m-4'>
+            <Link href={getItemPath(item)}>
+              {isProduct(item) && <ProductCard product={item} />}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

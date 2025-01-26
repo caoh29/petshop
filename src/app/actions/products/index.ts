@@ -1,6 +1,6 @@
 'use server';
 
-import { FilterGroup, Product } from "@/api/types";
+import { FilterGroup, Product, ProductWithDiscount } from "@/api/types";
 import prisma from "../../../../prisma/db";
 
 import { checkSearchParam, getPagination } from "@/lib/utils";
@@ -71,6 +71,58 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
       currentPage: page ?? 1, // Current page number
       products: products.map(product => ({
         ...product,
+        createdAt: product.createdAt.toISOString(), // Convert Date to string
+        reviews: product.reviews.map(review => ({
+          ...review,
+          createdAt: review.createdAt.toISOString() // Convert Date to string
+        }))
+      })),
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      products: [], // Return an empty array in case of error
+      pages: 0, // Return 0 pages in case of error
+      currentPage: 1 // Return 1 as the current page in case of error
+    };
+  }
+};
+
+export const getPaginatedDealsAction = async ({ take: userTake, searchParams }: GetProducts): Promise<{ products: ProductWithDiscount[], pages: number, currentPage: number }> => {
+  try {
+    const page = Number(searchParams?.page) ?? 1;
+
+    const { skip, take } = getPagination({ take: userTake });
+
+    // Get the total count of products based on the filters
+    const totalCount = await prisma.product.count({
+      where: {
+        discount: {
+          gt: 0
+        }
+      }
+    });
+
+    const products = await prisma.product.findMany({
+      take,
+      skip,
+      include: { reviews: true },
+      where: {
+        discount: {
+          gt: 0
+        }
+      },
+      orderBy: {
+        discount: 'desc'
+      },
+    });
+
+    return {
+      pages: Math.ceil(totalCount / take), // Total number of pages
+      currentPage: page ?? 1, // Current page number
+      products: products.map(product => ({
+        ...product,
+        discountedPrice: product.price - (product.price * product.discount / 100),
         createdAt: product.createdAt.toISOString(), // Convert Date to string
         reviews: product.reviews.map(review => ({
           ...review,

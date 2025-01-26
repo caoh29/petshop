@@ -95,7 +95,7 @@ export default function NavBar({
                   />
                 </button>
                 {showCategoryList[component.title] && (
-                  <ul className='flex flex-col list-none absolute border-2 border-solid border-orange-400 bg-orange-400'>
+                  <ul className='flex flex-col list-none absolute border-2 border-solid border-accent bg-secondary'>
                     {component.children.map((child) => (
                       <li key={child.title} className='my-1 mx-4'>
                         <button
@@ -109,7 +109,7 @@ export default function NavBar({
                           />
                         </button>
                         {showSubcategoryList[child.title] && (
-                          <ul className='flex flex-row list-none bg-black'>
+                          <ul className='flex flex-row list-none bg-ternary'>
                             {child.children?.map((subchild) => (
                               <li key={subchild.title} className='my-2 mx-4'>
                                 <Link

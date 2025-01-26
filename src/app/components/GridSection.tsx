@@ -8,7 +8,6 @@ interface Props {
   title?: string;
   items: Item[];
   basePath?: string;
-  userId: string | null;
 }
 
 // Type guard to check if the item is a Product
@@ -16,11 +15,7 @@ function isProduct(item: Item): item is Product {
   return (item as Product).category !== undefined;
 }
 
-export default function GridSection({
-  items,
-  basePath,
-  userId,
-}: Readonly<Props>) {
+export default function GridSection({ items, basePath }: Readonly<Props>) {
   const getItemPath = (item: Item) => {
     if (isProduct(item)) {
       // If basePath is provided, use it; otherwise, construct from item properties

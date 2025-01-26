@@ -63,19 +63,23 @@ export default function Header({ userId, isAdmin }: Readonly<Props>) {
       className={`${
         isHeaderVisible ? 'top-0 ' : '-top-20'
         // headerVisibility ? 'top-0 ' : '-top-20'
-      } sticky z-10 flex items-center justify-center py-4 px-4 sm:px-8 gap-4 sm:gap-8 bg-[#2A5135] h-20 w-full transition-all ease-in duration-500`}
+      } sticky z-10 flex items-center justify-center py-4 px-4 md:px-8 bg-primary h-20 w-full transition-all ease-in duration-500`}
     >
-      <SideNavBar className='lg:hidden' isAdmin={isAdmin} userId={userId} />
-      <Logo className='order-2 lg:order-1 lg:mx-0' />
+      <SideNavBar
+        className='order-1 lg:hidden'
+        isAdmin={isAdmin}
+        userId={userId}
+      />
+      <Logo className='order-2 lg:order-1 ml-[calc(50dvw-54px-18px-36px)] lg:mx-0 mr-auto' />
       <NavBar
         className='hidden lg:block lg:mx-auto lg:order-2'
         isVisible={isHeaderVisible}
         isAdmin={isAdmin}
         userId={userId}
       />
-      <SearchBar className='order-3' />
+      <SearchBar className='order-3 mr-4 sm:mr-8' />
       <ShoppingCart
-        className='order-4'
+        className='order-4 sm:mr-8'
         showCartPopup={showCartPopup}
         setShowCartPopup={setShowCartPopup}
         cart={cart}

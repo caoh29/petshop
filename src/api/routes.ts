@@ -220,6 +220,16 @@ export const ROUTES: Route[] = [
     ],
   },
   {
+    title: 'Best Sellers',
+    isProtected: false,
+    href: '/best-sellers',
+  },
+  {
+    title: 'Deals',
+    isProtected: false,
+    href: '/deals',
+  },
+  {
     title: 'New Arrivals',
     isProtected: false,
     href: '/new-arrivals',
@@ -235,9 +245,9 @@ export const ROUTES: Route[] = [
   //   href: '/gift-cards',
   // },
   {
-    title: 'Contact',
+    title: 'About Us',
     isProtected: false,
-    href: '/contact',
+    href: '/about-us',
   },
   {
     title: 'Profile',

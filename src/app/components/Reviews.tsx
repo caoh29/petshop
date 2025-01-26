@@ -82,7 +82,7 @@ export default function Reviews({
             type='number'
             min={1}
             max={5}
-            step={0.1}
+            step={1}
             value={reviewRating}
             onChange={(e) => setReviewRating(+e.target.value)}
           />

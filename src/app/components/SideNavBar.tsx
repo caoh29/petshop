@@ -59,8 +59,12 @@ export default function SideNavBar({
           ☰
         </span>
       </SheetTrigger>
-      <SheetContent side='left' onCloseAutoFocus={resetStates}>
-        <ul className='flex flex-col flex-nowrap list-none text-black'>
+      <SheetContent
+        side='left'
+        onCloseAutoFocus={resetStates}
+        className='bg-primary'
+      >
+        <ul className='flex flex-col flex-nowrap list-none text-white'>
           {filterRoutes().map((component) => (
             <li key={component.title} className='mx-4 my-1'>
               {component.href && (
@@ -81,7 +85,7 @@ export default function SideNavBar({
                     />
                   </button>
                   {showCategoryList[component.title] && (
-                    <ul className='flex flex-col list-none relative bg-slate-100'>
+                    <ul className='flex flex-col list-none relative bg-secondary'>
                       {component.children.map((child) => (
                         <li key={child.title} className='my-2 mx-4'>
                           <button
@@ -95,11 +99,11 @@ export default function SideNavBar({
                             />
                           </button>
                           {showSubcategoryList[child.title] && (
-                            <ul className='flex flex-col list-non bg-slate-200 border-2 border-solid border-slate-300'>
+                            <ul className='flex flex-col list-non bg-ternary border-2 border-solid border-white'>
                               {child.children?.map((subchild) => (
                                 <li
                                   key={subchild.title}
-                                  className='py-2 px-4 border-t-2 first-of-type:border-t-0 border-solid border-slate-300'
+                                  className='py-2 px-4 border-t-2 first-of-type:border-t-0 border-solid border-white'
                                 >
                                   <Link
                                     onClick={resetStates}

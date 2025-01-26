@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import ProductCard from '../components/ProductCard';
 import { Category, Product, SubCategory } from '@/api/types';
-import { capitalizeString } from '@/lib/utils';
 
 type Item = Product | Category | SubCategory;
 
@@ -9,6 +8,7 @@ interface Props {
   title?: string;
   items: Item[];
   basePath?: string;
+  userId: string | null;
 }
 
 // Type guard to check if the item is a Product
@@ -18,8 +18,8 @@ function isProduct(item: Item): item is Product {
 
 export default function GridSection({
   items,
-  title,
   basePath,
+  userId,
 }: Readonly<Props>) {
   const getItemPath = (item: Item) => {
     if (isProduct(item)) {
@@ -36,30 +36,16 @@ export default function GridSection({
   };
 
   return (
-    <section className=' bg-slate-400 py-10 px-4 flex justify-center'>
-      <div className='max-w-screen-lg flex flex-col gap-6'>
-        {title && (
-          <h2 className='text-3xl sm:text-4xl px-4 text-amber-500'>
-            {capitalizeString(title)}
-          </h2>
-        )}
-        <ul className='grid grid-cols-2 lg:grid-cols-3'>
-          {items.map((item) => (
-            <li
-              key={item.name}
-              className={
-                isProduct(item) && !basePath
-                  ? 'last-of-type:hidden lg:last-of-type:block'
-                  : ''
-              }
-            >
-              <Link href={getItemPath(item)}>
-                <ProductCard {...item} />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+    <div className='flex justify-center max-w-screen-lg py-10 px-4 bg-primary'>
+      <ul className='grid grid-cols-2 lg:grid-cols-3'>
+        {items.map((item) => (
+          <li key={item.name} className='m-4'>
+            <Link href={getItemPath(item)}>
+              {isProduct(item) && <ProductCard product={item} />}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

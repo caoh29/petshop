@@ -43,7 +43,7 @@ export function isEmptyString(str: string | undefined | null) {
 export const getPagination = ({ page = 1, take = 9 }: Pagination) => {
   page = Number(page);
   take = Number(take);
-  if (isNaN(page) || isNaN(take)) return { skip: 0, take: 9 };
+  if (isNaN(page) || isNaN(take)) return { skip: 0, take, };
   const skip = (page - 1) * take;
   return { skip, take };
 };

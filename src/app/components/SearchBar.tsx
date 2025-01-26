@@ -12,6 +12,7 @@ import {
 import { searchProductAction } from '../actions';
 import { Product } from '@/api/types';
 import { useRouter } from 'next/navigation';
+import { Button } from './ui/button';
 
 export default function SearchBar({
   className,
@@ -50,7 +51,7 @@ export default function SearchBar({
           className={`hover:scale-110 hover:cursor-pointer ${className}`}
         />
       </SheetTrigger>
-      <SheetContent side='top' className='bg-[#2A5135]'>
+      <SheetContent side='top' className='bg-primary'>
         <div className='flex justify-center items-center gap-4 mb-5'>
           <label htmlFor='name' className='text-right text-white'>
             Search
@@ -83,8 +84,8 @@ export default function SearchBar({
         )}
         <SheetFooter>
           <SheetClose asChild>
-            <button
-              className='mt-5 mr-6 p-2 rounded bg-black text-white'
+            <Button
+              variant={'secondary'}
               onClick={() => {
                 if (query.length > 0) {
                   router.push(`/search?query=${query}`);
@@ -92,7 +93,7 @@ export default function SearchBar({
               }}
             >
               Submit
-            </button>
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

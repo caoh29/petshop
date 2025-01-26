@@ -168,7 +168,12 @@ export interface Product {
   availableColors?: string[];
   stock: number;
   isOutOfStock: boolean;
+  discount: number;
   createdAt: Date | string;
+}
+
+export interface ProductWithDiscount extends Product {
+  discountedPrice: number;
 }
 
 export interface SelectedProduct {

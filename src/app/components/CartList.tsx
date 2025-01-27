@@ -21,7 +21,7 @@ export default function CartList({ variant = false, userId }: Readonly<Props>) {
       {cart.products.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
-        <ul className='space-y-4'>
+        <ul className='space-y-4 shadow-lg'>
           {cart.products.map((item) => (
             <li
               key={item.productId}

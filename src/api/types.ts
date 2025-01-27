@@ -172,10 +172,6 @@ export interface Product {
   createdAt: Date | string;
 }
 
-export interface ProductWithDiscount extends Product {
-  discountedPrice: number;
-}
-
 export interface SelectedProduct {
   productId: string;
   productImage: string;

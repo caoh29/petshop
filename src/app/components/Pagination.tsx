@@ -30,7 +30,7 @@ export default function Pagination({
   };
 
   const getActiveStyles = (isActive: boolean) => {
-    return isActive ? 'bg-blue-500' : '';
+    return isActive ? 'bg-secondary text-white' : '';
   };
 
   const renderPageLinks = () => {
@@ -118,7 +118,7 @@ export default function Pagination({
   };
 
   return (
-    <Pag>
+    <Pag className='mt-4'>
       <PaginationContent>
         {currentPage > 1 && (
           <PaginationItem>

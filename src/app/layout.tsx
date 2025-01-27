@@ -37,7 +37,9 @@ export default async function RootLayout({
       <body>
         <StoreProvider cart={cart} userId={userId}>
           <Header isAdmin={isAdmin} userId={userId} />
-          <main className='w-full flex flex-col flex-nowrap'>{children}</main>
+          <main className='w-full flex flex-col flex-nowrap bg-accent '>
+            {children}
+          </main>
           <Footer />
         </StoreProvider>
       </body>

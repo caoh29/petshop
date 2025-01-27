@@ -38,9 +38,16 @@ export default function ProductDetails({
       <AverageRating reviews={product.reviews} />
 
       <div className='my-1 text-md leading-5 text-gray-300'>
-        {product.price.toLocaleString('en-US', {
+        {product.price.toLocaleString('en-CA', {
           style: 'currency',
-          currency: 'USD',
+          currency: 'CAD',
+        })}
+        {product.discount}
+        {Number(
+          product.price - (product.price * product.discount) / 100,
+        ).toLocaleString('en-CA', {
+          style: 'currency',
+          currency: 'CAD',
         })}
       </div>
 

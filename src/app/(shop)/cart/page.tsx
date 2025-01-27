@@ -8,7 +8,7 @@ export default async function CartPage() {
   const session = await auth();
   const userId = session?.user?.id ?? null;
   return (
-    <div className='flex flex-col md:flex-row gap-2 p-8'>
+    <div className='flex flex-col md:flex-row gap-4 p-8'>
       <div className='container'>
         <h1 className='text-2xl font-bold mb-4'>Bag</h1>
         <CartList userId={userId} />

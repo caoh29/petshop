@@ -1,6 +1,6 @@
 'use server';
 
-import { FilterGroup, Product, ProductWithDiscount } from "@/api/types";
+import { FilterGroup, Product } from "@/api/types";
 import prisma from "../../../../prisma/db";
 
 import { checkSearchParam, getPagination } from "@/lib/utils";
@@ -88,7 +88,7 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
   }
 };
 
-export const getPaginatedDealsAction = async ({ take: userTake, searchParams }: GetProducts): Promise<{ products: ProductWithDiscount[], pages: number, currentPage: number }> => {
+export const getPaginatedDealsAction = async ({ take: userTake, searchParams }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
   try {
     const page = Number(searchParams?.page) ?? 1;
 
@@ -144,7 +144,7 @@ export const getProductByIdAction = async ({
   id
 }: {
   id: string;
-}) => {
+}): Promise<Product | null> => {
   try {
     const product = await prisma.product.findUnique({
       where: {

@@ -108,6 +108,11 @@ export const getFeaturedProductsAction = async ({ category, subcategory, searchP
         sizes: sizes ? { hasSome: sizes } : undefined,
         colors: colors ? { hasSome: colors } : undefined,
         name: query ? { contains: query, mode: 'insensitive' } : undefined,
+        stock: { gt: 0 },
+        isOutOfStock: false,
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - 120)), // Products created within the last N days
+        }
       }
     });
 
@@ -122,6 +127,8 @@ export const getFeaturedProductsAction = async ({ category, subcategory, searchP
         colors: colors ? { hasSome: colors } : undefined,
         name: query ? { contains: query, mode: 'insensitive' } : undefined,
         discount: 0,
+        stock: { gt: 0 },
+        isOutOfStock: false,
         createdAt: {
           gte: new Date(new Date().setDate(new Date().getDate() - 120)), // Products created within the last N days
         }

@@ -74,7 +74,7 @@ export default function AddToCart({
         productId: product.id,
         productImage: product.image,
         productName: product.name,
-        productPrice: product.price,
+        productPrice: product.price - (product.price * product.discount) / 100,
         productCategory: product.category,
         productSubcategory: product.subcategory,
         size,
@@ -83,7 +83,7 @@ export default function AddToCart({
       };
     }
 
-    dispatch(addProductToCart(selectedProduct));
+    dispatch(addProductToCart({ selectedProduct, userId }));
 
     updateSearchParams();
   };

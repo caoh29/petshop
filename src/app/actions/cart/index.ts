@@ -130,6 +130,7 @@ export const addProductToCartAction = async (
           select: {
             name: true,
             price: true,
+            discount: true,
             image: true,
             category: true,
             subcategory: true,
@@ -152,6 +153,7 @@ export const addProductToCartAction = async (
           select: {
             name: true,
             price: true,
+            discount: true,
             image: true,
             category: true,
             subcategory: true,
@@ -166,7 +168,7 @@ export const addProductToCartAction = async (
     productId: updatedCartProduct.productId,
     productImage: updatedCartProduct.product.image,
     productName: updatedCartProduct.product.name,
-    productPrice: updatedCartProduct.product.price,
+    productPrice: updatedCartProduct.product.price - (updatedCartProduct.product.price * updatedCartProduct.product.discount / 100),
     productCategory: updatedCartProduct.product.category,
     productSubcategory: updatedCartProduct.product.subcategory,
     size: updatedCartProduct.size ?? '',

@@ -36,7 +36,7 @@ export default function GridSection({ items, basePath }: Readonly<Props>) {
         {items.map((item) => (
           <li key={item.name} className='m-4'>
             <Link href={getItemPath(item)}>
-              {isProduct(item) && <ProductCard product={item} />}
+              {isProduct(item) && <ProductCard product={item} variant />}
             </Link>
           </li>
         ))}

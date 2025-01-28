@@ -10,9 +10,13 @@ import Link from 'next/link';
 
 interface Props {
   product: Product;
+  variant?: boolean;
 }
 
-export default function ProductCard({ product }: Readonly<Props>) {
+export default function ProductCard({
+  product,
+  variant = false,
+}: Readonly<Props>) {
   if (!product) return null;
   return (
     <Card className='overflow-hidden even:hidden sm:even:block max-w-sm w-full'>
@@ -29,10 +33,25 @@ export default function ProductCard({ product }: Readonly<Props>) {
           <h3 className='font-semibold text-lg mb-1'>
             {capitalizeString(product.name)}
           </h3>
-          <p className='text-sm text-gray-500 mb-2'>
-            {capitalizeString(product.category)}
+          {variant ? (
+            product.discount > 0 ? (
+              <p className='text-destructive line-through font-semibold mb-2'>
+                ${product.price.toFixed(2)}
+              </p>
+            ) : (
+              <p className='mb-2 text-accent'>-</p>
+            )
+          ) : (
+            <p className='text-sm text-gray-500 mb-2'>
+              {capitalizeString(product.category)}
+            </p>
+          )}
+          <p className='font-bold text-xl'>
+            $
+            {(product.price - (product.price * product.discount) / 100).toFixed(
+              2,
+            )}
           </p>
-          <p className='font-bold text-xl'>${product.price.toFixed(2)}</p>
         </div>
       </CardContent>
       <CardFooter>

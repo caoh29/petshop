@@ -23,7 +23,7 @@ export default function AverageRating({
 
   return (
     <>
-      {reviews && reviews?.length && (
+      {reviews && reviews?.length > 0 && (
         <div className='mt-4 font-light'>
           Average Rating:{' '}
           {(

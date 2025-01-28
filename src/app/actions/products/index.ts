@@ -88,6 +88,69 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
   }
 };
 
+export const getFeaturedProductsAction = async ({ category, subcategory, searchParams, take: userTake }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
+  try {
+    const page = Number(searchParams?.page) ?? 1;
+
+    const { skip, take } = getPagination({ page, take: userTake });
+
+    const sizes = checkSearchParam(searchParams?.Size);
+    const colors = checkSearchParam(searchParams?.Color);
+    const sortBy = checkSorting(searchParams?.sort as string);
+    const query = searchParams?.query as string;
+
+
+    // Get the total count of products based on the filters
+    const totalCount = await prisma.product.count({
+      where: {
+        category: category ?? undefined,
+        subcategory: subcategory ?? undefined,
+        sizes: sizes ? { hasSome: sizes } : undefined,
+        colors: colors ? { hasSome: colors } : undefined,
+        name: query ? { contains: query, mode: 'insensitive' } : undefined,
+      }
+    });
+
+    const products = await prisma.product.findMany({
+      take,
+      skip,
+      include: { reviews: true }, // Include reviews in the initial query
+      where: {
+        category: category ?? undefined,
+        subcategory: subcategory ?? undefined,
+        sizes: sizes ? { hasSome: sizes } : undefined,
+        colors: colors ? { hasSome: colors } : undefined,
+        name: query ? { contains: query, mode: 'insensitive' } : undefined,
+        discount: 0,
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - 120)), // Products created within the last N days
+        }
+      },
+      orderBy: sortBy ?? undefined,
+    });
+
+    return {
+      pages: Math.ceil(totalCount / take), // Total number of pages
+      currentPage: page ?? 1, // Current page number
+      products: products.map(product => ({
+        ...product,
+        createdAt: product.createdAt.toISOString(), // Convert Date to string
+        reviews: product.reviews.map(review => ({
+          ...review,
+          createdAt: review.createdAt.toISOString() // Convert Date to string
+        }))
+      })),
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      products: [], // Return an empty array in case of error
+      pages: 0, // Return 0 pages in case of error
+      currentPage: 1 // Return 1 as the current page in case of error
+    };
+  }
+};
+
 export const getPaginatedDealsAction = async ({ take: userTake, searchParams }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
   try {
     const page = Number(searchParams?.page) ?? 1;

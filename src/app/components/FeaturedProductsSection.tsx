@@ -1,9 +1,9 @@
 import ProductCard from './ProductCard';
 
-import { getPaginatedProductsAction } from '../actions';
+import { getFeaturedProductsAction } from '../actions';
 
 export default async function FeaturedProductsSection() {
-  const { products } = await getPaginatedProductsAction({ take: 6 });
+  const { products } = await getFeaturedProductsAction({ take: 6 });
   return (
     <section className='py-12 bg-secondary'>
       <div className='container max-w-screen-lg mx-auto px-4'>

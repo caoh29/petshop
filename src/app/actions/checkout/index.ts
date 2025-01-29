@@ -63,6 +63,7 @@ export const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship'
       },
       select: {
         price: true,
+        discount: true
       }
     });
 
@@ -75,7 +76,7 @@ export const getAmount = async (products: ValidProduct[], deliveryMethod: 'ship'
 
     return {
       ...item,
-      price: product.price,
+      price: product.price - (product.price * product.discount / 100),
     };
   }));
 
@@ -213,16 +214,17 @@ const updateUserAddress = async ({ userId, shippingInfo }: { userId: string, shi
 
 const getPrices = async (products: ValidProduct[]) => {
   const prices = await Promise.all(products.map(async (product) => {
-    const price = await prisma.product.findUnique({
+    const prod = await prisma.product.findUnique({
       where: {
         id: product.productId
       },
       select: {
         price: true,
+        discount: true
       }
     });
 
-    if (!price) {
+    if (!prod) {
       return {
         id: product.productId,
         price: 0,
@@ -231,7 +233,7 @@ const getPrices = async (products: ValidProduct[]) => {
 
     return {
       id: product.productId,
-      price: price.price,
+      price: prod.price - (prod.price * prod.discount / 100),
     };
   }))
   return prices;

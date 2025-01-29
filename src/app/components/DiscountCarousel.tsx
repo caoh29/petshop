@@ -66,7 +66,11 @@ export default function DiscountCarousel({ products }: Readonly<Props>) {
                           ${product.price.toFixed(2)}
                         </p>
                         <p className='text-2xl font-bold text-accent'>
-                          ${product.discount}% OFF
+                          $
+                          {Number(
+                            product.price -
+                              (product.price * product.discount) / 100,
+                          ).toFixed(2)}
                         </p>
                       </div>
                     </div>

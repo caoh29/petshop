@@ -64,6 +64,7 @@ export default function Footer() {
               type='email'
               name='email'
               placeholder='Email'
+              required
             />
             <input
               className='cursor-pointer text-lg hover:scale-125 font-bold'

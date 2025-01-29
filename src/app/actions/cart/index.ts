@@ -381,10 +381,18 @@ export async function getCartSummaryAction({ cart,
     const products = await Promise.all(cart.validatedProducts.map(async (prod) => {
       const productWithPrice = await prisma.product.findUnique({
         where: { id: prod.productId },
-        select: { price: true }
+        select: { price: true, discount: true }
       });
+
+      if (!productWithPrice) return {
+        productId: '',
+        price: 0,
+        isAvailable: false,
+        quantity: 0
+      };
+
       return {
-        price: productWithPrice?.price ?? 0,
+        price: productWithPrice.price - (productWithPrice.price * productWithPrice.discount / 100),
         ...prod
       }
     }))
@@ -408,12 +416,12 @@ async function getSubtotal(cart: Cart, isCheckout: boolean) {
     const prices = await Promise.all(cart.products.map(async (product) => {
       const prod = await prisma.product.findUnique({
         where: { id: product.productId },
-        select: { price: true }
+        select: { price: true, discount: true }
       });
 
       if (!prod) return 0;
 
-      return prod.price * product.quantity;
+      return (prod.price - (prod.price * prod.discount / 100)) * product.quantity;
     }));
     return prices.reduce((a, b) => a + b, 0);
   }
@@ -421,12 +429,12 @@ async function getSubtotal(cart: Cart, isCheckout: boolean) {
   const prices = await Promise.all(cart.validatedProducts.map(async (product) => {
     const prod = await prisma.product.findUnique({
       where: { id: product.productId },
-      select: { price: true }
+      select: { price: true, discount: true }
     });
 
     if (!prod) return 0;
 
-    return prod.price * product.quantity;
+    return (prod.price - (prod.price * prod.discount / 100)) * product.quantity;
   }));
   return prices.reduce((a, b) => a + b, 0);
 }

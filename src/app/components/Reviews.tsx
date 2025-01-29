@@ -68,14 +68,14 @@
 //         }}
 //       >
 //         <div className='flex flex-row gap-2 items-center'>
-//           <label htmlFor='review-text'>Review</label>
+//           <Label htmlFor='review-text'>Review</Label>
 //           <input
 //             id='review-text'
 //             className='p-2 border border-gray-300 rounded-md bg-gray-900 text-white flex-grow'
 //             value={reviewText}
 //             onChange={(e) => setReviewText(e.target.value)}
 //           />
-//           <label htmlFor='review-rating'>Rating</label>
+//           <Label htmlFor='review-rating'>Rating</Label>
 //           <input
 //             id='review-rating'
 //             className='p-2 border border-gray-300 rounded-md bg-gray-900 text-white'
@@ -118,6 +118,7 @@ import {
   SelectValue,
 } from './ui/select';
 import { Button } from './ui/button';
+import { Label } from './ui/label';
 
 interface Props {
   productId: string;
@@ -196,9 +197,7 @@ export default function Reviews({
         className='space-y-4'
       >
         <div className='space-y-2'>
-          <label htmlFor='review-text' className='text-sm font-medium'>
-            Review
-          </label>
+          <Label className='text-sm font-medium'>Review</Label>
           <Textarea
             id='review-text'
             placeholder='Write your review here...'
@@ -208,9 +207,7 @@ export default function Reviews({
           />
         </div>
         <div className='space-y-2'>
-          <label htmlFor='review-rating' className='text-sm font-medium'>
-            Rating
-          </label>
+          <Label className='text-sm font-medium'>Rating</Label>
           <Select
             value={reviewRating.toString()}
             onValueChange={(value) => setReviewRating(Number(value))}

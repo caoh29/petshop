@@ -69,7 +69,10 @@ export default function SortDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='outline' className='w-[200px] justify-between'>
+        <Button
+          variant='outline'
+          className='w-[150px] sm:w-[200px] justify-between'
+        >
           {selectedSort.label}
           <ChevronDown className='ml-2 h-4 w-4' />
         </Button>

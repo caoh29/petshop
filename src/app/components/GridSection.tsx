@@ -31,11 +31,11 @@ export default function GridSection({ items, basePath }: Readonly<Props>) {
   };
 
   return (
-    <div className='flex justify-center max-w-screen-lg py-10 px-4 bg-primary'>
-      <ul className='grid grid-cols-2 lg:grid-cols-3'>
+    <div className='flex justify-center w-full max-w-screen-lg py-10 px-4 bg-primary'>
+      <ul className='grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full'>
         {items.map((item) => (
-          <li key={item.name} className='m-4'>
-            <Link href={getItemPath(item)}>
+          <li key={item.name} className='flex'>
+            <Link href={getItemPath(item)} className='w-full'>
               {isProduct(item) && <ProductCard product={item} variant />}
             </Link>
           </li>

@@ -20,7 +20,7 @@ export default async function ShopByCategorySection() {
           {categories.map((category, index) => (
             <Link
               key={category.name}
-              href={category.name}
+              href={`/${category.name}`}
               className={`group relative overflow-hidden rounded-lg aspect-[4/3] ${
                 [2, 3, 4].includes(index) && 'hidden sm:block'
               }`}

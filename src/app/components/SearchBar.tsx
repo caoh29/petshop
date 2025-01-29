@@ -62,27 +62,6 @@ export default function SearchBar({
             className='w-4/5 border-2 border-slate-200 border-solid py-1 px-2 rounded'
             onChange={handleChange}
           />
-        </div>
-        {query.length >= 3 && !loading && products.length === 0 ? (
-          <p className='text-white text-center'>
-            No products matching your description were found.
-          </p>
-        ) : (
-          products.map((product) => (
-            <SheetClose key={product.id} asChild>
-              <Link
-                className='p-2 border-2 border-slate-200 border-solid flex flex-col flex-nowrap hover:bg-slate-400'
-                href={`/${product.category}/${product.subcategory}/${product.id}`}
-              >
-                <p className='text-white'>{product.name}</p>
-                <p className='text-slate-500 font-extralight text-sm'>
-                  {product.category}
-                </p>
-              </Link>
-            </SheetClose>
-          ))
-        )}
-        <SheetFooter>
           <SheetClose asChild>
             <Button
               variant={'secondary'}
@@ -95,7 +74,26 @@ export default function SearchBar({
               Submit
             </Button>
           </SheetClose>
-        </SheetFooter>
+        </div>
+        {query.length >= 3 && !loading && products.length === 0 ? (
+          <p className='text-white text-center'>
+            No products matching your description were found.
+          </p>
+        ) : (
+          products.map((product) => (
+            <SheetClose key={product.id} asChild>
+              <Link
+                className='p-2 border-2 border-slate-200 border-solid flex flex-col flex-nowrap hover:bg-ternary'
+                href={`/${product.category}/${product.subcategory}/${product.id}`}
+              >
+                <p className='text-white'>{product.name}</p>
+                <p className='text-secondary font-extralight text-sm'>
+                  {product.category}
+                </p>
+              </Link>
+            </SheetClose>
+          ))
+        )}
       </SheetContent>
     </Sheet>
   );

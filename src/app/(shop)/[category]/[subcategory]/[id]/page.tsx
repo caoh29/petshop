@@ -53,30 +53,36 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
   }
 
   return (
-    <div className='flex flex-wrap'>
-      <ProductImageGallery
-        images={product.additionalImages ?? []}
-        productName={product.name}
-        productImage={product.image}
-      />
+    <div className='flex flex-col flex-nowrap justify-items-center items-center py-8'>
+      <div className='md:grid md:grid-cols-2 2xl:grid-cols-3 pb-12 sm:px-6'>
+        <ProductImageGallery
+          className='order-1'
+          images={product.additionalImages ?? []}
+          productName={product.name}
+          productImage={product.image}
+        />
 
-      <ProductDetails
-        product={product}
-        addProductToCartAction={addProductToCartAction}
-        userId={userId}
+        <ProductDetails
+          className='order-2 2xl:col-span-2'
+          product={product}
+          addProductToCartAction={addProductToCartAction}
+          userId={userId}
+        />
+      </div>
+
+      <RelatedProducts
+        className='order-3 md:col-span-3'
+        productId={product.id}
+        productCategory={product.category}
+        productSubcategory={product.subcategory}
       />
 
       <Reviews
+        className='order-4 md:col-span-3'
         productId={product.id}
         reviews={product.reviews}
         addReviewAction={addReviewAction}
         userId={userId}
-      />
-
-      <RelatedProducts
-        productId={product.id}
-        productCategory={product.category}
-        productSubcategory={product.subcategory}
       />
     </div>
   );

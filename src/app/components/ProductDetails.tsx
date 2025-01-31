@@ -105,18 +105,24 @@ interface Props {
     userId?: string,
   ) => Promise<SelectedProduct>;
   userId: string | null;
+  className?: string;
 }
 
 export default function ProductDetails({
   product,
   addProductToCartAction,
   userId,
+  className,
 }: Readonly<Props>) {
   const discountedPrice =
     product.price - (product.price * product.discount) / 100;
 
   return (
-    <Card className='w-full md:w-1/2'>
+    <Card
+      className={`${
+        className ?? ''
+      } w-full rounded-none border-none bg-none shadow-none`}
+    >
       <CardHeader>
         <CardTitle className='text-3xl font-bold'>{product.name}</CardTitle>
         <div className='flex items-center space-x-2'>

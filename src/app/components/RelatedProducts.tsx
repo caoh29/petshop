@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
-// import { getProducts } from '@/api/products';
+import ProductCard from './ProductCard';
 
 import {
   Carousel,
@@ -10,19 +9,21 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from './ui/carousel';
-import { Card, CardContent } from './ui/card';
+
 import { getRelatedProductsAction } from '../actions/products';
 
 interface Props {
   productId: string;
   productCategory?: string;
   productSubcategory?: string;
+  className?: string;
 }
 
 export default async function RelatedProducts({
   productId: id,
   productCategory: category,
   productSubcategory: subcategory,
+  className,
 }: Readonly<Props>) {
   const products = await getRelatedProductsAction({
     id,
@@ -31,13 +32,19 @@ export default async function RelatedProducts({
   });
 
   return (
-    <div className='flex flex-col flex-wrap gap-6 w-full p-4'>
-      <h1 className='text-2xl font-bold mt-2 -mb-2'>Related Products</h1>
+    <div
+      className={`${
+        className ?? ''
+      } flex flex-col flex-nowrap gap-6 items-center w-full p-12 bg-secondary`}
+    >
+      <h2 className='text-3xl sm:text-4xl font-bold text-accent mb-8'>
+        Related Products
+      </h2>
       <Carousel
         opts={{
           align: 'center',
         }}
-        className={`w-full max-w-sm self-center md:max-w-xl lg:max-w-4xl`}
+        className={`w-full max-w-sm md:max-w-xl lg:max-w-4xl`}
       >
         <CarouselContent>
           {products.map((product) => (
@@ -48,17 +55,7 @@ export default async function RelatedProducts({
               <Link
                 href={`/${product.category}/${product.subcategory}/${product.id}`}
               >
-                <Card>
-                  <CardContent className='flex aspect-square items-center justify-center p-6'>
-                    <Image
-                      className={`aspect-[2/2] rounded-md object-cover`}
-                      src={product.image ?? ''}
-                      alt={`${product.name} image`}
-                      width={1024}
-                      height={1024}
-                    />
-                  </CardContent>
-                </Card>
+                <ProductCard product={product} variant />
               </Link>
             </CarouselItem>
           ))}
@@ -66,19 +63,6 @@ export default async function RelatedProducts({
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      {/* <ul className='flex flex-row flex-wrap m-2'>
-        {products
-          .filter((p) => p.id !== +productId)
-          .map((product) => (
-            <li key={product.id} className='md:w-1/5'>
-              <Link
-                href={`/${product.category}/${product.subcategory}/${product.id}`}
-              >
-                <ProductCard {...product} small />
-              </Link>
-            </li>
-          ))}
-      </ul> */}
     </div>
   );
 }

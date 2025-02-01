@@ -25,7 +25,7 @@ export default function ColorSelector({
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
-  const color = searchParams.get('Color');
+  const currentColor = searchParams.get('Color');
 
   if (colors.length === 0) return null;
 
@@ -50,7 +50,7 @@ export default function ColorSelector({
         className='flex flex-wrap justify-start'
         // value={colorState}
         // onValueChange={(value) => dispatch(setColor(value))}
-        value={color ?? ''}
+        value={currentColor ?? ''}
         onValueChange={(value) => updateSearchParams(value)}
       >
         {colors.map((color) => (

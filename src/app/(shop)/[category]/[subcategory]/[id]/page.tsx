@@ -1,11 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
-import {
-  addProductToCartAction,
-  addReviewAction,
-  getProductByIdAction,
-} from '@/app/actions';
+import { getProductByIdAction } from '@/app/actions';
 
 import ProductImageGallery from '@/app/components/ProductImageGallery';
 import ProductDetailsHeader from '@/app/components/ProductDetailsHeader';
@@ -74,7 +70,6 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
         <ProductDetails
           className='order-3 lg:order-2'
           product={product}
-          addProductToCartAction={addProductToCartAction}
           userId={userId}
         />
       </div>
@@ -90,7 +85,6 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
         className='order-5 lg:order-4 lg:col-span-2'
         productId={product.id}
         reviews={product.reviews}
-        addReviewAction={addReviewAction}
         userId={userId}
       />
     </div>

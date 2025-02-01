@@ -1,30 +1,21 @@
-import type { Product, SelectedProduct } from '@/api/types';
-import { capitalizeString } from '@/lib/utils';
-import AverageRating from '@/app/components/AverageRating';
+import type { Product } from '@/api/types';
 import QuantitySelector from '@/app/components/QuantitySelector';
 import SizeSelector from '@/app/components/SizeSelector';
 import ColorSelector from '@/app/components/ColorSelector';
 import AddToCart from '@/app/components/AddToCart';
 import ProductDetailsHeader from '@/app/components/ProductDetailsHeader';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardHeader } from './ui/card';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 
 interface Props {
   product: Product;
-  addProductToCartAction: (
-    id: string,
-    quantity: number,
-    options: { size?: string; color?: string },
-    userId?: string,
-  ) => Promise<SelectedProduct>;
   userId: string | null;
   className?: string;
 }
 
 export default function ProductDetails({
   product,
-  addProductToCartAction,
   userId,
   className,
 }: Readonly<Props>) {
@@ -103,7 +94,6 @@ export default function ProductDetails({
           <AddToCart
             className='mt-6'
             product={product}
-            addProductToCartAction={addProductToCartAction}
             disabled={product.isOutOfStock}
             sizes={product.sizes ?? []}
             colors={product.colors ?? []}

@@ -53,8 +53,8 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
   }
 
   return (
-    <div className='flex flex-col flex-nowrap justify-items-center items-center py-8'>
-      <div className='md:grid md:grid-cols-2 2xl:grid-cols-3 pb-12 sm:px-6'>
+    <div className='flex flex-col flex-nowrap justify-items-center items-center'>
+      <div className='lg:grid lg:grid-cols-2 py-12 sm:px-6'>
         <ProductImageGallery
           className='order-1'
           images={product.additionalImages ?? []}
@@ -63,7 +63,7 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
         />
 
         <ProductDetails
-          className='order-2 2xl:col-span-2'
+          className='order-2'
           product={product}
           addProductToCartAction={addProductToCartAction}
           userId={userId}
@@ -71,14 +71,14 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
       </div>
 
       <RelatedProducts
-        className='order-3 md:col-span-3'
+        className='order-3 lg:col-span-2'
         productId={product.id}
         productCategory={product.category}
         productSubcategory={product.subcategory}
       />
 
       <Reviews
-        className='order-4 md:col-span-3'
+        className='order-4 lg:col-span-2'
         productId={product.id}
         reviews={product.reviews}
         addReviewAction={addReviewAction}

@@ -90,7 +90,9 @@ export default function AddToCart({
 
   return (
     <Button
-      className={`${className} mt-6 text-lg font-bold`}
+      className={`${
+        className ?? ''
+      } font-bold w-full bg-primary hover:bg-primary/90 text-primary-foreground`}
       onClick={() => handleClick()}
       disabled={
         disabled ||

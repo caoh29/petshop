@@ -188,8 +188,9 @@ export default function ProductDetails({
           SKU: <span className='font-medium'>{product.sku}</span>
         </div>
 
-        <div className='flex justify-end'>
+        <div className='flex justify-center'>
           <AddToCart
+            className='mt-6'
             product={product}
             addProductToCartAction={addProductToCartAction}
             disabled={product.isOutOfStock}

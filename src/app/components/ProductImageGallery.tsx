@@ -32,10 +32,10 @@ export default function ProductImageGallery({
   };
 
   return (
-    <div className={`${className ?? ''} w-full relative p-4`}>
+    <div className={`${className ?? ''} w-full max-w-2xl relative p-4 mx-auto`}>
       {images.length > 0 && (
         <>
-          <div className='hidden sm:block md:hidden lg:block w-1/5 absolute left-0 top-0 p-4 h-full overflow-y-auto'>
+          <div className='hidden sm:block w-1/5 absolute left-0 top-0 p-4 h-full overflow-y-auto'>
             {images.map((img, index) => (
               <Image
                 key={img}
@@ -50,7 +50,7 @@ export default function ProductImageGallery({
               />
             ))}
           </div>
-          <div className='sm:ml-[20%] md:ml-[5%] lg:ml-[20%] relative'>
+          <div className='sm:ml-[20%] relative'>
             <Image
               className='aspect-square rounded-md object-cover'
               src={images[currentImageIndex]}

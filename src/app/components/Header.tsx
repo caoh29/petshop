@@ -26,7 +26,6 @@ export default function Header({ userId, isAdmin }: Readonly<Props>) {
 
   const path = usePathname();
 
-  const [showCartPopup, setShowCartPopup] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   // const dispatch = useDispatch();
   // const headerVisibility = useHeaderVisibility();
@@ -78,12 +77,7 @@ export default function Header({ userId, isAdmin }: Readonly<Props>) {
         userId={userId}
       />
       <SearchBar className='order-3 mr-4 sm:mr-8' />
-      <ShoppingCart
-        className='order-4 sm:mr-8'
-        showCartPopup={showCartPopup}
-        setShowCartPopup={setShowCartPopup}
-        cart={cart}
-      />
+      <ShoppingCart className='order-4 sm:mr-8' cart={cart} />
       <AuthButton
         className='order-5 text-white hidden sm:block'
         userId={userId}

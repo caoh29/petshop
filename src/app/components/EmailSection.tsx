@@ -35,7 +35,7 @@ export default function EmailSection({ email }: Readonly<Props>) {
   }, [defaultValue, dispatch]);
 
   return (
-    <>
+    <div className='space-y-1 mb-2'>
       <Label>Email</Label>
       <Input
         type='email'
@@ -43,10 +43,11 @@ export default function EmailSection({ email }: Readonly<Props>) {
         placeholder='example@gmail.com'
         required
         defaultValue={defaultValue}
+        className='bg-white'
         onChange={(e) => {
           dispatch(setEmail(e.target.value));
         }}
       />
-    </>
+    </div>
   );
 }

@@ -28,6 +28,7 @@ const getCart = async (userId: string): Promise<Cart> => {
               image: true,
               category: true,
               subcategory: true,
+              discount: true,
             }
           }
         }
@@ -61,7 +62,7 @@ const getCart = async (userId: string): Promise<Cart> => {
         productId,
         productImage: product.image,
         productName: product.name,
-        productPrice: product.price,
+        productPrice: (product.price - (product.price * product.discount / 100)),
         productCategory: product.category,
         productSubcategory: product.subcategory,
         size: size ?? '',

@@ -54,40 +54,44 @@ export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
       <AccordionItem value='contactInfo'>
         <AccordionTrigger>Contact Information</AccordionTrigger>
         <AccordionContent>
-          <EmailSection email={userData?.email ?? ''} />
-          <ShippingAddressSection
-            userData={userData}
-            stripePromise={stripePromise}
-          />
-          {deliveryMethod === 'ship' && (
-            <div className='flex flex-row flex-nowrap gap-2 mt-4'>
-              <Checkbox
-                checked={isShippingSameAsBilling}
-                onClick={() =>
-                  setIsShippingSameAsBilling(!isShippingSameAsBilling)
-                }
-              />
-              <Label>Is billing address same a shipping address?</Label>
-            </div>
-          )}
-          {deliveryMethod === 'ship' && userId && (
-            <div className='flex flex-row flex-nowrap gap-2 mt-4'>
-              <Checkbox
-                checked={saveAddress}
-                onClick={() => dispatch(toggleSaveAddress())}
-              />
-              <Label>Do you want to save the address?</Label>
-            </div>
-          )}
+          <div className='border-2 border-solid border-primary p-4 rounded-lg shadow-lg'>
+            <EmailSection email={userData?.email ?? ''} />
+            <ShippingAddressSection
+              userData={userData}
+              stripePromise={stripePromise}
+            />
+            {deliveryMethod === 'ship' && (
+              <div className='flex flex-row flex-nowrap gap-2 mt-4'>
+                <Checkbox
+                  checked={isShippingSameAsBilling}
+                  onClick={() =>
+                    setIsShippingSameAsBilling(!isShippingSameAsBilling)
+                  }
+                />
+                <Label>Is billing address same a shipping address?</Label>
+              </div>
+            )}
+            {deliveryMethod === 'ship' && userId && (
+              <div className='flex flex-row flex-nowrap gap-2 mt-4'>
+                <Checkbox
+                  checked={saveAddress}
+                  onClick={() => dispatch(toggleSaveAddress())}
+                />
+                <Label>Do you want to save the address?</Label>
+              </div>
+            )}
+          </div>
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value='billingInfo'>
         <AccordionTrigger>Billing Information</AccordionTrigger>
         <AccordionContent>
-          <BillingAddressSection
-            isShippingSameAsBilling={isShippingSameAsBilling}
-            stripePromise={stripePromise}
-          />
+          <div className='border-2 border-solid border-primary p-4 rounded-lg shadow-lg'>
+            <BillingAddressSection
+              isShippingSameAsBilling={isShippingSameAsBilling}
+              stripePromise={stripePromise}
+            />
+          </div>
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value='payment'>
@@ -95,7 +99,9 @@ export default function CheckoutSection({ userData, userId }: Readonly<Props>) {
           Payment Information
         </AccordionTrigger>
         <AccordionContent>
-          <PaymentSection userId={userId} stripePromise={stripePromise} />
+          <div className='border-2 border-solid border-primary p-4 rounded-lg shadow-lg'>
+            <PaymentSection userId={userId} stripePromise={stripePromise} />
+          </div>
         </AccordionContent>
       </AccordionItem>
     </Accordion>

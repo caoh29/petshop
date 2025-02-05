@@ -22,18 +22,18 @@ export default function AboutUsPage() {
             <div>
               <h2 className='text-3xl font-bold mb-6'>Our Story</h2>
               <p className='text-lg mb-4'>
-                Founded in 2010, PetShop started as a small local pet supply
+                {`Founded in 2010, PetShop started as a small local pet supply
                 store with a big dream: to provide the best products and care
                 for all types of pets. Over the years, we've grown into a
                 leading online destination for pet owners, but our commitment to
                 quality and animal welfare remains at the heart of everything we
-                do.
+                do.`}
               </p>
               <p className='text-lg'>
-                From our humble beginnings to our current status as a trusted
+                {`From our humble beginnings to our current status as a trusted
                 name in pet care, we've always put pets first. Our team of
                 animal lovers and experts work tirelessly to bring you the best
-                products, advice, and service.
+                products, advice, and service.`}
               </p>
             </div>
             <div className='relative h-96 rounded-lg overflow-hidden'>

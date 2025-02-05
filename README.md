@@ -125,12 +125,13 @@ petshop/
 ├── prisma/                   # Database schema and migrations
 ├── public/                   # Static assets and images
 ├── src/                      # Source code
-│   ├── api/                  # API routes and handlers
 │   ├── app/                  # Next.js app router components and pages
 │   ├── hooks/                # Custom React hooks
 │   ├── lib/                  # Utility functions and shared logic
 │   ├── mocks/                # Mock data and testing utilities
 │   ├── store/                # Redux store configuration
+│   ├── types/                # TypeScript type definitions
+│   ├── routes.ts             # Routes in app
 │   ├── middleware.ts         # Next.js middleware configuration
 │   └── auth.ts               # Authentication configuration
 ├── .env                      # Environment variables
@@ -148,14 +149,12 @@ petshop/
 - **`.next/`**: Contains the built production code
 - **`prisma/`**: Houses the database schema, migrations, and seed data
 - **`src/`**: Main source code directory
-  - **`api/`**: Backend API routes and handlers
+  - **`types/`**: TypeScript type definitions
   - **`app/`**: Frontend pages and components using Next.js App Router
   - **`hooks/`**: Reusable React hooks
   - **`lib/`**: Shared utilities and helper functions
   - **`mocks/`**: Testing utilities and mock data
   - **`store/`**: Redux store setup, slices, and actions
-  - **`auth.ts`**: Authentication configuration and providers
-- **`middleware.ts`**: Request/response middleware functions
 
 ## 🔧 Technologies Used
 

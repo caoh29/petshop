@@ -44,10 +44,10 @@ export default function AccountPreferencesForm() {
           control={form.control}
           name='emailNotifications'
           render={({ field }) => (
-            <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+            <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4 bg-white'>
               <div className='space-y-0.5'>
                 <FormLabel className='text-base'>Email Notifications</FormLabel>
-                <FormDescription>
+                <FormDescription className='text-secondary'>
                   Receive email notifications about your account activity.
                 </FormDescription>
               </div>
@@ -64,10 +64,10 @@ export default function AccountPreferencesForm() {
           control={form.control}
           name='smsAlerts'
           render={({ field }) => (
-            <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+            <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4 bg-white'>
               <div className='space-y-0.5'>
                 <FormLabel className='text-base'>SMS Alerts</FormLabel>
-                <FormDescription>
+                <FormDescription className='text-secondary'>
                   Receive SMS alerts for important updates.
                 </FormDescription>
               </div>
@@ -84,10 +84,10 @@ export default function AccountPreferencesForm() {
           control={form.control}
           name='marketingEmails'
           render={({ field }) => (
-            <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+            <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4 bg-white'>
               <div className='space-y-0.5'>
                 <FormLabel className='text-base'>Marketing Emails</FormLabel>
-                <FormDescription>
+                <FormDescription className='text-secondary'>
                   Receive emails about new products, features, and more.
                 </FormDescription>
               </div>
@@ -104,10 +104,10 @@ export default function AccountPreferencesForm() {
           control={form.control}
           name='dataSharing'
           render={({ field }) => (
-            <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+            <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4 bg-white'>
               <div className='space-y-0.5'>
                 <FormLabel className='text-base'>Data Sharing</FormLabel>
-                <FormDescription>
+                <FormDescription className='text-secondary'>
                   Allow us to share your data with our partners.
                 </FormDescription>
               </div>

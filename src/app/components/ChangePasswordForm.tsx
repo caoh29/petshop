@@ -46,7 +46,11 @@ export default function ChangePasswordForm() {
             <FormItem>
               <FormLabel>New Password</FormLabel>
               <FormControl>
-                <Input className='max-w-md' type='password' {...field} />
+                <Input
+                  className='max-w-md bg-white'
+                  type='password'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -59,7 +63,11 @@ export default function ChangePasswordForm() {
             <FormItem>
               <FormLabel>Confirm New Password</FormLabel>
               <FormControl>
-                <Input className='max-w-md' type='password' {...field} />
+                <Input
+                  className='max-w-md bg-white'
+                  type='password'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

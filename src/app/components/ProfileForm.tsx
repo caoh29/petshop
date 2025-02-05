@@ -204,7 +204,12 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
+                      <Input
+                        className='bg-white'
+                        type='text'
+                        disabled={!isEditable}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,7 +224,12 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
+                      <Input
+                        className='bg-white'
+                        type='text'
+                        disabled={!isEditable}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -236,7 +246,12 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>Address</FormLabel>
                     <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
+                      <Input
+                        className='bg-white'
+                        type='text'
+                        disabled={!isEditable}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -251,7 +266,12 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>Address 2 (Optional)</FormLabel>
                     <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
+                      <Input
+                        className='bg-white'
+                        type='text'
+                        disabled={!isEditable}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -268,7 +288,12 @@ export default function ProfileForm({
                   <FormItem>
                     <FormLabel>City</FormLabel>
                     <FormControl>
-                      <Input type='text' disabled={!isEditable} {...field} />
+                      <Input
+                        className='bg-white'
+                        type='text'
+                        disabled={!isEditable}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -291,14 +316,14 @@ export default function ProfileForm({
                         disabled={!isEditable || loadingCountries}
                         {...field}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className='bg-white'>
                           {loadingCountries ? (
                             <Skeleton className='h-8 w-full' />
                           ) : (
                             <SelectValue />
                           )}
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className='bg-white'>
                           {countries.map((country) => (
                             <SelectItem key={country.code} value={country.code}>
                               {country.name}
@@ -330,14 +355,14 @@ export default function ProfileForm({
                         }}
                         {...field}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className='bg-white'>
                           {loadingStates ? (
                             <Skeleton className='h-8 w-full' />
                           ) : (
                             <SelectValue />
                           )}
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className='bg-white'>
                           {states.map((state) => (
                             <SelectItem key={state.code} value={state.code}>
                               {state.name}
@@ -360,7 +385,7 @@ export default function ProfileForm({
                     <FormLabel>Postal Code</FormLabel>
                     <FormControl>
                       <Input
-                        className='uppercase'
+                        className='uppercase bg-white'
                         type='text'
                         disabled={!isEditable}
                         {...field}
@@ -382,6 +407,7 @@ export default function ProfileForm({
                     <FormLabel>Phone</FormLabel>
                     <FormControl>
                       <Input
+                        className='bg-white'
                         type='tel'
                         placeholder='+12223334444'
                         disabled={!isEditable}

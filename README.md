@@ -206,18 +206,9 @@ npx prisma studio
 npx prisma migrate dev
 ```
 
-## 🚀 Deployment
-
-1. Set up a PostgreSQL database (e.g., on [Railway](https://railway.app/) or [Supabase](https://supabase.com/))
-2. Deploy to [Vercel](https://vercel.com):
-   ```bash
-   vercel
-   ```
-3. Configure environment variables in your deployment platform
-
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is open source and free.
 
 ## 🤝 Contributing
 
@@ -237,4 +228,4 @@ Give a ⭐️ if this project helped you!
 
 Camilo Ordonez Herrera - [@92iMAHC](https://x.com/92iMAHC) - cronox20@gmail.com
 
-Project Link: [https://github.com/caoh29/petshop](https://github.com/caoh29/petshop)
+Project Link: [https://store.caoh29.dev](https://store.caoh29.dev)

@@ -8,9 +8,11 @@ import type { Product } from '@/types/types';
 interface Props {
   product: Product;
   variant?: boolean;
+  className?: string;
 }
 
 export default function ProductCard({
+  className = '',
   product,
   variant = false,
 }: Readonly<Props>) {
@@ -22,7 +24,7 @@ export default function ProductCard({
   ).toFixed(2);
 
   return (
-    <Card className='h-full overflow-hidden w-full'>
+    <Card className={`h-full overflow-hidden w-full ${className}`}>
       <CardContent className={`p-0 flex flex-col ${variant ? 'h-full' : ''}`}>
         <div className='relative w-full pt-[100%]'>
           <Image

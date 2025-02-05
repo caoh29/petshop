@@ -81,8 +81,8 @@ export default function DiscountCarousel({ products }: Readonly<Props>) {
           ))
         )}
       </CarouselContent>
-      <CarouselPrevious className='bg-primary text-accent hover:bg-secondary hover:text-white' />
-      <CarouselNext className='bg-primary text-accent hover:bg-secondary hover:text-white' />
+      <CarouselPrevious className='bg-primary text-accent hover:bg-secondary hover:text-white hidden sm:flex' />
+      <CarouselNext className='bg-primary text-accent hover:bg-secondary hover:text-white hidden sm:flex' />
     </Carousel>
   );
 }

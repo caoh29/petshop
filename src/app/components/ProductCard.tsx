@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter } from './ui/card';
 import { Button } from './ui/button';
 import { capitalizeString } from '@/lib/utils';
-import type { Product } from '@/api/types';
+import type { Product } from '@/types/types';
 
 interface Props {
   product: Product;

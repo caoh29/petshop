@@ -1,6 +1,6 @@
 'use server';
 
-import { DetailedOrder } from "@/api/types";
+import { DetailedOrder } from "@/types/types";
 import prisma from "../../../../prisma/db";
 
 import { getPagination } from "@/lib/utils";

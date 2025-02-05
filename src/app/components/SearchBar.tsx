@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from './ui/sheet';
 import { searchProductAction } from '../actions';
-import { Product } from '@/api/types';
+import { Product } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 

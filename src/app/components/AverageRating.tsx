@@ -4,7 +4,7 @@
 
 // import { setReviews, RootState } from '../../store/store';
 // import { useReviews } from '../../hooks';
-import { Review } from '@/api/types';
+import { Review } from '@/types/types';
 import { Star } from 'lucide-react';
 
 interface Props {

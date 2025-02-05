@@ -219,21 +219,21 @@ export const ROUTES: Route[] = [
       },
     ],
   },
-  {
-    title: 'Best Sellers',
-    isProtected: false,
-    href: '/best-sellers',
-  },
-  {
-    title: 'Deals',
-    isProtected: false,
-    href: '/deals',
-  },
-  {
-    title: 'New Arrivals',
-    isProtected: false,
-    href: '/new-arrivals',
-  },
+  // {
+  //   title: 'Best Sellers',
+  //   isProtected: false,
+  //   href: '/best-sellers',
+  // },
+  // {
+  //   title: 'Deals',
+  //   isProtected: false,
+  //   href: '/deals',
+  // },
+  // {
+  //   title: 'New Arrivals',
+  //   isProtected: false,
+  //   href: '/new-arrivals',
+  // },
   // {
   //   title: 'Rewards',
   //   isProtected: false,

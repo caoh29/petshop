@@ -15,7 +15,7 @@ import {
   CarouselPrevious,
 } from './ui/carousel';
 
-import { Product } from '@/api/types';
+import { Product } from '@/types/types';
 
 interface Props {
   products: Product[];

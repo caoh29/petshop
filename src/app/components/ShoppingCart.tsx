@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ShoppingCart as ShoppingCartIcon } from 'lucide-react';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet';
 
-import { Cart } from '@/api/types';
+import { Cart } from '@/types/types';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import CartDeleteSelector from './CartDeleteSelector';
 

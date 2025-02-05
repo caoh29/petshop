@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 // import { useDispatch, useStore } from 'react-redux';
 import { Star } from 'lucide-react';
 
-import type { Review } from '@/api/types';
+import type { Review } from '@/types/types';
 // import { setReviews, type RootState } from '../../store/store';
 // import { useReviews } from '../../hooks';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';

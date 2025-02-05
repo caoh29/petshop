@@ -3,7 +3,7 @@
 import { Minus, Plus } from 'lucide-react';
 import { useAppDispatch, useCart } from '@/hooks';
 import { updateProductInCart } from '../../store/store';
-import type { SelectedProduct } from '@/api/types';
+import type { SelectedProduct } from '@/types/types';
 import { updateProductCartAction } from '@/app/actions';
 import { Button } from './ui/button';
 import { Input } from './ui/input';

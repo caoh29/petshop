@@ -1,6 +1,6 @@
 'use server';
 
-import { FilterGroup, Product } from "@/api/types";
+import { FilterGroup, Product } from "@/types/types";
 import prisma from "../../../../prisma/db";
 
 import { checkSearchParam, getPagination } from "@/lib/utils";

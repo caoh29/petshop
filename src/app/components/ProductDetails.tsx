@@ -1,4 +1,4 @@
-import type { Product } from '@/api/types';
+import type { Product } from '@/types/types';
 import QuantitySelector from '@/app/components/QuantitySelector';
 import SizeSelector from '@/app/components/SizeSelector';
 import ColorSelector from '@/app/components/ColorSelector';

@@ -1,4 +1,4 @@
-import { DetailedOrder } from '@/api/types';
+import { DetailedOrder } from '@/types/types';
 import Image from 'next/image';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 export function OrderDetails({ order }: Readonly<Props>) {
   return (
     <div className='bg-white shadow-md rounded-lg p-6 space-y-6'>
-      <h2 className='text-2xl font-semibold'>Order #{order.id}</h2>
+      <h2 className='text-2xl font-semibold'>Order Number: {order.id}</h2>
 
       <div className='grid grid-cols-2 gap-4'>
         <div>

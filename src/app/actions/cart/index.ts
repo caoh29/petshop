@@ -4,7 +4,7 @@ import prisma from "../../../../prisma/db";
 
 import { getTaxes } from '../checkout';
 
-import { BillingInfo, Cart, SelectedProduct, ValidProduct } from '@/api/types';
+import { BillingInfo, Cart, SelectedProduct, ValidProduct } from '@/types/types';
 
 const getCart = async (userId: string): Promise<Cart> => {
   // Retrieve the cart from the database

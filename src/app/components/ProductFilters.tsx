@@ -7,7 +7,7 @@ import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
-import { FilterGroup } from '@/api/types';
+import { FilterGroup } from '@/types/types';
 
 interface Props {
   filterGroups: FilterGroup[];

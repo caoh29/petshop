@@ -32,16 +32,13 @@ export default async function OrdersPage({ searchParams }: Readonly<Props>) {
 
   return (
     <div className='container mx-auto px-4 py-8'>
-      <h1 className='text-3xl font-bold mb-6'>Orders</h1>
-      <div className='flex flex-col gap-8'>
-        <div className='flex justify-between items-center mb-4'>
-          <SortDropdown />
-        </div>
+      <h1 className='text-3xl font-bold'>Orders</h1>
+      <div className='flex flex-col items-end gap-8'>
+        <SortDropdown />
         <Table>
-          <TableCaption>A list of your recent orders.</TableCaption>
           <TableHeader>
-            <TableRow>
-              <TableHead className='w-[100px]'>Order ID</TableHead>
+            <TableRow className='bg-primary hover:bg-primary'>
+              <TableHead>Order ID</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Delivery Method</TableHead>
@@ -51,9 +48,17 @@ export default async function OrdersPage({ searchParams }: Readonly<Props>) {
           <TableBody>
             {orders.length > 0 ? (
               orders.map((order) => (
-                <TableRow key={order.id}>
+                <TableRow
+                  key={order.id}
+                  className='bg-secondary hover:bg-secondary text-white text-left'
+                >
                   <TableCell className='font-medium'>
-                    <Link href={`/orders/${order.id}`}>{order.id}</Link>
+                    <Link
+                      className='underline hover:text-ternary'
+                      href={`/orders/${order.id}`}
+                    >
+                      {order.id}
+                    </Link>
                   </TableCell>
                   <TableCell>{order.status}</TableCell>
                   <TableCell>{order.createdAt.toISOString()}</TableCell>

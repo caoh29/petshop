@@ -1,4 +1,4 @@
-import { BillingInfo, ShippingInfo } from "@/api/types";
+import { BillingInfo, ShippingInfo } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 

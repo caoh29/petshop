@@ -10,7 +10,7 @@ import { useAppDispatch } from '@/hooks';
 
 import { addProductToCartAction } from '../actions';
 
-import { Product, SelectedProduct } from '@/api/types';
+import { Product, SelectedProduct } from '@/types/types';
 
 interface Props {
   className?: string;

@@ -1,6 +1,6 @@
 "use server";
 
-import { BillingInfo, Cart, ShippingInfo, ValidProduct } from "@/api/types";
+import { BillingInfo, Cart, ShippingInfo, ValidProduct } from "@/types/types";
 
 import { capitalizeString, convertToCurrency, isEmptyString } from "@/lib/utils";
 

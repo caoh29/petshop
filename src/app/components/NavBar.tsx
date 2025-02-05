@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import { ChevronDown } from 'lucide-react';
-import { ROUTES } from '@/api/routes';
+import { ROUTES } from '@/routes';
 
 // import { useHeaderVisibility } from '../../hooks';
 

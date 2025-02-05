@@ -3,7 +3,7 @@ import AverageRating from '@/app/components/AverageRating';
 import { capitalizeString } from '@/lib/utils';
 
 import { Badge } from './ui/badge';
-import { Review } from '@/api/types';
+import { Review } from '@/types/types';
 
 interface Props {
   className?: string;

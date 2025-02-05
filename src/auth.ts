@@ -9,7 +9,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import prisma from "../prisma/db"
 import { schemaLogin } from "./lib/schemas/login-user"
 import { checkPassword } from "./lib/utils"
-import { PROTECTED_ROUTES } from "./api/routes"
+import { PROTECTED_ROUTES } from "./routes"
 
 
 declare module "next-auth" {

@@ -1,4 +1,4 @@
-import { Cart, SelectedProduct, ValidProduct } from "@/api/types";
+import { Cart, SelectedProduct, ValidProduct } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartState {

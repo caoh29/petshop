@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import ProductCard from '../components/ProductCard';
-import { Category, Product, SubCategory } from '@/api/types';
+import { Category, Product, SubCategory } from '@/types/types';
 
 type Item = Product | Category | SubCategory;
 

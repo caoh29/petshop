@@ -7,7 +7,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { AppStore, makeStore, setCart } from '../store/store';
 
-import { type Cart } from '@/api/types';
+import { type Cart } from '@/types/types';
 
 export default function StoreProvider({
   cart,

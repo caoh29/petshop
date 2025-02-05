@@ -89,7 +89,7 @@ export function SigninForm() {
   return (
     <div className='w-full max-w-md'>
       <Form {...form}>
-        <Card>
+        <Card className='bg-primary text-white'>
           <CardHeader className='space-y-1'>
             <CardTitle className='text-3xl font-bold'>Sign In</CardTitle>
             <CardDescription>
@@ -107,6 +107,7 @@ export function SigninForm() {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
+                        className='text-black bg-white'
                         type='email'
                         placeholder='example@domain.com'
                         {...field}
@@ -124,6 +125,7 @@ export function SigninForm() {
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
+                        className='text-black bg-white'
                         type='password'
                         placeholder='Password1+'
                         {...field}
@@ -133,7 +135,12 @@ export function SigninForm() {
                   </FormItem>
                 )}
               />
-              <Button type='submit' className='w-full mt-8' disabled={loading}>
+              <Button
+                type='submit'
+                className='w-full mt-8'
+                variant={'secondary'}
+                disabled={loading}
+              >
                 {loading ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
@@ -146,6 +153,7 @@ export function SigninForm() {
             </div>
             <div className='mt-4 text-center text-sm'>
               <Button
+                variant={'secondary'}
                 onClick={() =>
                   signIn('google', {
                     redirectTo: '/',
@@ -163,12 +171,12 @@ export function SigninForm() {
             Sign Up
           </Link>
         </div>
-        <div className='mt-4 text-center text-sm'>
+        {/* <div className='mt-4 text-center text-sm'>
           Forgot your password?
           <Link className='underline ml-2' href='/auth/reset'>
             Reset Password
           </Link>
-        </div>
+        </div> */}
       </Form>
     </div>
   );

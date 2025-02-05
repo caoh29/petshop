@@ -124,12 +124,12 @@ export default function StripePaymentStatus() {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center p-4'>
+    <div className='min-h-screen flex items-center justify-center p-4 bg-accent'>
       <Card className={`w-full max-w-lg border-2 ${getStatusColor()}`}>
         <CardContent className='pt-6'>
           <div className='flex flex-col items-center space-y-4 text-center'>
             {getStatusIcon()}
-            <Alert className='mt-4'>
+            <Alert className='mt-4 bg-white'>
               <AlertTitle className='text-xl font-semibold'>
                 {status === 'succeeded'
                   ? 'Payment Successful!'
@@ -149,7 +149,7 @@ export default function StripePaymentStatus() {
         </CardContent>
         <CardFooter className='flex justify-center gap-4 pt-6'>
           <Link href='/'>
-            <Button variant='outline' className='gap-2'>
+            <Button className='gap-2'>
               Keep Shopping
               <ArrowRight className='h-4 w-4' />
             </Button>

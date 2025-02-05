@@ -4,7 +4,7 @@ import prisma from "../../../../prisma/db";
 
 import { getTaxes } from '../checkout';
 
-import { BillingInfo, Cart, SelectedProduct, ValidProduct } from '@/api/types';
+import { BillingInfo, Cart, SelectedProduct, ValidProduct } from '@/types/types';
 
 const getCart = async (userId: string): Promise<Cart> => {
   // Retrieve the cart from the database
@@ -28,6 +28,7 @@ const getCart = async (userId: string): Promise<Cart> => {
               image: true,
               category: true,
               subcategory: true,
+              discount: true,
             }
           }
         }
@@ -61,7 +62,7 @@ const getCart = async (userId: string): Promise<Cart> => {
         productId,
         productImage: product.image,
         productName: product.name,
-        productPrice: product.price,
+        productPrice: (product.price - (product.price * product.discount / 100)),
         productCategory: product.category,
         productSubcategory: product.subcategory,
         size: size ?? '',
@@ -130,6 +131,7 @@ export const addProductToCartAction = async (
           select: {
             name: true,
             price: true,
+            discount: true,
             image: true,
             category: true,
             subcategory: true,
@@ -152,6 +154,7 @@ export const addProductToCartAction = async (
           select: {
             name: true,
             price: true,
+            discount: true,
             image: true,
             category: true,
             subcategory: true,
@@ -166,7 +169,7 @@ export const addProductToCartAction = async (
     productId: updatedCartProduct.productId,
     productImage: updatedCartProduct.product.image,
     productName: updatedCartProduct.product.name,
-    productPrice: updatedCartProduct.product.price,
+    productPrice: updatedCartProduct.product.price - (updatedCartProduct.product.price * updatedCartProduct.product.discount / 100),
     productCategory: updatedCartProduct.product.category,
     productSubcategory: updatedCartProduct.product.subcategory,
     size: updatedCartProduct.size ?? '',
@@ -379,10 +382,18 @@ export async function getCartSummaryAction({ cart,
     const products = await Promise.all(cart.validatedProducts.map(async (prod) => {
       const productWithPrice = await prisma.product.findUnique({
         where: { id: prod.productId },
-        select: { price: true }
+        select: { price: true, discount: true }
       });
+
+      if (!productWithPrice) return {
+        productId: '',
+        price: 0,
+        isAvailable: false,
+        quantity: 0
+      };
+
       return {
-        price: productWithPrice?.price ?? 0,
+        price: productWithPrice.price - (productWithPrice.price * productWithPrice.discount / 100),
         ...prod
       }
     }))
@@ -406,12 +417,12 @@ async function getSubtotal(cart: Cart, isCheckout: boolean) {
     const prices = await Promise.all(cart.products.map(async (product) => {
       const prod = await prisma.product.findUnique({
         where: { id: product.productId },
-        select: { price: true }
+        select: { price: true, discount: true }
       });
 
       if (!prod) return 0;
 
-      return prod.price * product.quantity;
+      return (prod.price - (prod.price * prod.discount / 100)) * product.quantity;
     }));
     return prices.reduce((a, b) => a + b, 0);
   }
@@ -419,12 +430,12 @@ async function getSubtotal(cart: Cart, isCheckout: boolean) {
   const prices = await Promise.all(cart.validatedProducts.map(async (product) => {
     const prod = await prisma.product.findUnique({
       where: { id: product.productId },
-      select: { price: true }
+      select: { price: true, discount: true }
     });
 
     if (!prod) return 0;
 
-    return prod.price * product.quantity;
+    return (prod.price - (prod.price * prod.discount / 100)) * product.quantity;
   }));
   return prices.reduce((a, b) => a + b, 0);
 }

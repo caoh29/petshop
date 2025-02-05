@@ -55,15 +55,14 @@ export default function Footer() {
       <FooterLinks />
       <div className='flex flex-row flex-nowrap justify-between items-center max-w-screen-md w-full'>
         <form className='flex flex-col gap-4' action=''>
-          <Label htmlFor='email' className='order-1'>
-            Subscribe to our emails
-          </Label>
+          <Label className='order-1'>Subscribe to our emails</Label>
           <div className='order-2 flex gap-2 items-center h-10 w-full rounded-md bg-secondary px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50'>
             <Input
               className='all-unset'
               type='email'
               name='email'
               placeholder='Email'
+              required
             />
             <input
               className='cursor-pointer text-lg hover:scale-125 font-bold'

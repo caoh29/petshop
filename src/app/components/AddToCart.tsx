@@ -8,17 +8,13 @@ import { addProductToCart } from '../../store/store';
 
 import { useAppDispatch } from '@/hooks';
 
-import { Product, SelectedProduct } from '@/api/types';
+import { addProductToCartAction } from '../actions';
+
+import { Product, SelectedProduct } from '@/types/types';
 
 interface Props {
   className?: string;
   userId: string | null;
-  addProductToCartAction: (
-    id: string,
-    quantity: number,
-    options: { size?: string; color?: string },
-    userId?: string,
-  ) => Promise<SelectedProduct>;
   disabled: boolean;
   product: Product;
   sizes?: string[];
@@ -28,7 +24,6 @@ interface Props {
 export default function AddToCart({
   className,
   userId,
-  addProductToCartAction,
   disabled,
   product,
   sizes,
@@ -74,7 +69,7 @@ export default function AddToCart({
         productId: product.id,
         productImage: product.image,
         productName: product.name,
-        productPrice: product.price,
+        productPrice: product.price - (product.price * product.discount) / 100,
         productCategory: product.category,
         productSubcategory: product.subcategory,
         size,
@@ -83,14 +78,16 @@ export default function AddToCart({
       };
     }
 
-    dispatch(addProductToCart(selectedProduct));
+    dispatch(addProductToCart({ selectedProduct, userId }));
 
     updateSearchParams();
   };
 
   return (
     <Button
-      className={`${className} mt-6 text-lg font-bold`}
+      className={`${
+        className ?? ''
+      } font-bold w-full bg-primary hover:bg-primary/90 text-primary-foreground`}
       onClick={() => handleClick()}
       disabled={
         disabled ||

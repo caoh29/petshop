@@ -1,5 +1,5 @@
 // import { getProductsByCategory } from '@/api/products';
-import { VALID_ROUTES } from '@/api/routes';
+import { VALID_ROUTES } from '@/routes';
 
 import ProductFilters from '@/app/components/ProductFilters';
 import SortDropdown from '@/app/components/SortDropdown';

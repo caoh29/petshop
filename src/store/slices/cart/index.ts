@@ -1,4 +1,4 @@
-import { Cart, SelectedProduct, ValidProduct } from "@/api/types";
+import { Cart, SelectedProduct, ValidProduct } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartState {
@@ -14,6 +14,11 @@ const initialState: CartState = {
   },
 };
 
+interface AddToCartPayload {
+  selectedProduct: SelectedProduct;
+  userId: string | null;
+}
+
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -22,17 +27,21 @@ export const cartSlice = createSlice({
       state.cart = action.payload;
     },
 
-    addProductToCart: (state, action: PayloadAction<SelectedProduct>) => {
+    addProductToCart: (state, action: PayloadAction<AddToCartPayload>) => {
       const existingProduct = state.cart.products.find(
-        (p) => p.productId === action.payload.productId &&
-          p.size === action.payload.size &&
-          p.color === action.payload.color
+        (p) => p.productId === action.payload.selectedProduct.productId &&
+          p.size === action.payload.selectedProduct.size &&
+          p.color === action.payload.selectedProduct.color
       );
 
       if (existingProduct) {
-        existingProduct.quantity += action.payload.quantity;
+        if (action.payload.userId) {
+          existingProduct.quantity = action.payload.selectedProduct.quantity;
+        } else {
+          existingProduct.quantity += action.payload.selectedProduct.quantity;
+        }
       } else {
-        state.cart.products.push(action.payload);
+        state.cart.products.push(action.payload.selectedProduct);
       }
     },
 

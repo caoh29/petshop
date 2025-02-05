@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { ChevronDown } from 'lucide-react';
-import { ROUTES } from '@/api/routes';
+import { ROUTES } from '@/routes';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet';
 import AuthButton from './AuthButton';
 

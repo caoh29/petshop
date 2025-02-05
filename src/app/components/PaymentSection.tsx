@@ -18,7 +18,7 @@ export default function PaymentSection({
   const { proceedToPayment } = useCheckout();
 
   return (
-    <section className='flex flex-col flex-nowrap gap-6 rounded-lg bg-white p-8 shadow-sm'>
+    <section className='flex flex-col flex-nowrap gap-6 rounded-lg bg-accent p-8'>
       {proceedToPayment ? (
         <StripePaymentWrapper stripePromise={stripePromise}>
           <StripePaymentForm userId={userId} />

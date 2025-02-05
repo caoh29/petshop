@@ -34,23 +34,18 @@ export default async function CheckoutPage() {
   }
 
   return (
-    <div className='min-h-screen bg-gray-200'>
-      <div className='mx-auto max-w-7xl p-4 sm:px-6 lg:px-8'>
-        <div className='grid gap-8 lg:grid-cols-2'>
-          {/* Order Summary Section */}
-          <div className='rounded-lg bg-white p-8 shadow-sm lg:sticky lg:top-4'>
-            <h1 className='text-2xl font-semibold'>Order Summary</h1>
-            <ScrollArea className='h-[300px] p-4'>
-              <CartList userId={userId} variant />
-            </ScrollArea>
-            <Separator className='my-4' />
-            <CartSummary isCheckout />
-          </div>
-          {/* Checkout Section */}
-          <div className='flex flex-col flex-nowrap gap-8 rounded-lg bg-white p-8 shadow-sm'>
-            <CheckoutSection userData={userData} userId={userId} />
-          </div>
-        </div>
+    <div className='flex flex-col gap-8 md:grid md:grid-cols-2 lg:p-8 md:min-h-[calc(70dvh-5rem)]'>
+      <div className='rounded-lg p-4 bg-accent sm:p-8 shadow-lg lg:sticky lg:top-4'>
+        <h1 className='text-2xl font-semibold'>Order Summary</h1>
+        <ScrollArea className='h-[300px] p-4'>
+          <CartList userId={userId} variant />
+        </ScrollArea>
+        <Separator className='my-4' />
+        <CartSummary isCheckout />
+      </div>
+      {/* Checkout Section */}
+      <div className='flex flex-col flex-nowrap gap-8 rounded-lg bg-accent p-8 shadow-lg'>
+        <CheckoutSection userData={userData} userId={userId} />
       </div>
     </div>
   );

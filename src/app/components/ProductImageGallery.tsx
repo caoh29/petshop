@@ -8,12 +8,14 @@ interface Props {
   images: string[];
   productName: string;
   productImage: string;
+  className?: string;
 }
 
 export default function ProductImageGallery({
   images,
   productName,
   productImage,
+  className,
 }: Readonly<Props>) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -30,10 +32,10 @@ export default function ProductImageGallery({
   };
 
   return (
-    <div className='w-full md:w-1/2 relative p-4'>
+    <div className={`${className ?? ''} w-full max-w-2xl relative p-4 mx-auto`}>
       {images.length > 0 && (
         <>
-          <div className='hidden md:block w-1/5 absolute left-0 top-0 p-4 h-full overflow-y-auto'>
+          <div className='hidden sm:block w-1/5 absolute left-0 top-0 p-4 h-full overflow-y-auto'>
             {images.map((img, index) => (
               <Image
                 key={img}
@@ -48,7 +50,7 @@ export default function ProductImageGallery({
               />
             ))}
           </div>
-          <div className='md:ml-[20%] relative'>
+          <div className='sm:ml-[20%] relative'>
             <Image
               className='aspect-square rounded-md object-cover'
               src={images[currentImageIndex]}

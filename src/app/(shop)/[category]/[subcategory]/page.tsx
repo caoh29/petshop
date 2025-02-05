@@ -1,5 +1,5 @@
 // import { getProductsBySubCategory } from '@/api/products';
-import { VALID_ROUTES } from '@/api/routes';
+import { VALID_ROUTES } from '@/routes';
 import GridSection from '@/app/components/GridSection';
 import ProductFilters from '@/app/components/ProductFilters';
 import SortDropdown from '@/app/components/SortDropdown';

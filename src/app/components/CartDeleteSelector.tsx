@@ -1,10 +1,10 @@
 'use client';
 
 import { useAppDispatch } from '@/hooks';
-
 import { deleteProductFromCart } from '../../store/store';
-
 import { deleteProductCartAction } from '@/app/actions';
+import { Button } from './ui/button';
+import { Trash2 } from 'lucide-react';
 
 interface Props {
   id: string;
@@ -20,11 +20,9 @@ export default function CartDeleteSelector({
   userId,
 }: Readonly<Props>) {
   const dispatch = useAppDispatch();
-  // const cart = useCart();
 
   const handleDelete = async () => {
-    if (userId) {
-      // Update the cart on the server for authenticated users
+    if (userId && userId.length > 0) {
       await deleteProductCartAction(
         id,
         {
@@ -45,8 +43,13 @@ export default function CartDeleteSelector({
   };
 
   return (
-    <button className='text-red-500' onClick={() => handleDelete()}>
-      Remove
-    </button>
+    <Button
+      variant='ghost'
+      size='sm'
+      className='text-destructive hover:text-destructive hover:bg-destructive/10'
+      onClick={() => handleDelete()}
+    >
+      <Trash2 className='w-4 h-4' />
+    </Button>
   );
 }

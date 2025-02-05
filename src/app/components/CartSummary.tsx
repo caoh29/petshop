@@ -62,7 +62,7 @@ export default function CartSummary({ isCheckout = false }: Readonly<Props>) {
   return (
     <div
       className={`flex flex-col gap-4 px-4 py-3 my-4 rounded-md ${
-        !isCheckout && 'bg-gray-100 shadow-sm'
+        !isCheckout && 'shadow-xl'
       }`}
     >
       {loading ? (

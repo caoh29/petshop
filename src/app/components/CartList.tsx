@@ -21,18 +21,18 @@ export default function CartList({ variant = false, userId }: Readonly<Props>) {
       {cart.products.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
-        <ul className='space-y-4'>
+        <ul className='space-y-4 shadow-lg'>
           {cart.products.map((item) => (
             <li
               key={item.productId}
-              className='flex items-center space-x-4 border-b pb-4'
+              className='flex items-center space-x-4 border-b-2 border-solid border-primary mb-4'
             >
               <Image
                 src={item.productImage}
                 alt={item.productName}
                 width={100}
                 height={100}
-                className='object-cover'
+                className='object-cover aspect-square'
               />
               <div className='flex-grow'>
                 {variant ? (
@@ -80,7 +80,7 @@ export default function CartList({ variant = false, userId }: Readonly<Props>) {
                   ${item.productPrice.toFixed(2)}
                 </p>
               ) : (
-                <>
+                <div className='flex flex-row flex-nowrap items-end'>
                   <CartQuantitySelector
                     quantity={item.quantity}
                     id={item.productId}
@@ -94,7 +94,7 @@ export default function CartList({ variant = false, userId }: Readonly<Props>) {
                     color={item.color}
                     userId={userId}
                   />
-                </>
+                </div>
               )}
             </li>
           ))}

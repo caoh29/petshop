@@ -91,7 +91,7 @@ export function SignupForm() {
     <div className='w-full max-w-md'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Card>
+          <Card className='bg-primary text-white'>
             <CardHeader className='space-y-1'>
               <CardTitle className='text-3xl font-bold'>Sign Up</CardTitle>
               <CardDescription>
@@ -106,7 +106,12 @@ export function SignupForm() {
                   <FormItem className='space-y-2'>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input type='text' placeholder='John' {...field} />
+                      <Input
+                        className='text-black bg-white'
+                        type='text'
+                        placeholder='John'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -119,7 +124,12 @@ export function SignupForm() {
                   <FormItem className='space-y-2'>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input type='text' placeholder='Doe' {...field} />
+                      <Input
+                        className='text-black bg-white'
+                        type='text'
+                        placeholder='Doe'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -133,6 +143,7 @@ export function SignupForm() {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
+                        className='text-black bg-white'
                         type='email'
                         placeholder='example@domain.com'
                         {...field}
@@ -150,6 +161,7 @@ export function SignupForm() {
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
+                        className='text-black bg-white'
                         type='password'
                         placeholder='Password1+'
                         {...field}
@@ -161,7 +173,12 @@ export function SignupForm() {
               />
             </CardContent>
             <CardFooter className='flex flex-col'>
-              <Button type='submit' className='w-full' disabled={loading}>
+              <Button
+                type='submit'
+                className='w-full'
+                variant={'secondary'}
+                disabled={loading}
+              >
                 {loading ? 'Signing Up...' : 'Sign Up'}
               </Button>
             </CardFooter>

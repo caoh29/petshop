@@ -1,4 +1,4 @@
-import { Review } from "@/api/types";
+import { Review } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ReviewsState {

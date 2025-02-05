@@ -15,7 +15,7 @@ export default function SizeSelector({
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
-  const size = searchParams.get('Size');
+  const currentSize = searchParams.get('Size');
 
   if (sizes.length === 0) return null;
 
@@ -39,7 +39,7 @@ export default function SizeSelector({
         type='single'
         className='flex flex-wrap justify-start'
         // value={sizeState}
-        value={size ?? ''}
+        value={currentSize ?? ''}
         // onValueChange={(value) => dispatch(setSize(value))}
         onValueChange={(value) => updateSearchParams(value)}
       >

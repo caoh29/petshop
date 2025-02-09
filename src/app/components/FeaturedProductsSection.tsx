@@ -6,7 +6,7 @@ export default async function FeaturedProductsSection() {
   const { products } = await getFeaturedProductsAction({ take: 6 });
   return (
     <section className='py-12 bg-secondary'>
-      <div className='container max-w-screen-lg mx-auto px-4'>
+      <div className='max-w-screen-lg mx-auto px-8'>
         <h2 className='text-3xl sm:text-4xl font-bold text-accent text-center mb-8'>
           Featured Products
         </h2>

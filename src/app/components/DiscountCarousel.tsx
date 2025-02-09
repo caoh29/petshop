@@ -62,7 +62,7 @@ export default function DiscountCarousel({ products }: Readonly<Props>) {
                         {product.name}
                       </h3>
                       <div className='space-y-2'>
-                        <p className='text-muted line-through font-bold'>
+                        <p className='text-secondary line-through font-semibold'>
                           ${product.price.toFixed(2)}
                         </p>
                         <p className='text-2xl font-bold text-accent'>

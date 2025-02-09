@@ -41,7 +41,7 @@ export default function ProductCard({
               {capitalizeString(product.name)}
             </h3>
             {!variant && (
-              <p className='text-xs sm:text-sm text-muted'>
+              <p className='text-xs sm:text-sm text-secondary'>
                 {capitalizeString(product.category)}
               </p>
             )}

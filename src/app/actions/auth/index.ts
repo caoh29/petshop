@@ -177,3 +177,35 @@ export async function logoutUserAction() {
     };
   }
 }
+
+export async function checkIfUserExistsAction(email: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (user) {
+      return {
+        data: {
+          message: "User exists",
+          status: 200,
+        },
+      };
+    } else {
+      return {
+        errors: {
+          email: ["User does not exist"],
+        },
+        status: 404,
+      };
+    }
+  } catch (error) {
+    console.error("Error checking for existing user:", error);
+    return {
+      errors: {
+        server: ["An error occurred while checking for existing user"],
+      },
+      message: "An error occurred. Failed to check for existing user.",
+    };
+  }
+}

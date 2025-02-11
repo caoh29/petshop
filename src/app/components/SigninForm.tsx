@@ -171,12 +171,12 @@ export function SigninForm() {
             Sign Up
           </Link>
         </div>
-        {/* <div className='mt-4 text-center text-sm'>
+        <div className='mt-4 text-center text-sm'>
           Forgot your password?
-          <Link className='underline ml-2' href='/auth/reset'>
+          <Link className='underline ml-2' href='/auth/forgot-password'>
             Reset Password
           </Link>
-        </div> */}
+        </div>
       </Form>
     </div>
   );

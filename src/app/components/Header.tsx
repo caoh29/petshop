@@ -55,7 +55,7 @@ export default function Header({ userId, isAdmin }: Readonly<Props>) {
     // }, [isHeaderVisible]);
   }, [isHeaderVisible]);
 
-  if (path === '/auth/signin' || path === '/auth/signup') return;
+  if (path.startsWith('/auth')) return;
 
   return (
     <header

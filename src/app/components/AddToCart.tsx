@@ -8,7 +8,7 @@ import { addProductToCart } from '../../store/store';
 
 import { useAppDispatch } from '@/hooks';
 
-import { addProductToCartAction } from '../actions';
+import { addProductToCartAction } from '../api/actions';
 
 import { Product, SelectedProduct } from '@/types/types';
 

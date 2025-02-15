@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import {
   CardTitle,
   CardDescription,
@@ -26,7 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useForm } from 'react-hook-form';
 
-import { checkIfUserExistsAction } from '@/app/actions';
+import { checkIfUserExistsAction } from '@/app/api/actions';
 
 import {
   schemaForgotPassword,
@@ -36,6 +38,7 @@ import {
 
 export default function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   // Define form
   const form = useForm<SchemaForgotPassword>({
@@ -46,7 +49,7 @@ export default function ForgotPasswordForm() {
   // Handle submission.
   async function onSubmit(data: SchemaForgotPassword) {
     setLoading(true);
-    const res = await checkIfUserExistsAction(data.email);
+    const res = await checkIfUserExistsAction(data);
     setLoading(false);
     if (res.errors) {
       if ('email' in res.errors && res.errors.email) {
@@ -62,19 +65,19 @@ export default function ForgotPasswordForm() {
       }
     } else {
       form.reset();
-      window.location.replace('/auth/forgot-password/otp');
+      router.replace(`/auth/forgot-password/otp?token=${res.data.token}`);
     }
   }
   return (
     <div className='w-full max-w-md'>
       <Form {...form}>
         <Card className='bg-primary text-white'>
-          <CardHeader className='space-y-1'>
+          <CardHeader className='space-y-2'>
             <CardTitle className='text-3xl font-bold'>
               Forgot Password
             </CardTitle>
             <CardDescription>
-              Enter your email to receive an OTP
+              Enter your email to receive a One Time Password (OTP) to reset
             </CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>

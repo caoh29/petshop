@@ -6,7 +6,7 @@ import { Resend } from 'resend';
 
 import prisma from "../../../../../prisma/db";
 
-import EmailTemplate from "@/app/components/EmailTemplate";
+import EmailOrderTemplate from "@/app/components/EmailOrderTemplate";
 
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
@@ -100,7 +100,7 @@ const handlePaymentSucceeded = async (event: Stripe.PaymentIntentSucceededEvent)
     from: 'PetShop <orders@store.caoh29.dev>',
     to: [metadata.email],
     subject: 'Thanks for your order with PetShop',
-    react: EmailTemplate({ orderId: metadata.orderId }),
+    react: EmailOrderTemplate({ orderId: metadata.orderId }),
   });
 
   if (error) {

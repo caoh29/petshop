@@ -8,7 +8,7 @@ import { Button } from './ui/button';
 import { useAppDispatch, useCart } from '../../hooks';
 // import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 
-import { validateStockAction, reserveStockAction } from '../actions';
+import { validateStockAction, reserveStockAction } from '../api/actions';
 
 import { setValidatedProducts } from '@/store/store';
 

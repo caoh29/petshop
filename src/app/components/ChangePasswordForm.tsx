@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+
+import { useSearchParams, useRouter } from 'next/navigation';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@/app/components/ui/button';
@@ -19,10 +22,23 @@ import {
   SchemaChangePassword,
   schemaChangePassword,
 } from '@/lib/schemas/change-password';
-import { changePasswordAction } from '../actions';
+import {
+  changePasswordAction,
+  changePasswordWithTokenAction,
+} from '../api/actions';
 
-export default function ChangePasswordForm() {
+interface Props {
+  userId: string | null;
+  variant?: boolean;
+}
+
+export default function ChangePasswordForm({
+  userId,
+  variant,
+}: Readonly<Props>) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const form = useForm<SchemaChangePassword>({
     resolver: zodResolver(schemaChangePassword),
@@ -31,9 +47,20 @@ export default function ChangePasswordForm() {
 
   async function onSubmit(data: SchemaChangePassword) {
     setIsLoading(true);
-    await changePasswordAction(data);
-    setIsLoading(false);
-    form.reset();
+    if (userId) {
+      await changePasswordAction(data);
+      setIsLoading(false);
+      form.reset();
+    } else {
+      const token = searchParams.get('token');
+      if (!token) {
+        return;
+      }
+      await changePasswordWithTokenAction(data, token);
+      setIsLoading(false);
+      form.reset();
+      router.push('/auth/signin');
+    }
   }
 
   return (
@@ -47,7 +74,7 @@ export default function ChangePasswordForm() {
               <FormLabel>New Password</FormLabel>
               <FormControl>
                 <Input
-                  className='max-w-md bg-white'
+                  className='max-w-md bg-white text-black'
                   type='password'
                   {...field}
                 />
@@ -64,7 +91,7 @@ export default function ChangePasswordForm() {
               <FormLabel>Confirm New Password</FormLabel>
               <FormControl>
                 <Input
-                  className='max-w-md bg-white'
+                  className='max-w-md bg-white text-black'
                   type='password'
                   {...field}
                 />
@@ -73,7 +100,12 @@ export default function ChangePasswordForm() {
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={isLoading}>
+        <Button
+          type='submit'
+          disabled={isLoading}
+          variant={variant ? 'secondary' : 'default'}
+          className={`${variant ? 'w-full' : ''}`}
+        >
           {isLoading ? 'Changing Password...' : 'Change Password'}
         </Button>
       </form>

@@ -9,7 +9,10 @@ import Pagination from '@/app/components/Pagination';
 
 import { capitalizeString } from '@/lib/utils';
 
-import { getFiltersAction, getPaginatedProductsAction } from '../../actions';
+import {
+  getFiltersAction,
+  getPaginatedProductsAction,
+} from '../../api/actions';
 
 interface Props {
   params: { category: string };

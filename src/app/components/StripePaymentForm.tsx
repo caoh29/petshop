@@ -12,7 +12,7 @@ import { Button } from './ui/button';
 
 import { useCart, useCheckout } from '@/hooks';
 
-import { createOrderAction, createPaymentIntentAction } from '../actions';
+import { createOrderAction, createPaymentIntentAction } from '../api/actions';
 
 interface Props {
   userId: string | null;

@@ -4,7 +4,7 @@ import { Minus, Plus } from 'lucide-react';
 import { useAppDispatch, useCart } from '@/hooks';
 import { updateProductInCart } from '../../store/store';
 import type { SelectedProduct } from '@/types/types';
-import { updateProductCartAction } from '@/app/actions';
+import { updateProductCartAction } from '@/app/api/actions';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';

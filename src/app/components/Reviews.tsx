@@ -18,7 +18,7 @@ import {
 } from './ui/select';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
-import { addReviewAction } from '../actions';
+import { addReviewAction } from '../api/actions';
 
 interface Props {
   productId: string;

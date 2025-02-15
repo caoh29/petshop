@@ -2,7 +2,7 @@
 
 import { auth } from '@/auth';
 import { schemaProfile, SchemaProfile } from '@/lib/schemas/profile-user';
-import prisma from '../../../../prisma/db';
+import prisma from '../../../../../prisma/db';
 import { revalidatePath } from 'next/cache';
 import { schemaChangePassword, SchemaChangePassword } from '@/lib/schemas/change-password';
 import { saltAndHashPassword } from "@/lib/utils";

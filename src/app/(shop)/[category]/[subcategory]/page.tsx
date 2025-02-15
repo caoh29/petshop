@@ -8,7 +8,10 @@ import NotFound from '@/app/components/PageNotFound';
 
 import { capitalizeString } from '@/lib/utils';
 
-import { getFiltersAction, getPaginatedProductsAction } from '../../../actions';
+import {
+  getFiltersAction,
+  getPaginatedProductsAction,
+} from '../../../api/actions';
 
 export default async function SubCategoryPage({
   params,

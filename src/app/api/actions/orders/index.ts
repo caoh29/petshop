@@ -1,7 +1,7 @@
 'use server';
 
 import { DetailedOrder } from "@/types/types";
-import prisma from "../../../../prisma/db";
+import prisma from "../../../../../prisma/db";
 
 import { getPagination } from "@/lib/utils";
 import { auth } from "@/auth";

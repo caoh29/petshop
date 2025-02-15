@@ -30,7 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useForm } from 'react-hook-form';
 
-import { registerUserAction } from '@/app/actions';
+import { registerUserAction } from '@/app/api/actions';
 
 import {
   schemaRegister,

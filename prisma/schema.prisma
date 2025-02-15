@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id             String          @id @default(uuid())
+  id             String               @id @default(uuid())
   name           String?
-  email          String          @unique
+  email          String               @unique
   password       String?
   emailVerified  DateTime?
   image          String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
   firstName      String
   lastName       String
   address        String?
@@ -25,16 +25,18 @@ model User {
   zip            String?
   country        String?
   phone          String?
-  isAdmin        Boolean?        @default(false)
-  isVerified     Boolean?        @default(false)
-  isGuest        Boolean?        @default(false)
+  isAdmin        Boolean?             @default(false)
+  isVerified     Boolean?             @default(false)
+  isGuest        Boolean?             @default(false)
+  passResets     PasswordResetToken[]
+  otps           OTPToken[]
   accounts       Account[]
   Authenticators Authenticator[]
   cart           Cart?
   orders         Order[]
   reviews        Review[]
   sessions       Session[]
-  wishlist       Product[]       @relation("UserWishlist")
+  wishlist       Product[]            @relation("UserWishlist")
 }
 
 model Account {
@@ -71,6 +73,25 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(uuid())
+  token   String   @unique
+  userId  String
+  expires DateTime
+  isUsed  Boolean  @default(false)
+  user    User     @relation(fields: [userId], references: [id])
+}
+
+model OTPToken {
+  id      String   @id @default(uuid())
+  token   String   @unique
+  userId  String
+  code    Int
+  expires DateTime
+  isUsed  Boolean  @default(false)
+  user    User     @relation(fields: [userId], references: [id])
 }
 
 model Authenticator {
@@ -128,10 +149,10 @@ model Product {
   availableColors  String[]
   stock            Int
   isOutOfStock     Boolean
-  discount         Int               @default(0)
   createdAt        DateTime          @default(now())
   reservedStock    Int               @default(0)
   updatedAt        DateTime          @updatedAt
+  discount         Int               @default(0)
   reviews          Review[]
   selectedProducts SelectedProduct[]
   wishedBy         User[]            @relation("UserWishlist")

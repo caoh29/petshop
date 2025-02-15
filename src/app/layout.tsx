@@ -5,7 +5,7 @@ import StoreProvider from './StoreProvider';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-import { getCartAction } from './actions/cart';
+import { getCartAction } from './api/actions/cart';
 // import { ClerkProvider } from '@clerk/nextjs';
 
 import { auth } from '@/auth';

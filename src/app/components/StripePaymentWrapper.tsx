@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 
 import { useCart, useCheckout } from '@/hooks';
-import { getAmount } from '../actions';
+import { getAmount } from '../api/actions';
 import { Stripe } from '@stripe/stripe-js';
 
 interface Props {

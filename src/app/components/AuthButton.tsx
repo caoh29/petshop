@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { logoutUserAction } from '../actions';
+import { logoutUserAction } from '../api/actions';
 
 import { Button } from './ui/button';
 

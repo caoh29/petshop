@@ -226,3 +226,8 @@ export interface Pagination {
   page?: number;
   take?: number;
 }
+
+export interface AuthTokenData {
+  userId: string;
+  expires: Date;
+}

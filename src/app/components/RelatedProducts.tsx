@@ -10,7 +10,7 @@ import {
   CarouselPrevious,
 } from './ui/carousel';
 
-import { getRelatedProductsAction } from '../actions/products';
+import { getRelatedProductsAction } from '../api/actions/products';
 
 interface Props {
   productId: string;

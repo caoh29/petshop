@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
-import { getCategoriesAction } from '../actions';
+import { getCategoriesAction } from '../api/actions';
 import { capitalizeString } from '@/lib/utils';
 
 const TITLE = 'Shop By Animal';

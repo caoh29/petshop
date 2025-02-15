@@ -33,12 +33,12 @@ const links = [
     href: '/',
   },
   {
-    title: 'About Us',
-    href: '/about',
+    title: 'Home',
+    href: '/',
   },
   {
-    title: 'Contact Us',
-    href: '/contact',
+    title: 'About Us',
+    href: '/about-us',
   },
   {
     title: 'FAQ',
@@ -48,7 +48,7 @@ const links = [
 
 export default function Footer() {
   const path = usePathname();
-  if (path === '/auth/signin' || path === '/auth/signup') return;
+  // if (path.startsWith('/auth')) return;
 
   return (
     <footer className='flex flex-col items-center justify-center py-10 px-8 bg-primary gap-12 text-white'>

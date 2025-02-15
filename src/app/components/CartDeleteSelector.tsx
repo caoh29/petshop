@@ -2,7 +2,7 @@
 
 import { useAppDispatch } from '@/hooks';
 import { deleteProductFromCart } from '../../store/store';
-import { deleteProductCartAction } from '@/app/actions';
+import { deleteProductCartAction } from '@/app/api/actions';
 import { Button } from './ui/button';
 import { Trash2 } from 'lucide-react';
 

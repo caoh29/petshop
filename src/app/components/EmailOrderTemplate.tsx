@@ -4,7 +4,7 @@ interface Props {
 
 const THANKS = "Thank you for choosing Pet Shop for your pet's needs!";
 
-export default function EmailTemplate({ orderId }: Readonly<Props>) {
+export default function EmailOrderTemplate({ orderId }: Readonly<Props>) {
   return (
     <div className='font-sans max-w-[600px] mx-auto p-5 bg-gray-100 rounded-lg'>
       <div className='bg-white p-6 rounded-lg shadow-md'>

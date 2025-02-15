@@ -9,7 +9,7 @@ import {
   SheetFooter,
   SheetTrigger,
 } from './ui/sheet';
-import { searchProductAction } from '../actions';
+import { searchProductAction } from '../api/actions';
 import { Product } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';

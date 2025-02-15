@@ -4,7 +4,7 @@ import { BillingInfo, Cart, ShippingInfo, ValidProduct } from "@/types/types";
 
 import { capitalizeString, convertToCurrency, isEmptyString } from "@/lib/utils";
 
-import prisma from "../../../../prisma/db";
+import prisma from "../../../../../prisma/db";
 
 import Stripe from "stripe";
 

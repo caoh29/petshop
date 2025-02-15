@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
-import { getProductByIdAction } from '@/app/actions';
+import { getProductByIdAction } from '@/app/api/actions';
 
 import ProductImageGallery from '@/app/components/ProductImageGallery';
 import ProductDetailsHeader from '@/app/components/ProductDetailsHeader';

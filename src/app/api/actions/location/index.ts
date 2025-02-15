@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from "../../../../prisma/db";
+import prisma from "../../../../../prisma/db";
 
 export async function getCountriesAction() {
   const countries = await prisma.country.findMany();

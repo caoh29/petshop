@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
-import { getPaginatedOrdersByUserAction } from '@/app/actions';
+import { getPaginatedOrdersByUserAction } from '@/app/api/actions';
 import {
   Table,
   TableBody,

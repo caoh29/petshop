@@ -1,5 +1,5 @@
 import DiscountCarousel from './DiscountCarousel';
-import { getPaginatedDealsAction } from '../actions';
+import { getPaginatedDealsAction } from '../api/actions';
 
 const TITLE = 'Hot Deals!';
 

@@ -32,7 +32,7 @@ import {
   getCountriesAction,
   getStatesByCountryCodeAction,
   updateUserAction,
-} from '../actions';
+} from '../api/actions';
 
 interface Props {
   defaultValues: {

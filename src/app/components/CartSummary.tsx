@@ -10,7 +10,7 @@ import Subtotal from './Subtotal';
 import { Separator } from './ui/separator';
 
 import { useCart, useCheckout } from '../../hooks';
-import { getCartSummaryAction } from '../actions';
+import { getCartSummaryAction } from '../api/actions';
 import { Skeleton } from './ui/skeleton';
 
 interface Props {

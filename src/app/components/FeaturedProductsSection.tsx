@@ -1,6 +1,6 @@
 import ProductCard from './ProductCard';
 
-import { getFeaturedProductsAction } from '../actions';
+import { getFeaturedProductsAction } from '../api/actions';
 
 export default async function FeaturedProductsSection() {
   const { products } = await getFeaturedProductsAction({ take: 6 });

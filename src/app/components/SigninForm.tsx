@@ -31,7 +31,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useForm } from 'react-hook-form';
 
-import { loginUserAction } from '@/app/actions';
+import { loginUserAction } from '@/app/api/actions';
 
 import {
   schemaLogin,
@@ -147,9 +147,7 @@ export function SigninForm() {
           </CardContent>
           <CardFooter className='flex flex-col'>
             <div className='flex items-center text-slate-500 my-4'>
-              <hr className='flex-1 border-b border-slate-500' />
               <span className='mx-4 font-medium'>OR</span>
-              <hr className='flex-1 border-b border-slate-500' />
             </div>
             <div className='mt-4 text-center text-sm'>
               <Button

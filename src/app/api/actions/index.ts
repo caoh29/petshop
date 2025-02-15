@@ -6,7 +6,7 @@ export { addReviewAction } from './reviews';
 
 export { getCategoriesAction } from './categories';
 
-export { registerUserAction, loginUserAction, logoutUserAction, checkIfUserExistsAction } from './auth';
+export { registerUserAction, loginUserAction, logoutUserAction, checkIfUserExistsAction, checkOTPAction, changePasswordWithTokenAction } from './auth';
 
 export { getUserDefaultValuesAction, createPaymentIntentAction, createOrderAction, getAmount } from './checkout';
 

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
-import { getOrderByIdAction } from '@/app/actions';
+import { getOrderByIdAction } from '@/app/api/actions';
 import { OrderDetails } from '@/app/components/OrderDetails';
 
 interface Props {

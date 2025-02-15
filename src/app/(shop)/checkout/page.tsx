@@ -6,7 +6,7 @@ import { ScrollArea } from '@/app/components/ui/scroll-area';
 import CartList from '@/app/components/CartList';
 import CartSummary from '@/app/components/CartSummary';
 import CheckoutSection from '@/app/components/CheckoutSection';
-import { getUserDefaultValuesAction } from '@/app/actions';
+import { getUserDefaultValuesAction } from '@/app/api/actions';
 
 export type UserData =
   | {

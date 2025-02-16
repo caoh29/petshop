@@ -11,7 +11,7 @@ import {
   InputOTPSlot,
 } from '@/app/components/ui/input-otp';
 
-import { REGEXP_ONLY_DIGITS } from 'input-otp';
+// import { REGEXP_ONLY_DIGITS } from 'input-otp';
 
 import { checkOTPAction } from '../api/actions';
 
@@ -36,7 +36,8 @@ export default function InputOTP() {
     <>
       <InputOTPComponent
         maxLength={6}
-        pattern={REGEXP_ONLY_DIGITS}
+        // pattern={REGEXP_ONLY_DIGITS}
+        pattern={'^\\d+$'}
         inputMode='numeric'
         onComplete={handleOnComplete}
         onChange={() => setError(null)}

@@ -1,4 +1,4 @@
-// import InputOTP from '@/app/components/InputOTP';
+import InputOTP from '@/app/components/InputOTP';
 import {
   CardTitle,
   CardDescription,
@@ -14,7 +14,9 @@ export default function OTPPage() {
         <CardTitle className='text-3xl font-bold'>One Time Password</CardTitle>
         <CardDescription>Enter the code sent to your email</CardDescription>
       </CardHeader>
-      <CardContent className='space-y-4'>{/* <InputOTP /> */}</CardContent>
+      <CardContent className='space-y-4'>
+        <InputOTP />
+      </CardContent>
     </Card>
   );
 }

@@ -50,7 +50,6 @@ export default function ForgotPasswordForm() {
   async function onSubmit(data: SchemaForgotPassword) {
     setLoading(true);
     const res = await checkIfUserExistsAction(data);
-    setLoading(false);
     if (res.errors) {
       if ('email' in res.errors && res.errors.email) {
         form.setError(
@@ -67,6 +66,7 @@ export default function ForgotPasswordForm() {
       form.reset();
       router.replace(`/auth/forgot-password/otp?token=${res.data.token}`);
     }
+    setLoading(false);
   }
   return (
     <div className='w-full max-w-md'>

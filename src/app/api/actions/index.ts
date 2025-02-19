@@ -10,8 +10,10 @@ export { registerUserAction, loginUserAction, logoutUserAction, checkIfUserExist
 
 export { getUserDefaultValuesAction, createPaymentIntentAction, createOrderAction, getAmount } from './checkout';
 
-export { getPaginatedOrdersByUserAction, getOrderByIdAction } from './orders';
+export { getPaginatedOrdersUserAction, getOrderByIdUserAction } from './orders';
 
 export { updateUserAction, changePasswordAction } from './profile';
 
 export { getCountriesAction, getStatesByCountryCodeAction } from './location';
+
+export { getPaginatedUsersAdminAction, getUserByIdAdminAction, getPaginatedOrdersAdminAction, getOrderByIdAdminAction } from './admin';

@@ -262,24 +262,24 @@ export const ROUTES: Route[] = [
   {
     title: 'Admin',
     isProtected: true,
-    href: '/admin',
-    // children: [
-    //   {
-    //     title: 'Products',
-    //     isProtected: true,
-    //     href: '/admin/products',
-    //   },
-    //   {
-    //     title: 'Orders',
-    //     isProtected: true,
-    //     href: '/admin/orders',
-    //   },
-    //   {
-    //     title: 'Users',
-    //     isProtected: true,
-    //     href: '/admin/users',
-    //   },
-    // ],
+    // href: '/admin',
+    children: [
+      {
+        title: 'Products',
+        isProtected: true,
+        href: '/admin/products',
+      },
+      {
+        title: 'Orders',
+        isProtected: true,
+        href: '/admin/orders',
+      },
+      {
+        title: 'Users',
+        isProtected: true,
+        href: '/admin/users',
+      },
+    ],
   },
 ];
 

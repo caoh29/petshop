@@ -41,16 +41,17 @@ const checkSorting = (sortBy: string | undefined): { total: "asc" | "desc" } | {
 }
 
 
-export const getPaginatedOrdersByUserAction = async ({ searchParams }: GetOrders): Promise<PaginatedOrders> => {
+export const getPaginatedOrdersUserAction = async ({ searchParams }: GetOrders): Promise<PaginatedOrders> => {
   try {
     const session = await auth();
 
     const userId = session?.user?.id ?? undefined;
 
-    // if (!session) return {
-    //   errors: ["Unauthorized"],
-    //   message: "You are Unauthorized",
-    // };
+    if (!userId) return {
+      orders: [], // Return an empty array in case of error
+      pages: 0, // Return 0 pages in case of error
+      currentPage: 1 // Return 1 as the current page in case of error
+    };
 
     const page = Number(searchParams?.page) ?? 1;
 
@@ -98,16 +99,13 @@ export const getPaginatedOrdersByUserAction = async ({ searchParams }: GetOrders
   }
 }
 
-export const getOrderByIdAction = async ({ orderId }: { orderId: string; }) => {
+export const getOrderByIdUserAction = async ({ orderId }: { orderId: string; }) => {
   try {
     const session = await auth();
 
     const userId = session?.user?.id ?? undefined;
 
-    // if (!session) return {
-    //   errors: ["Unauthorized"],
-    //   message: "You are Unauthorized",
-    // };
+    if (!userId) return { order: null };
 
     const order = await prisma.order.findUnique({
       where: {

@@ -51,7 +51,7 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
 
   return (
     <div className='flex flex-col flex-nowrap justify-items-center items-center'>
-      <div className='lg:grid lg:grid-cols-2 py-12 sm:px-6'>
+      <div className='lg:grid lg:grid-cols-2 sm:px-6'>
         <ProductDetailsHeader
           className='order-1 px-4 lg:hidden'
           productName={product.name}

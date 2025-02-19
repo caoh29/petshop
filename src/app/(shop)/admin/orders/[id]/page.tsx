@@ -1,21 +1,17 @@
 import { redirect } from 'next/navigation';
-import { auth } from '@/auth';
-import { getOrderByIdUserAction } from '@/app/api/actions';
+import { getOrderByIdAdminAction } from '@/app/api/actions';
 import { OrderDetails } from '@/app/components/OrderDetails';
 
 interface Props {
   params: { id: string };
 }
 
-export default async function OrderByIdPage({ params }: Readonly<Props>) {
-  const session = await auth();
-
-  const { order } = await getOrderByIdUserAction({
+export default async function OrderByIdAdminPage({ params }: Readonly<Props>) {
+  const { order } = await getOrderByIdAdminAction({
     orderId: params.id,
   });
 
-  if (!order) redirect('/orders');
-  if (order.userId !== session?.user.id) redirect('/orders');
+  if (!order) redirect('/admin/orders');
 
   return (
     <div className='mx-auto'>

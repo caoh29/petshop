@@ -11,9 +11,9 @@ export default function HeroSection() {
       <div className='min-h-[calc(100dvh-5rem)] max-w-sm flex flex-col gap-4 items-center text-center pt-[30dvh] px-4 md:pt-[15dvh] lg:absolute lg:left-0 lg:pl-[5dvw] lg:pt-[15dvh]'>
         <h1 className='text-black text-2xl font-medium'>Adventure Awaits</h1>
         <p className='font-light'>{HERO_BRANDING}</p>
-        <Button asChild>
+        {/* <Button asChild>
           <Link href='/best-sellers'>Shop</Link>
-        </Button>
+        </Button> */}
       </div>
     </section>
   );

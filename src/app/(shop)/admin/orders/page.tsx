@@ -1,4 +1,4 @@
-import { getPaginatedOrdersUserAction } from '@/app/api/actions';
+import { getPaginatedOrdersAdminAction } from '@/app/api/actions';
 import {
   Table,
   TableBody,
@@ -17,8 +17,10 @@ interface Props {
   };
 }
 
-export default async function OrdersPage({ searchParams }: Readonly<Props>) {
-  const { orders, pages, currentPage } = await getPaginatedOrdersUserAction({
+export default async function AdminOrdersPage({
+  searchParams,
+}: Readonly<Props>) {
+  const { orders, pages, currentPage } = await getPaginatedOrdersAdminAction({
     searchParams,
   });
 
@@ -47,7 +49,7 @@ export default async function OrdersPage({ searchParams }: Readonly<Props>) {
                   <TableCell className='font-medium'>
                     <Link
                       className='underline hover:text-ternary'
-                      href={`/orders/${order.id}`}
+                      href={`/admin/orders/${order.id}`}
                     >
                       {order.id}
                     </Link>

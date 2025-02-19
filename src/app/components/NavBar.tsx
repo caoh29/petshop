@@ -31,9 +31,19 @@ export default function NavBar({
   // const isVisible = useHeaderVisibility();
 
   const toggleCategory = (category: string) => {
+    if (
+      Object.keys(showCategoryList).length === 1 &&
+      !showCategoryList[category]
+    )
+      return;
+
+    if (showCategoryList[category]) {
+      setShowCategoryList({});
+      return;
+    }
+
     setShowCategoryList({
-      ...showCategoryList,
-      [category]: !showCategoryList[category],
+      [category]: true,
     });
   };
 
@@ -96,34 +106,45 @@ export default function NavBar({
                 </button>
                 {showCategoryList[component.title] && (
                   <ul className='flex flex-col list-none absolute border-2 border-solid border-accent bg-secondary'>
-                    {component.children.map((child) => (
-                      <li key={child.title} className='my-1 mx-4'>
-                        <button
-                          className='flex items-center'
-                          onClick={() => toggleSubcategory(child.title)}
-                        >
-                          {child.title}
-                          <ChevronDown
-                            className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
-                            aria-hidden='true'
-                          />
-                        </button>
-                        {showSubcategoryList[child.title] && (
-                          <ul className='flex flex-row list-none bg-ternary'>
-                            {child.children?.map((subchild) => (
-                              <li key={subchild.title} className='my-2 mx-4'>
-                                <Link
-                                  onClick={resetStates}
-                                  href={`${child.href}${subchild.href}`}
-                                >
-                                  {subchild.title}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
+                    {component.children.map((child) => {
+                      if (!child.children)
+                        return (
+                          <li key={child.title} className='my-1 mx-4'>
+                            <Link onClick={resetStates} href={child.href!}>
+                              {child.title}
+                            </Link>
+                          </li>
+                        );
+
+                      return (
+                        <li key={child.title} className='my-1 mx-4'>
+                          <button
+                            className='flex items-center'
+                            onClick={() => toggleSubcategory(child.title)}
+                          >
+                            {child.title}
+                            <ChevronDown
+                              className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
+                              aria-hidden='true'
+                            />
+                          </button>
+                          {showSubcategoryList[child.title] && (
+                            <ul className='flex flex-row list-none bg-ternary'>
+                              {child.children?.map((subchild) => (
+                                <li key={subchild.title} className='my-2 mx-4'>
+                                  <Link
+                                    onClick={resetStates}
+                                    href={`${child.href}${subchild.href}`}
+                                  >
+                                    {subchild.title}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </>

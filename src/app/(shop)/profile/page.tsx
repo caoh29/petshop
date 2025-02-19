@@ -19,7 +19,7 @@ export default async function ProfilePage() {
   if (!defaultValues) redirect('/auth/signin');
 
   return (
-    <div className='flex flex-col flex-nowrap gap-6 p-8'>
+    <div className='flex flex-col flex-nowrap gap-6'>
       <ProfileForm defaultValues={defaultValues} />
       <div className='mt-8'>
         <h2 className='text-2xl font-bold mb-4'>Change Password</h2>

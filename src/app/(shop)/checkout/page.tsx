@@ -34,7 +34,7 @@ export default async function CheckoutPage() {
   }
 
   return (
-    <div className='flex flex-col gap-8 md:grid md:grid-cols-2 lg:p-8 md:min-h-[calc(70dvh-5rem)]'>
+    <div className='flex flex-col gap-8 md:grid md:grid-cols-2 md:min-h-[calc(70dvh-5rem)]'>
       <div className='rounded-lg p-4 bg-accent sm:p-8 shadow-lg lg:sticky lg:top-4'>
         <h1 className='text-2xl font-semibold'>Order Summary</h1>
         <ScrollArea className='h-[300px] p-4'>

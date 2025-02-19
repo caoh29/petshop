@@ -1,4 +1,4 @@
-import { getPaginatedOrdersUserAction } from '@/app/api/actions';
+import { getPaginatedUsersAdminAction } from '@/app/api/actions';
 import {
   Table,
   TableBody,
@@ -17,53 +17,57 @@ interface Props {
   };
 }
 
-export default async function OrdersPage({ searchParams }: Readonly<Props>) {
-  const { orders, pages, currentPage } = await getPaginatedOrdersUserAction({
+export default async function AdminUsersPage({
+  searchParams,
+}: Readonly<Props>) {
+  const { users, pages, currentPage } = await getPaginatedUsersAdminAction({
     searchParams,
   });
 
   return (
     <div className='mx-auto'>
-      <h1 className='text-3xl font-bold'>Orders</h1>
+      <h1 className='text-3xl font-bold'>Users</h1>
       <div className='flex flex-col items-end gap-8'>
         <SortDropdown />
         <Table>
           <TableHeader>
             <TableRow className='bg-primary hover:bg-primary'>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead>Delivery Method</TableHead>
-              <TableHead className='text-right'>Amount</TableHead>
+              <TableHead>User ID</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Phone</TableHead>
+              <TableHead>Guest</TableHead>
+              <TableHead className='text-right'>Admin</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.length > 0 ? (
-              orders.map((order) => (
+            {users.length > 0 ? (
+              users.map((user) => (
                 <TableRow
-                  key={order.id}
-                  className='bg-secondary hover:bg-secondary text-white text-left'
+                  key={user.id}
+                  className='bg-secondary hover:bg-secondary text-white'
                 >
                   <TableCell className='font-medium'>
                     <Link
                       className='underline hover:text-ternary'
-                      href={`/orders/${order.id}`}
+                      href={`/admin/users/${user.id}`}
                     >
-                      {order.id}
+                      {user.id}
                     </Link>
                   </TableCell>
-                  <TableCell>{order.status}</TableCell>
-                  <TableCell>{order.createdAt.toISOString()}</TableCell>
-                  <TableCell>{order.deliveryMethod}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.name ?? 'unknown'}</TableCell>
+                  <TableCell>{user.phone ?? 'No phone'}</TableCell>
+                  <TableCell>{user.isGuest ? 'Yes' : 'No'}</TableCell>
                   <TableCell className='text-right'>
-                    ${order.total.toFixed(2)}
+                    {user.isAdmin ? 'Yes' : 'No'}
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className='text-center'>
-                  No orders found
+                  No users found
                 </TableCell>
               </TableRow>
             )}

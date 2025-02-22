@@ -87,7 +87,7 @@ export default function NavBar({
             key={component.title}
             className='mx-4 first-of-type:mr-4 first-of-type:ml-0 last-of-type:ml-4 last-of-type:mr-0'
           >
-            {component.href && (
+            {component.href && !component.children && (
               <Link onClick={resetStates} href={component.href}>
                 {component.title}
               </Link>

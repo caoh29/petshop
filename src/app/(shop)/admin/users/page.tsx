@@ -26,7 +26,7 @@ export default async function AdminUsersPage({
 
   return (
     <div className='mx-auto'>
-      <h1 className='text-3xl font-bold'>Users</h1>
+      <h1 className='text-3xl font-bold text-black'>Users</h1>
       <div className='flex flex-col items-end gap-8'>
         <SortDropdown />
         <Table>
@@ -36,8 +36,7 @@ export default async function AdminUsersPage({
               <TableHead>Email</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead>Guest</TableHead>
-              <TableHead className='text-right'>Admin</TableHead>
+              <TableHead className='text-right'>Guest</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -58,9 +57,8 @@ export default async function AdminUsersPage({
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.name ?? 'unknown'}</TableCell>
                   <TableCell>{user.phone ?? 'No phone'}</TableCell>
-                  <TableCell>{user.isGuest ? 'Yes' : 'No'}</TableCell>
                   <TableCell className='text-right'>
-                    {user.isAdmin ? 'Yes' : 'No'}
+                    {user.isGuest ? 'Yes' : 'No'}
                   </TableCell>
                 </TableRow>
               ))

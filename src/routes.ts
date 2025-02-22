@@ -262,7 +262,7 @@ export const ROUTES: Route[] = [
   {
     title: 'Admin',
     isProtected: true,
-    // href: '/admin',
+    href: '/admin',
     children: [
       {
         title: 'Products',

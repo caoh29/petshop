@@ -23,7 +23,6 @@ interface PaginatedUsers {
     updatedAt: Date;
     phone: string | null;
     isGuest: boolean;
-    isAdmin: boolean;
   }[];
   pages: number;
   currentPage: number;
@@ -55,6 +54,48 @@ export const getPaginatedUsersAdminAction = async ({ searchParams }: GetUsers): 
 
     const sortBy = checkUserSorting(searchParams?.sort as string);
 
+    const onlyAdmins = searchParams?.onlyAdmins === 'true';
+
+    if (onlyAdmins) {
+      const totalCount = await prisma.user.count({
+        where: {
+          isAdmin: true,
+        }
+      });
+
+      const users = await prisma.user.findMany({
+        where: {
+          isAdmin: true,
+        },
+        take,
+        skip,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          isGuest: true,
+          isAdmin: true,
+          createdAt: true,
+          updatedAt: true,
+
+        },
+        orderBy: sortBy ?? undefined,
+      });
+
+      return {
+        pages: Math.ceil(totalCount / take), // Total number of pages
+        currentPage: page ?? 1, // Current page number
+        users: users.map((user) => {
+          return {
+            ...user,
+            isGuest: user.isGuest ?? false,
+            isAdmin: user.isAdmin ?? false,
+          }
+        }),
+      }
+    }
+
 
     // Get the total count of products based on the filters
     const totalCount = await prisma.user.count();
@@ -62,13 +103,15 @@ export const getPaginatedUsersAdminAction = async ({ searchParams }: GetUsers): 
     const users = await prisma.user.findMany({
       take,
       skip,
+      where: {
+        isAdmin: false,
+      },
       select: {
         id: true,
         name: true,
         email: true,
         phone: true,
         isGuest: true,
-        isAdmin: true,
         createdAt: true,
         updatedAt: true,
 
@@ -83,7 +126,6 @@ export const getPaginatedUsersAdminAction = async ({ searchParams }: GetUsers): 
         return {
           ...user,
           isGuest: user.isGuest ?? false,
-          isAdmin: user.isAdmin ?? false,
         }
       }),
     }
@@ -309,6 +351,7 @@ export const inactivateUserAdminAction = async (userId: string) => {
       },
       data: {
         isActive: false,
+        isAdmin: false,
       }
     });
 

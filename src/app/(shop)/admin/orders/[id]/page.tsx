@@ -16,7 +16,7 @@ export default async function OrderByIdAdminPage({ params }: Readonly<Props>) {
   return (
     <div className='mx-auto'>
       <h1 className='text-3xl font-bold mb-6'>Order Details</h1>
-      <OrderDetails order={order} />
+      <OrderDetails order={order} variant />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import prisma from "../../../../../prisma/db";
 
 import { getPagination } from "@/lib/utils";
 import { DetailedOrder } from "@/types/types";
+import { revalidatePath } from "next/cache";
 
 interface GetUsers {
   searchParams?: {
@@ -240,7 +241,7 @@ export const getOrderByIdAdminAction = async ({ orderId }: { orderId: string; })
 
     const detailedOrder: DetailedOrder = {
       ...order,
-      trackingNumber: order.trackingNumber ?? undefined,
+      trackingNumber: order.trackingNumber,
       products: order.products.map((item) => ({
         id: item.productId,
         image: item.product.image,
@@ -254,9 +255,9 @@ export const getOrderByIdAdminAction = async ({ orderId }: { orderId: string; })
       })),
       user: {
         id: order.user.id,
-        name: order.user.name ?? undefined,
+        name: order.user.name,
         email: order.user.email,
-        phone: order.user.phone ?? undefined,
+        phone: order.user.phone,
       },
     };
 
@@ -264,5 +265,63 @@ export const getOrderByIdAdminAction = async ({ orderId }: { orderId: string; })
   } catch (error) {
     console.error('Error fetching order:', error);
     return { order: null };
+  }
+}
+
+export const promoteUserToAdminAction = async (userId: string) => {
+  try {
+    const session = await auth();
+
+    if (!session?.user.isAdmin) return { errors: ["Unauthorized"], message: "You are Unauthorized" };
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isAdmin: true,
+      }
+    });
+
+    revalidatePath(`/admin/users/${user.id}`);
+
+    return {
+      data: {
+        email: user.email,
+        isAdmin: user.isAdmin ?? false
+      }, message: "The user has been promoted to admin."
+    };
+  } catch (error) {
+    console.log(error);
+    return { errors: ["Something went wrong"], message: "Something went wrong" };
+  }
+}
+
+export const inactivateUserAdminAction = async (userId: string) => {
+  try {
+    const session = await auth();
+
+    if (!session?.user.isAdmin) return { errors: ["Unauthorized"], message: "You are Unauthorized" };
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isActive: false,
+      }
+    });
+
+    revalidatePath(`/admin/users/${user.id}`);
+
+    return {
+      data: {
+        email: user.email,
+        isActive: user.isActive ?? false
+      }, message: "The user has been inactivated."
+    };
+  } catch (error) {
+    console.log(error);
+    return { errors: ["Something went wrong"], message: "Something went wrong" };
   }
 }

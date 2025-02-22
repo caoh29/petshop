@@ -128,7 +128,7 @@ export const getOrderByIdUserAction = async ({ orderId }: { orderId: string; }) 
 
     const detailedOrder: DetailedOrder = {
       ...order,
-      trackingNumber: order.trackingNumber ?? undefined,
+      trackingNumber: order.trackingNumber,
       products: order.products.map((item) => ({
         id: item.productId,
         image: item.product.image,
@@ -142,9 +142,9 @@ export const getOrderByIdUserAction = async ({ orderId }: { orderId: string; }) 
       })),
       user: {
         id: order.user.id,
-        name: order.user.name ?? undefined,
+        name: order.user.name,
         email: order.user.email,
-        phone: order.user.phone ?? undefined,
+        phone: order.user.phone,
       },
     };
 

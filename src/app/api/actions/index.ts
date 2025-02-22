@@ -16,4 +16,4 @@ export { updateUserAction, changePasswordAction } from './profile';
 
 export { getCountriesAction, getStatesByCountryCodeAction } from './location';
 
-export { getPaginatedUsersAdminAction, getUserByIdAdminAction, getPaginatedOrdersAdminAction, getOrderByIdAdminAction } from './admin';
+export { getPaginatedUsersAdminAction, getUserByIdAdminAction, getPaginatedOrdersAdminAction, getOrderByIdAdminAction, promoteUserToAdminAction, inactivateUserAdminAction } from './admin';

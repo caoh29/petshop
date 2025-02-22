@@ -29,7 +29,6 @@ const IV_LENGTH = 12; // For aes-256-gcm, this is always 12
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// import { revalidatePath } from "next/cache";
 
 export async function registerUserAction(data: SchemaRegister) {
   const validatedFields = await schemaRegister.safeParseAsync(data);
@@ -137,6 +136,8 @@ export async function loginUserAction(data: SchemaLogin) {
       redirect: false,
     });
 
+    revalidatePath("/");
+
     return {
       data: {
         message: "User logged in successfully",
@@ -160,6 +161,13 @@ export async function loginUserAction(data: SchemaLogin) {
           },
           message: "Invalid password. Failed to Login.",
         };
+      } else if (error.cause?.err?.message === "User is inactive") {
+        return {
+          errors: {
+            email: ["User is inactive."],
+          },
+          message: "User is inactive. Failed to Login.",
+        }
       } else {
         return {
           errors: {
@@ -181,6 +189,7 @@ export async function loginUserAction(data: SchemaLogin) {
 export async function logoutUserAction() {
   try {
     const isSignedOut = await signOut({ redirect: false });
+    revalidatePath("/");
     return {
       data: {
         message: "User logged out successfully",
@@ -214,6 +223,15 @@ export async function checkIfUserExistsAction(data: SchemaForgotPassword) {
     const user = await prisma.user.findUnique({
       where: { email },
     });
+
+    if (!user?.isActive) {
+      return {
+        errors: {
+          email: ["User is inactive."],
+        },
+        status: 403,
+      };
+    }
 
     if (user) {
       const { otp, otpExpiry, token } = await createOTP(user.id);

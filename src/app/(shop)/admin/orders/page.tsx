@@ -55,7 +55,13 @@ export default async function AdminOrdersPage({
                     </Link>
                   </TableCell>
                   <TableCell>{order.status}</TableCell>
-                  <TableCell>{order.createdAt.toISOString()}</TableCell>
+                  <TableCell>
+                    {new Date(order.createdAt).toLocaleDateString('en-CA', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </TableCell>
                   <TableCell>{order.deliveryMethod}</TableCell>
                   <TableCell className='text-right'>
                     ${order.total.toFixed(2)}

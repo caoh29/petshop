@@ -12,7 +12,7 @@ export default async function UserByIdPage({ params }: Readonly<Props>) {
 
   return (
     <div className='mx-auto'>
-      <h1 className='text-3xl font-bold mb-6'>User Details</h1>
+      <h1 className='text-3xl font-bold mb-6 text-black'>User Details</h1>
       <div className='w-full flex flex-col flex-nowrap justify-center items-center'>
         <UserDetails user={user} />
       </div>

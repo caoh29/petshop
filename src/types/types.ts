@@ -120,7 +120,7 @@ export interface DetailedOrder {
   status: string;
   shippingAddress: string;
   paymentMethod: string;
-  trackingNumber?: string;
+  trackingNumber: string | null;
   deliveryMethod: string;
   products: {
     id: string;
@@ -135,9 +135,9 @@ export interface DetailedOrder {
   }[];
   user: {
     id: string;
-    name?: string;
+    name: string | null;
     email: string;
-    phone?: string;
+    phone: string | null;
   };
 }
 

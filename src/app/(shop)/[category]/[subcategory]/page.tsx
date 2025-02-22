@@ -46,8 +46,10 @@ export default async function SubCategoryPage({
         {capitalizeString(params.subcategory)}
       </h1>
       <div className='flex flex-col md:flex-row gap-8'>
-        <div className='w-full md:w-1/4'>
-          <ProductFilters filterGroups={filters} />
+        <div className='w-full md:w-1/4 relative'>
+          <div className='md:sticky md:top-20'>
+            <ProductFilters filterGroups={filters} />
+          </div>
         </div>
         <div className='w-full md:w-3/4'>
           <div className='flex justify-between items-center mb-4'>

@@ -25,6 +25,7 @@ model User {
   zip            String?
   country        String?
   phone          String?
+  isActive       Boolean?             @default(true)
   isAdmin        Boolean?             @default(false)
   isVerified     Boolean?             @default(false)
   isGuest        Boolean?             @default(false)

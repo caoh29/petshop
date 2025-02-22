@@ -56,6 +56,11 @@ const config = {
         if (!user) {
           throw new Error("No user was found")
         }
+
+        if (!user.isActive) {
+          throw new Error("User is inactive")
+        }
+
         // logic to salt and hash password
         const isValidPassword = await checkPassword(password, user?.password ?? '');
 

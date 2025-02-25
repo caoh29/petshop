@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import bcrypt from "bcryptjs"
 import { Pagination } from "@/types/types";
+import { SORTING_OPTIONS } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -48,6 +49,7 @@ export const getPagination = ({ page = 1, take = 9 }: Pagination) => {
   return { skip, take };
 };
 
+
 export const checkSearchParam = (searchParam: string | string[] | undefined): string[] | undefined => {
   if (Array.isArray(searchParam)) {
     return searchParam;
@@ -55,4 +57,17 @@ export const checkSearchParam = (searchParam: string | string[] | undefined): st
     return [searchParam];
   }
   return undefined;
+}
+
+export const checkSorting = (sortBy: string | string[] | undefined, type: 'product' | 'order' | 'user') => {
+  if (!sortBy || Array.isArray(sortBy)) return;
+
+  const obj = SORTING_OPTIONS[type].find((element) => element.value === sortBy);
+  if (!obj) return;
+
+  const [prop, order] = obj.value.split('_');
+
+  return {
+    [prop]: order
+  };
 }

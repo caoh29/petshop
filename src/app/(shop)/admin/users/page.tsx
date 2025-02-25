@@ -28,7 +28,7 @@ export default async function AdminUsersPage({
     <div className='mx-auto'>
       <h1 className='text-3xl font-bold text-black'>Users</h1>
       <div className='flex flex-col items-end gap-8'>
-        <SortDropdown />
+        <SortDropdown items={users} />
         <Table>
           <TableHeader>
             <TableRow className='bg-primary hover:bg-primary'>
@@ -55,7 +55,10 @@ export default async function AdminUsersPage({
                     </Link>
                   </TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.name ?? 'unknown'}</TableCell>
+                  <TableCell>
+                    {user.name ??
+                      `${user.firstName}${user.firstName !== 'unknown' ? ` ${user.lastName}` : ''}`}
+                  </TableCell>
                   <TableCell>{user.phone ?? 'No phone'}</TableCell>
                   <TableCell className='text-right'>
                     {user.isGuest ? 'Yes' : 'No'}

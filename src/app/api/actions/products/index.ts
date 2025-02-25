@@ -3,7 +3,7 @@
 import { FilterGroup, Product } from "@/types/types";
 import prisma from "../../../../../prisma/db";
 
-import { checkSearchParam, getPagination } from "@/lib/utils";
+import { checkSearchParam, checkSorting, getPagination } from "@/lib/utils";
 
 interface GetProducts {
   category?: string;
@@ -14,21 +14,6 @@ interface GetProducts {
   take?: number;
 }
 
-
-const checkSorting = (sortBy: string | undefined): { price: "asc" | "desc" } | { createdAt: "asc" | "desc" } | undefined => {
-  if (sortBy === 'price_asc') {
-    return { price: "asc" };
-  } else if (sortBy === 'price_desc') {
-    return { price: "desc" };
-  } else if (sortBy === 'newest') {
-    return { createdAt: "desc" };
-  } else if (sortBy === 'featured') {
-    return { createdAt: "asc" };
-  } else {
-    return undefined;
-  }
-}
-
 export const getPaginatedProductsAction = async ({ category, subcategory, searchParams, take: userTake }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
   try {
     const page = Number(searchParams?.page) ?? 1;
@@ -37,7 +22,7 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
 
     const sizes = checkSearchParam(searchParams?.Size);
     const colors = checkSearchParam(searchParams?.Color);
-    const sortBy = checkSorting(searchParams?.sort as string);
+    const sortBy = checkSorting(searchParams?.sort, 'product');
     const query = searchParams?.query as string;
 
 
@@ -96,7 +81,7 @@ export const getFeaturedProductsAction = async ({ category, subcategory, searchP
 
     const sizes = checkSearchParam(searchParams?.Size);
     const colors = checkSearchParam(searchParams?.Color);
-    const sortBy = checkSorting(searchParams?.sort as string);
+    const sortBy = checkSorting(searchParams?.sort, 'product');
     const query = searchParams?.query as string;
 
 

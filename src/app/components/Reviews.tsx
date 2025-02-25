@@ -105,7 +105,13 @@ export default function Reviews({
                   ))}
                 </div>
               </div>
-              <span className='text-sm text-white'>{review.createdAt}</span>
+              <span className='text-sm text-white'>
+                {new Date(review.createdAt).toLocaleDateString('en-CA', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>

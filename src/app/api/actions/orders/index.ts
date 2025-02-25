@@ -1,9 +1,9 @@
 'use server';
 
-import { DetailedOrder } from "@/types/types";
+import { DetailedOrder, SimplifiedOrder } from "@/types/types";
 import prisma from "../../../../../prisma/db";
 
-import { getPagination } from "@/lib/utils";
+import { checkSorting, getPagination } from "@/lib/utils";
 import { auth } from "@/auth";
 
 
@@ -14,30 +14,9 @@ interface GetOrders {
 }
 
 interface PaginatedOrders {
-  orders: {
-    id: string;
-    total: number;
-    createdAt: Date;
-    status: string;
-    deliveryMethod: string;
-  }[];
+  orders: SimplifiedOrder[];
   pages: number;
   currentPage: number;
-}
-
-
-const checkSorting = (sortBy: string | undefined): { total: "asc" | "desc" } | { createdAt: "asc" | "desc" } | undefined => {
-  if (sortBy === 'total_asc') {
-    return { total: "asc" };
-  } else if (sortBy === 'total_desc') {
-    return { total: "desc" };
-  } else if (sortBy === 'newest') {
-    return { createdAt: "desc" };
-  } else if (sortBy === 'featured') {
-    return { createdAt: "asc" };
-  } else {
-    return undefined;
-  }
 }
 
 
@@ -57,7 +36,7 @@ export const getPaginatedOrdersUserAction = async ({ searchParams }: GetOrders):
 
     const { skip, take } = getPagination({ page });
 
-    const sortBy = checkSorting(searchParams?.sort as string);
+    const sortBy = checkSorting(searchParams?.sort, 'order');
 
 
     // Get the total count of products based on the filters
@@ -74,20 +53,17 @@ export const getPaginatedOrdersUserAction = async ({ searchParams }: GetOrders):
       where: {
         userId,
       },
-      select: {
-        id: true,
-        total: true,
-        createdAt: true,
-        status: true,
-        deliveryMethod: true,
-      },
       orderBy: sortBy ?? undefined,
     });
 
     return {
       pages: Math.ceil(totalCount / take), // Total number of pages
       currentPage: page ?? 1, // Current page number
-      orders,
+      orders: orders.map((order) => ({
+        ...order,
+        createdAt: order.createdAt.toISOString(), // Convert createdAt to ISO string
+        trackingNumber: order.trackingNumber ?? undefined,
+      })),
     }
   } catch (error) {
     console.log(error);

@@ -41,7 +41,7 @@ export default async function SearchPage({ searchParams }: Readonly<Props>) {
             ) : (
               <p>No products found</p>
             )}
-            <SortDropdown />
+            <SortDropdown items={products} />
           </div>
           <GridSection items={products ?? []} />
           {pages > 1 && (

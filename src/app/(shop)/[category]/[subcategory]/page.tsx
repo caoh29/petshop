@@ -58,7 +58,7 @@ export default async function SubCategoryPage({
             ) : (
               <p>No products found</p>
             )}
-            <SortDropdown />
+            <SortDropdown items={products} />
           </div>
           <GridSection
             items={products ?? []}

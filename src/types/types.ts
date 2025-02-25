@@ -18,6 +18,8 @@ export interface User {
   phone?: string;
   isAdmin?: boolean;
   isVerified?: boolean;
+  isGuest?: boolean;
+
 
   // Relations
   orders?: Order[];
@@ -29,6 +31,19 @@ export interface User {
 
   // Optional WebAuthn support
   authenticators?: Authenticator[];
+}
+
+export interface SimplifiedUser {
+  id: string;
+  name?: string; // Made optional as per NextAuth schema
+  firstName: string;
+  lastName: string;
+  email: string;
+  createdAt: string;
+  phone?: string;
+  isAdmin?: boolean;
+  isVerified?: boolean;
+  isGuest?: boolean;
 }
 
 export interface ShippingInfo {
@@ -98,6 +113,18 @@ export interface Authenticator {
   transports?: string;
 }
 
+
+export interface SimplifiedOrder {
+  id: string;
+  userId: string;
+  total: number;
+  createdAt: string;
+  status: string;
+  shippingAddress: string;
+  paymentMethod: string;
+  deliveryMethod: string;
+  trackingNumber?: string;
+}
 
 export interface Order {
   id: string;

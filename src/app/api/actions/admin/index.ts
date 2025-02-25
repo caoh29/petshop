@@ -4,8 +4,8 @@ import { auth } from "@/auth";
 
 import prisma from "../../../../../prisma/db";
 
-import { getPagination } from "@/lib/utils";
-import { DetailedOrder } from "@/types/types";
+import { getPagination, checkSorting } from "@/lib/utils";
+import { DetailedOrder, SimplifiedOrder, SimplifiedUser } from "@/types/types";
 import { revalidatePath } from "next/cache";
 
 interface GetUsers {
@@ -15,28 +15,11 @@ interface GetUsers {
 }
 
 interface PaginatedUsers {
-  users: {
-    id: string;
-    name: string | null;
-    email: string;
-    createdAt: Date;
-    updatedAt: Date;
-    phone: string | null;
-    isGuest: boolean;
-  }[];
+  users: SimplifiedUser[];
   pages: number;
   currentPage: number;
 }
 
-const checkUserSorting = (sortBy: string | undefined): { createdAt: "asc" | "desc" } | undefined => {
-  if (sortBy === 'newest') {
-    return { createdAt: "desc" };
-  } else if (sortBy === 'featured') {
-    return { createdAt: "asc" };
-  } else {
-    return undefined;
-  }
-}
 
 export const getPaginatedUsersAdminAction = async ({ searchParams }: GetUsers): Promise<PaginatedUsers> => {
   try {
@@ -52,7 +35,7 @@ export const getPaginatedUsersAdminAction = async ({ searchParams }: GetUsers): 
 
     const { skip, take } = getPagination({ page });
 
-    const sortBy = checkUserSorting(searchParams?.sort as string);
+    const sortBy = checkSorting(searchParams?.sort, 'user');
 
     const onlyAdmins = searchParams?.onlyAdmins === 'true';
 
@@ -69,30 +52,21 @@ export const getPaginatedUsersAdminAction = async ({ searchParams }: GetUsers): 
         },
         take,
         skip,
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          phone: true,
-          isGuest: true,
-          isAdmin: true,
-          createdAt: true,
-          updatedAt: true,
-
-        },
         orderBy: sortBy ?? undefined,
       });
 
       return {
         pages: Math.ceil(totalCount / take), // Total number of pages
         currentPage: page ?? 1, // Current page number
-        users: users.map((user) => {
-          return {
-            ...user,
-            isGuest: user.isGuest ?? false,
-            isAdmin: user.isAdmin ?? false,
-          }
-        }),
+        users: users.map((user) => ({
+          ...user,
+          name: user.name ?? undefined,
+          createdAt: user.createdAt.toISOString(),
+          phone: user.phone ?? undefined,
+          isVerified: user.isVerified ?? undefined,
+          isGuest: user.isGuest ?? false,
+          isAdmin: user.isAdmin ?? false,
+        })),
       }
     }
 
@@ -106,28 +80,21 @@ export const getPaginatedUsersAdminAction = async ({ searchParams }: GetUsers): 
       where: {
         isAdmin: false,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        isGuest: true,
-        createdAt: true,
-        updatedAt: true,
-
-      },
       orderBy: sortBy ?? undefined,
     });
 
     return {
       pages: Math.ceil(totalCount / take), // Total number of pages
       currentPage: page ?? 1, // Current page number
-      users: users.map((user) => {
-        return {
-          ...user,
-          isGuest: user.isGuest ?? false,
-        }
-      }),
+      users: users.map((user) => ({
+        ...user,
+        name: user.name ?? undefined,
+        createdAt: user.createdAt.toISOString(),
+        phone: user.phone ?? undefined,
+        isVerified: user.isVerified ?? undefined,
+        isGuest: user.isGuest ?? false,
+        isAdmin: user.isAdmin ?? false,
+      })),
     }
   } catch (error) {
     console.log(error);
@@ -182,29 +149,9 @@ interface GetOrders {
 }
 
 interface PaginatedOrders {
-  orders: {
-    id: string;
-    total: number;
-    createdAt: Date;
-    status: string;
-    deliveryMethod: string;
-  }[];
+  orders: SimplifiedOrder[];
   pages: number;
   currentPage: number;
-}
-
-const checkOrderSorting = (sortBy: string | undefined): { total: "asc" | "desc" } | { createdAt: "asc" | "desc" } | undefined => {
-  if (sortBy === 'total_asc') {
-    return { total: "asc" };
-  } else if (sortBy === 'total_desc') {
-    return { total: "desc" };
-  } else if (sortBy === 'newest') {
-    return { createdAt: "desc" };
-  } else if (sortBy === 'featured') {
-    return { createdAt: "asc" };
-  } else {
-    return undefined;
-  }
 }
 
 
@@ -222,7 +169,7 @@ export const getPaginatedOrdersAdminAction = async ({ searchParams }: GetOrders)
 
     const { skip, take } = getPagination({ page });
 
-    const sortBy = checkOrderSorting(searchParams?.sort as string);
+    const sortBy = checkSorting(searchParams?.sort, 'order');
 
 
     // Get the total count of products based on the filters
@@ -231,20 +178,17 @@ export const getPaginatedOrdersAdminAction = async ({ searchParams }: GetOrders)
     const orders = await prisma.order.findMany({
       take,
       skip,
-      select: {
-        id: true,
-        total: true,
-        createdAt: true,
-        status: true,
-        deliveryMethod: true,
-      },
       orderBy: sortBy ?? undefined,
     });
 
     return {
       pages: Math.ceil(totalCount / take), // Total number of pages
       currentPage: page ?? 1, // Current page number
-      orders,
+      orders: orders.map((order) => ({
+        ...order,
+        createdAt: order.createdAt.toISOString(), // Convert createdAt to ISO string
+        trackingNumber: order.trackingNumber ?? undefined,
+      })),
     }
   } catch (error) {
     console.log(error);

@@ -6,7 +6,7 @@ import { Truck, CreditCard, CalendarDays } from 'lucide-react';
 
 interface Props {
   order: DetailedOrder;
-  variant: boolean;
+  variant?: boolean;
 }
 
 export function OrderDetails({ order, variant }: Readonly<Props>) {

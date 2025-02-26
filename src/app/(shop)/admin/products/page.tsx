@@ -1,3 +1,3 @@
 export default function AdminProductsPage() {
-  return <div>AdminProductsPage</div>;
+  return <h1>AdminProductsPage</h1>;
 }

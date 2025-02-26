@@ -42,12 +42,11 @@ const config = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, request) {
-        let user = null
 
         const { email, password } = await schemaLogin.parseAsync(credentials);
 
         // logic to verify if the user exists
-        user = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
           where: {
             email: email.toLowerCase(),
           },
@@ -62,7 +61,7 @@ const config = {
         }
 
         // logic to salt and hash password
-        const isValidPassword = await checkPassword(password, user?.password ?? '');
+        const isValidPassword = await checkPassword(password, user.password ?? '');
 
         if (!isValidPassword) {
           throw new Error("Invalid password")

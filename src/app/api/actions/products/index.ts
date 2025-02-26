@@ -289,12 +289,14 @@ export const searchProductAction = async (query: string) => {
 
 export const getFiltersAction = async ({ category, subcategory, searchParams }: GetProducts): Promise<{ filters: FilterGroup[] }> => {
   try {
-    const query = searchParams?.query as string;
+    const query = searchParams?.query;
 
-    const filters = await prisma.product.findMany({
+    if (Array.isArray(query)) return { filters: [] }
+
+    const products = await prisma.product.findMany({
       where: {
-        category: category ?? undefined,
-        subcategory: subcategory ?? undefined,
+        category,
+        subcategory,
         name: query ? { contains: query, mode: 'insensitive' } : undefined,
       },
       select: {
@@ -303,18 +305,28 @@ export const getFiltersAction = async ({ category, subcategory, searchParams }: 
       },
     });
 
-    const sizes = Array.from(new Set(filters.flatMap(filter => filter.sizes))).sort();
-    const colors = Array.from(new Set(filters.flatMap(filter => filter.colors))).sort();
+    if (products.length === 0) {
+      return { filters: [] };
+    }
 
+    const { sizes, colors } = products.reduce(
+      (acc, product) => {
+        product.sizes.forEach(size => acc.sizes.add(String(size))); // Ensure size is a string
+        product.colors.forEach(color => acc.colors.add(String(color))); // Ensure color is a string
+        return acc;
+      },
+      { sizes: new Set<string>(), colors: new Set<string>() }
+    );
 
     const filterGroups: FilterGroup[] = [
       {
         name: 'Size',
-        options: sizes.map(size => ({ id: size, label: size })),
+        options: [sizes.values].map((size) => ({ id: size.toString(), label: size.toString() })),
       },
       {
         name: 'Color',
-        options: colors.map(color => ({ id: color, label: color.charAt(0).toUpperCase() + color.slice(1) })),
+        options: [colors.values]
+          .map((color) => ({ id: color.toString(), label: color.toString().charAt(0).toUpperCase() + color.toString().slice(1) })),
       },
     ];
 

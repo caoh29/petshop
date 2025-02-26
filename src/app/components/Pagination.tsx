@@ -34,7 +34,7 @@ export default function Pagination({
   };
 
   const renderPageLinks = () => {
-    const pageLinks: React.ReactNode[] = [];
+    const pageLinks = [];
     const showEllipsisStart = currentPage > 3;
     const showEllipsisEnd = currentPage < totalPages - 2;
 

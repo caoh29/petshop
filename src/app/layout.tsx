@@ -10,7 +10,6 @@ import { getCartAction } from './api/actions/cart';
 // import { ClerkProvider } from '@clerk/nextjs';
 
 import { auth } from '@/auth';
-import { Cart } from '@/types/types';
 
 export const metadata: Metadata = {
   title: 'My PetShop',
@@ -28,7 +27,7 @@ export default async function RootLayout({
   const userId = session?.user?.id ?? null;
   const isAdmin = session?.user?.isAdmin ?? false;
 
-  let cart: Cart | null = null;
+  let cart = null;
   if (userId !== null) {
     cart = await getCartAction(userId);
   }

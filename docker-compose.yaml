@@ -13,3 +13,23 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - ./postgresql:/var/lib/postgresql/data
+    networks:
+      - petshop-network
+  
+  # petshop-app:
+  #   build: .
+  #   links:
+  #     - petshop-db
+  #   container_name: petshop-app-container
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - petshop-db
+  #   environment:
+  #     - NODE_ENV=development
+  #   networks:
+  #     - petshop-network
+
+networks:
+  petshop-network:
+    driver: bridge

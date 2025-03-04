@@ -62,7 +62,7 @@ export default function Header({ userId, isAdmin }: Readonly<Props>) {
       className={`${
         isHeaderVisible ? 'top-0 ' : '-top-20'
         // headerVisibility ? 'top-0 ' : '-top-20'
-      } sticky z-10 flex items-center justify-center py-4 px-4 md:px-8 bg-primary h-20 w-full transition-all ease-in duration-500`}
+      } sticky z-10 flex items-center justify-center py-4 px-4 md:px-8 bg-primary h-20 w-full transition-all ease-in duration-500 border-b border-b-secondary`}
     >
       <SideNavBar
         className='order-1 lg:hidden'

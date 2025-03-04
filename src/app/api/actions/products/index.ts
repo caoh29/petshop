@@ -1,6 +1,6 @@
 'use server';
 
-import { FilterGroup, Product } from "@/types/types";
+import { FilterGroup, Product, SimplifiedProduct } from "@/types/types";
 import prisma from "../../../../../prisma/db";
 
 import { checkSearchParam, checkSorting, getPagination } from "@/lib/utils";
@@ -14,7 +14,13 @@ interface GetProducts {
   take?: number;
 }
 
-export const getPaginatedProductsAction = async ({ category, subcategory, searchParams, take: userTake }: GetProducts): Promise<{ products: Product[], pages: number, currentPage: number }> => {
+interface PaginatedProducts {
+  products: SimplifiedProduct[];
+  pages: number;
+  currentPage: number;
+}
+
+export const getPaginatedProductsAction = async ({ category, subcategory, searchParams, take: userTake }: GetProducts): Promise<PaginatedProducts> => {
   try {
     const page = Number(searchParams?.page) ?? 1;
 
@@ -40,7 +46,6 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
     const products = await prisma.product.findMany({
       take,
       skip,
-      include: { reviews: true }, // Include reviews in the initial query
       where: {
         category: category ?? undefined,
         subcategory: subcategory ?? undefined,
@@ -57,10 +62,6 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
       products: products.map(product => ({
         ...product,
         createdAt: product.createdAt.toISOString(), // Convert Date to string
-        reviews: product.reviews.map(review => ({
-          ...review,
-          createdAt: review.createdAt.toISOString() // Convert Date to string
-        }))
       })),
     }
   } catch (error) {

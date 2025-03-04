@@ -2,7 +2,12 @@
 
 import { useState, useEffect, useMemo } from 'react';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 
 import { ChevronDown } from 'lucide-react';
 import {
@@ -13,7 +18,11 @@ import {
 } from './ui/dropdown-menu';
 import { Button } from './ui/button';
 
-import { Product, SimplifiedOrder, SimplifiedUser } from '@/types/types';
+import {
+  SimplifiedOrder,
+  SimplifiedProduct,
+  SimplifiedUser,
+} from '@/types/types';
 import { SORTING_OPTIONS } from '@/lib/constants';
 
 interface SortOption {
@@ -21,7 +30,7 @@ interface SortOption {
   value: string;
 }
 
-type ItemType = Product | SimplifiedOrder | SimplifiedUser;
+type ItemType = SimplifiedProduct | SimplifiedOrder | SimplifiedUser;
 
 interface SortDropdownProps<T extends ItemType> {
   items: T[];
@@ -31,8 +40,8 @@ export default function SortDropdown<T extends ItemType>({
   items,
 }: Readonly<SortDropdownProps<T>>) {
   const router = useRouter();
-  const params = useParams();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const sortOptions: SortOption[] = useMemo(() => {
     if (items.length === 0) return [];
@@ -41,7 +50,8 @@ export default function SortDropdown<T extends ItemType>({
 
     if ('price' in firstItem) {
       // Product sorting options
-      return SORTING_OPTIONS.product;
+      if (pathname === '/admin/products') return SORTING_OPTIONS.product;
+      return SORTING_OPTIONS.product.filter((option) => !option.adminOnly);
     } else if ('total' in firstItem) {
       // Order sorting options
       return SORTING_OPTIONS.order;
@@ -51,7 +61,7 @@ export default function SortDropdown<T extends ItemType>({
     }
 
     return [];
-  }, [items]);
+  }, [items, pathname]);
 
   const [selectedSort, setSelectedSort] = useState<SortOption>({
     label: 'Sort By',
@@ -61,20 +71,9 @@ export default function SortDropdown<T extends ItemType>({
   const updateSort = (newSortBy: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set('sort', newSortBy);
-    if (params.subcategory && params.category) {
-      router.replace(
-        `/${params.category}/${params.subcategory}?${newParams.toString()}`,
-        { scroll: false },
-      );
-    } else if (params.category && !params.subcategory) {
-      router.replace(`/${params.category}?${newParams.toString()}`, {
-        scroll: false,
-      });
-    } else {
-      router.replace(`?${newParams.toString()}`, {
-        scroll: false,
-      });
-    }
+    router.replace(`?${newParams.toString()}`, {
+      scroll: false,
+    });
   };
 
   useEffect(() => {
@@ -82,7 +81,6 @@ export default function SortDropdown<T extends ItemType>({
       if (searchParams.has('sort')) {
         return option.value === searchParams.get('sort');
       }
-      // return option.value === 'createdAt_desc';
     }) ?? {
       label: 'Sort By',
       value: '',

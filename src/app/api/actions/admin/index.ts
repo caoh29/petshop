@@ -5,8 +5,10 @@ import { auth } from "@/auth";
 import prisma from "../../../../../prisma/db";
 
 import { getPagination, checkSorting } from "@/lib/utils";
-import { DetailedOrder, SimplifiedOrder, SimplifiedUser } from "@/types/types";
+import { DetailedOrder, Product, SimplifiedOrder, SimplifiedProduct, SimplifiedUser } from "@/types/types";
 import { revalidatePath } from "next/cache";
+import { SchemaCreateProduct, schemaCreateProduct } from "@/lib/schemas/create-product";
+import { schemaEditProduct, SchemaEditProduct } from "@/lib/schemas/edit-product";
 
 interface GetUsers {
   searchParams?: {
@@ -312,3 +314,250 @@ export const inactivateUserAdminAction = async (userId: string) => {
     return { errors: ["Something went wrong"], message: "Something went wrong" };
   }
 }
+
+interface GetProducts {
+  category?: string;
+  subcategory?: string;
+  searchParams?: {
+    [key: string]: string | string[] | undefined;
+  },
+  take?: number;
+}
+
+interface PaginatedProducts {
+  products: SimplifiedProduct[];
+  pages: number;
+  currentPage: number;
+}
+
+export const getPaginatedProductsAdminAction = async ({ searchParams }: GetProducts): Promise<PaginatedProducts> => {
+  try {
+    const session = await auth();
+
+    if (!session?.user.isAdmin) return { products: [], pages: 0, currentPage: 1 };
+
+    const page = Number(searchParams?.page) ?? 1;
+
+    const { skip, take } = getPagination({ page });
+
+    const sortBy = checkSorting(searchParams?.sort, 'product');
+
+    const totalCount = await prisma.product.count();
+
+    const products = await prisma.product.findMany({
+      take,
+      skip,
+      orderBy: sortBy ?? undefined,
+    });
+
+    return {
+      pages: Math.ceil(totalCount / take), // Total number of pages
+      currentPage: page ?? 1, // Current page number
+      products: products.map((product) => ({
+        ...product,
+        createdAt: product.createdAt.toISOString(),
+      })),
+    }
+  } catch (error) {
+    console.log(error);
+    return { products: [], pages: 0, currentPage: 1 };
+  }
+}
+
+export const getProductByIdAdminAction = async (productId: string): Promise<{ product: Product | null }> => {
+  try {
+    const session = await auth();
+
+    if (!session?.user.isAdmin) return { product: null };
+
+    const product = await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+      include: {
+        reviews: true,
+      },
+    });
+
+    if (!product) return { product: null };
+
+    return {
+      product: {
+        ...product,
+        createdAt: product.createdAt.toISOString(),
+        updatedAt: product.updatedAt.toISOString(),
+        reviews: product.reviews.map((review) => ({
+          ...review,
+          createdAt: review.createdAt.toISOString(),
+        })),
+      }
+    }
+
+  } catch (error) {
+    console.log(error);
+    return { product: null };
+  }
+}
+
+export const createProductAdminAction = async (values: SchemaCreateProduct) => {
+  try {
+    // Validate form data using Zod
+    const validatedFields = await schemaCreateProduct.safeParseAsync(values);
+
+    if (!validatedFields.success) {
+      return {
+        success: false,
+        message: "Invalid form data",
+        errors: validatedFields.error.flatten().fieldErrors
+      };
+    }
+
+    const data = validatedFields.data;
+
+    // // Handle avatar image
+    // const avatarImage = formData.get("avatarImage") as File;
+    // let avatarImageUrl = "";
+
+    // if (avatarImage && avatarImage.size > 0) {
+    //   avatarImageUrl = await uploadFile(avatarImage);
+    // }
+
+    // Create product in database
+    const product = await prisma.product.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        discount: data.discount,
+        category: data.category,
+        subcategory: data.subcategory,
+        stock: data.stock,
+        sizes: data.sizes,
+        colors: data.colors,
+        sku: data.sku,
+        isOutOfStock: data.stock <= 0,
+        image: '',
+        additionalImages: []
+      },
+    });
+
+    revalidatePath("/admin/products");
+    return { success: true, product };
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return { success: false, error: "Failed to create product" };
+  }
+};
+
+async function uploadFile(file: File): Promise<string> {
+  // In a real implementation, you would:
+  // 1. Upload the file to a storage service (S3, Cloudinary, etc.)
+  // 2. Return the URL of the uploaded file
+
+  // For this example, we'll just return a placeholder URL
+  console.log(`Uploading file: ${file.name}`)
+  return `/uploads/${Date.now()}-${file.name}`
+}
+
+export const updateProductAdminAction = async (productId: string, values: SchemaEditProduct) => {
+  try {
+    const session = await auth();
+
+    if (!session?.user.isAdmin) return {
+      success: false,
+      message: "Unauthorized"
+    };
+
+    // Validate form data using Zod
+    const validatedFields = await schemaEditProduct.safeParseAsync(values);
+
+    if (!validatedFields.success) {
+      return {
+        success: false,
+        message: "Invalid form data",
+        errors: validatedFields.error.flatten().fieldErrors
+      };
+    }
+
+    const data = validatedFields.data;
+
+    // // Handle avatar image if provided
+    // const avatarImage = formData.get("avatarImage") as File;
+    // let imageUpdate = {};
+
+    // if (avatarImage && avatarImage.size > 0) {
+    //   const avatarImageUrl = await uploadFile(avatarImage);
+    //   imageUpdate = { image: avatarImageUrl };
+    // }
+
+    // Update product in database
+    const product = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        discount: data.discount,
+        category: data.category,
+        subcategory: data.subcategory,
+        stock: data.stock,
+        sizes: data.sizes,
+        availableSizes: data.availableSizes,
+        colors: data.colors,
+        availableColors: data.availableColors,
+        sku: data.sku,
+        isOutOfStock: data.isOutOfStock,
+        image: data.image,
+        additionalImages: data.additionalImages,
+      },
+    });
+
+    revalidatePath(`/admin/products/${productId}`);
+
+    return {
+      success: true,
+      message: "Product updated successfully",
+      product
+    };
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return {
+      success: false,
+      message: "Failed to update product"
+    };
+  }
+};
+
+export const deleteProductAdminAction = async (productId: string) => {
+  try {
+    const session = await auth();
+
+    if (!session?.user.isAdmin) return {
+      success: false,
+      message: "Unauthorized"
+    };
+
+    // mark as discontinued product
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        isDiscounted: true,
+        isOutOfStock: true,
+        stock: 0,
+      },
+    });
+
+    revalidatePath("/admin/products");
+
+    return {
+      success: true,
+      message: "Product deleted successfully"
+    };
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return {
+      success: false,
+      message: "Failed to delete product"
+    };
+  }
+};

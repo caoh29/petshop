@@ -62,7 +62,7 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
 
         <ProductImageGallery
           className='order-2 lg:order-1'
-          images={product.additionalImages ?? []}
+          images={[product.image, ...(product.additionalImages ?? [])]}
           productName={product.name}
           productImage={product.image}
         />

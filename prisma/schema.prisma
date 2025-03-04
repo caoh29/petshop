@@ -150,6 +150,7 @@ model Product {
   availableColors  String[]
   stock            Int
   isOutOfStock     Boolean
+  isDiscounted     Boolean           @default(false)
   createdAt        DateTime          @default(now())
   reservedStock    Int               @default(0)
   updatedAt        DateTime          @updatedAt
@@ -181,15 +182,18 @@ model Cart {
 }
 
 model Category {
-  id    String @id @default(uuid())
-  name  String
-  image String
+  id            String        @id @default(uuid())
+  name          String
+  image         String
+  subCategories SubCategory[]
 }
 
 model SubCategory {
-  id    String @id @default(uuid())
-  name  String
-  image String
+  id         String   @id @default(uuid())
+  name       String
+  image      String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
 }
 
 model Country {

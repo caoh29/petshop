@@ -83,7 +83,9 @@ export default function ShoppingCart({ className, cart }: Readonly<Props>) {
           className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors disabled:pointer-events-none disabled:opacity-50 bg-secondary text-white hover:bg-secondary/80 w-full px-4 py-2'
           asChild
         >
-          <Link href='/cart'>Review Cart</Link>
+          <Link href='/cart' prefetch={null}>
+            Review Cart
+          </Link>
         </SheetClose>
       </SheetContent>
     </Sheet>

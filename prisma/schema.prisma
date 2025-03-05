@@ -141,8 +141,8 @@ model Product {
   additionalImages String[]
   name             String
   price            Float
-  category         String
-  subcategory      String
+  categoryId       String
+  subcategoryId    String
   description      String
   sizes            String[]
   availableSizes   String[]
@@ -158,6 +158,8 @@ model Product {
   reviews          Review[]
   selectedProducts SelectedProduct[]
   wishedBy         User[]            @relation("UserWishlist")
+  category         Category          @relation(fields: [categoryId], references: [id])
+  subcategory      SubCategory       @relation(fields: [subcategoryId], references: [id])
 }
 
 model SelectedProduct {
@@ -186,14 +188,16 @@ model Category {
   name          String
   image         String
   subCategories SubCategory[]
+  Product       Product[]
 }
 
 model SubCategory {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   name       String
   image      String
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category  @relation(fields: [categoryId], references: [id])
+  Product    Product[]
 }
 
 model Country {

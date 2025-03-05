@@ -4,7 +4,6 @@ import {
   getCategoriesAction,
 } from '@/app/api/actions';
 import EditProduct from '@/app/components/EditProduct/index';
-// import EditProduct from '@/app/components/EditProduct';
 
 interface Props {
   params: {

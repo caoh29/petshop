@@ -32,11 +32,31 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
     const query = searchParams?.query as string;
 
 
+    const categoryId = category ? await prisma.category.findFirst({
+      where: {
+        name: category,
+      },
+      select: {
+        id: true,
+      },
+    }) : undefined;
+
+    const subcategoryId = subcategory ? await prisma.subCategory.findFirst({
+      where: {
+        name: subcategory,
+        categoryId: categoryId?.id ?? undefined,
+      },
+      select: {
+        id: true,
+      },
+    }) : undefined;
+
+
     // Get the total count of products based on the filters
     const totalCount = await prisma.product.count({
       where: {
-        category: category ?? undefined,
-        subcategory: subcategory ?? undefined,
+        categoryId: categoryId?.id,
+        subcategoryId: subcategoryId?.id,
         sizes: sizes ? { hasSome: sizes } : undefined,
         colors: colors ? { hasSome: colors } : undefined,
         name: query ? { contains: query, mode: 'insensitive' } : undefined,
@@ -47,13 +67,25 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
       take,
       skip,
       where: {
-        category: category ?? undefined,
-        subcategory: subcategory ?? undefined,
+        categoryId: categoryId?.id,
+        subcategoryId: subcategoryId?.id,
         sizes: sizes ? { hasSome: sizes } : undefined,
         colors: colors ? { hasSome: colors } : undefined,
         name: query ? { contains: query, mode: 'insensitive' } : undefined,
       },
       orderBy: sortBy ?? undefined,
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        subcategory: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     return {
@@ -61,6 +93,8 @@ export const getPaginatedProductsAction = async ({ category, subcategory, search
       currentPage: page ?? 1, // Current page number
       products: products.map(product => ({
         ...product,
+        category: product.category.name,
+        subcategory: product.subcategory.name,
         createdAt: product.createdAt.toISOString(), // Convert Date to string
       })),
     }
@@ -85,12 +119,30 @@ export const getFeaturedProductsAction = async ({ category, subcategory, searchP
     const sortBy = checkSorting(searchParams?.sort, 'product');
     const query = searchParams?.query as string;
 
+    const categoryId = category ? await prisma.category.findFirst({
+      where: {
+        name: category,
+      },
+      select: {
+        id: true,
+      },
+    }) : undefined;
+
+    const subcategoryId = subcategory ? await prisma.subCategory.findFirst({
+      where: {
+        name: subcategory,
+        categoryId: categoryId?.id ?? undefined,
+      },
+      select: {
+        id: true,
+      },
+    }) : undefined;
 
     // Get the total count of products based on the filters
     const totalCount = await prisma.product.count({
       where: {
-        category: category ?? undefined,
-        subcategory: subcategory ?? undefined,
+        categoryId: categoryId?.id,
+        subcategoryId: subcategoryId?.id,
         sizes: sizes ? { hasSome: sizes } : undefined,
         colors: colors ? { hasSome: colors } : undefined,
         name: query ? { contains: query, mode: 'insensitive' } : undefined,
@@ -105,13 +157,24 @@ export const getFeaturedProductsAction = async ({ category, subcategory, searchP
     const products = await prisma.product.findMany({
       take,
       skip,
-      include: { reviews: true }, // Include reviews in the initial query
+      include: {
+        reviews: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        subcategory: {
+          select: {
+            name: true,
+          },
+        },
+      }, // Include reviews in the initial query
       where: {
-        category: category ?? undefined,
-        subcategory: subcategory ?? undefined,
+        categoryId: categoryId?.id,
+        subcategoryId: subcategoryId?.id,
         sizes: sizes ? { hasSome: sizes } : undefined,
         colors: colors ? { hasSome: colors } : undefined,
-        name: query ? { contains: query, mode: 'insensitive' } : undefined,
         discount: 0,
         stock: { gt: 0 },
         isOutOfStock: false,
@@ -127,6 +190,8 @@ export const getFeaturedProductsAction = async ({ category, subcategory, searchP
       currentPage: page ?? 1, // Current page number
       products: products.map(product => ({
         ...product,
+        category: product.category.name,
+        subcategory: product.subcategory.name,
         createdAt: product.createdAt.toISOString(), // Convert Date to string
         reviews: product.reviews.map(review => ({
           ...review,
@@ -162,7 +227,19 @@ export const getPaginatedDealsAction = async ({ take: userTake, searchParams }: 
     const products = await prisma.product.findMany({
       take,
       skip,
-      include: { reviews: true },
+      include: {
+        reviews: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        subcategory: {
+          select: {
+            name: true,
+          },
+        },
+      },
       where: {
         discount: {
           gt: 0
@@ -178,6 +255,8 @@ export const getPaginatedDealsAction = async ({ take: userTake, searchParams }: 
       currentPage: page ?? 1, // Current page number
       products: products.map(product => ({
         ...product,
+        category: product.category.name,
+        subcategory: product.subcategory.name,
         discountedPrice: product.price - (product.price * product.discount / 100),
         createdAt: product.createdAt.toISOString(), // Convert Date to string
         reviews: product.reviews.map(review => ({
@@ -208,13 +287,25 @@ export const getProductByIdAction = async ({
       },
       include: {
         reviews: true,
-      }
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        subcategory: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     if (!product) return null;
 
     return {
       ...product,
+      category: product.category.name,
+      subcategory: product.subcategory.name,
       createdAt: product.createdAt.toISOString(),
       reviews: product.reviews.map(review => ({
         ...review,
@@ -229,15 +320,45 @@ export const getProductByIdAction = async ({
 
 export const getRelatedProductsAction = async ({ id, category, subcategory }: { id: string, category?: string, subcategory?: string }) => {
   try {
+
+    const categoryId = category ? await prisma.category.findFirst({
+      where: {
+        name: category,
+      },
+      select: {
+        id: true,
+      },
+    }) : undefined;
+
+    const subcategoryId = subcategory ? await prisma.subCategory.findFirst({
+      where: {
+        name: subcategory,
+        categoryId: categoryId?.id ?? undefined,
+      },
+      select: {
+        id: true,
+      },
+    }) : undefined;
+
+
     const products = await prisma.product.findMany({
       take: 4,
-      include: { reviews: true },
-      orderBy: {
-        createdAt: 'desc',
+      include: {
+        reviews: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        subcategory: {
+          select: {
+            name: true,
+          },
+        },
       },
       where: {
-        category: category ?? undefined,
-        subcategory: subcategory ?? undefined,
+        categoryId: categoryId?.id,
+        subcategoryId: subcategoryId?.id,
         NOT: {
           id: id,
         },
@@ -246,6 +367,8 @@ export const getRelatedProductsAction = async ({ id, category, subcategory }: { 
 
     return products.map(product => ({
       ...product,
+      category: product.category.name,
+      subcategory: product.subcategory.name,
       createdAt: product.createdAt.toISOString(),
       reviews: product.reviews.map(review => ({
         ...review,
@@ -268,14 +391,25 @@ export const searchProductAction = async (query: string) => {
         },
       },
       take: 10,
-      include: { reviews: true },
-      orderBy: {
-        createdAt: 'desc',
+      include: {
+        reviews: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        subcategory: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
     return products.map(product => ({
       ...product,
+      category: product.category.name,
+      subcategory: product.subcategory.name,
       createdAt: product.createdAt.toISOString(),
       reviews: product.reviews.map(review => ({
         ...review,
@@ -292,48 +426,87 @@ export const getFiltersAction = async ({ category, subcategory, searchParams }: 
   try {
     const query = searchParams?.query;
 
-    if (Array.isArray(query)) return { filters: [] }
+    // Early return for invalid query format
+    if (Array.isArray(query)) {
+      return { filters: [] };
+    }
 
+    // Find category ID
+    const categoryId = category
+      ? await prisma.category.findFirst({
+        where: { name: category },
+        select: { id: true }
+      })
+      : undefined;
+
+    // Find subcategory ID based on category
+    const subcategoryId = subcategory && categoryId
+      ? await prisma.subCategory.findFirst({
+        where: {
+          name: subcategory,
+          categoryId: categoryId.id,
+        },
+        select: { id: true }
+      })
+      : undefined;
+
+    // Fetch products with the specified filters
     const products = await prisma.product.findMany({
       where: {
-        category,
-        subcategory,
+        categoryId: categoryId?.id,
+        subcategoryId: subcategoryId?.id,
         name: query ? { contains: query, mode: 'insensitive' } : undefined,
       },
       select: {
         sizes: true,
         colors: true,
       },
+      orderBy: {
+        sizes: 'desc',
+      },
     });
 
+    // Return empty filters if no products found
     if (products.length === 0) {
       return { filters: [] };
     }
 
-    const { sizes, colors } = products.reduce(
-      (acc, product) => {
-        product.sizes.forEach(size => acc.sizes.add(String(size))); // Ensure size is a string
-        product.colors.forEach(color => acc.colors.add(String(color))); // Ensure color is a string
-        return acc;
-      },
-      { sizes: new Set<string>(), colors: new Set<string>() }
-    );
+    // Collect unique sizes and colors
+    const sizeSet = new Set<string>();
+    const colorSet = new Set<string>();
 
+    // Populate sets with unique values
+    products.forEach(product => {
+      product.sizes.forEach(size => sizeSet.add(String(size)));
+      product.colors.forEach(color => colorSet.add(String(color)));
+    });
+
+    // Convert sets to arrays for the filter groups
+    const sizeArray = Array.from(sizeSet);
+    const colorArray = Array.from(colorSet);
+
+    // Create filter groups with proper formatting
     const filterGroups: FilterGroup[] = [
       {
         name: 'Size',
-        options: [sizes.values].map((size) => ({ id: size.toString(), label: size.toString() })),
+        options: sizeArray.map(size => ({
+          id: size,
+          label: size
+        })),
       },
       {
         name: 'Color',
-        options: [colors.values]
-          .map((color) => ({ id: color.toString(), label: color.toString().charAt(0).toUpperCase() + color.toString().slice(1) })),
+        options: colorArray.map(color => ({
+          id: color,
+          label: color.charAt(0).toUpperCase() + color.slice(1)
+        })),
       },
     ];
 
     return { filters: filterGroups };
   } catch (error) {
     console.error('Error fetching filters:', error);
+    // Log detailed error for debugging but return a generic message
     return {
       filters: []
     };

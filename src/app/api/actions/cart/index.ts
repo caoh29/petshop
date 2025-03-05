@@ -26,8 +26,16 @@ const getCart = async (userId: string): Promise<Cart> => {
               name: true,
               price: true,
               image: true,
-              category: true,
-              subcategory: true,
+              category: {
+                select: {
+                  name: true,
+                }
+              },
+              subcategory: {
+                select: {
+                  name: true,
+                }
+              },
               discount: true,
             }
           }
@@ -63,8 +71,8 @@ const getCart = async (userId: string): Promise<Cart> => {
         productImage: product.image,
         productName: product.name,
         productPrice: (product.price - (product.price * product.discount / 100)),
-        productCategory: product.category,
-        productSubcategory: product.subcategory,
+        productCategory: product.category.name,
+        productSubcategory: product.subcategory.name,
         size: size ?? '',
         color: color ?? '',
         quantity: quantity,
@@ -229,8 +237,16 @@ export const updateProductCartAction = async (
             name: true,
             price: true,
             image: true,
-            category: true,
-            subcategory: true,
+            category: {
+              select: {
+                name: true,
+              }
+            },
+            subcategory: {
+              select: {
+                name: true,
+              },
+            },
           }
         }
       }
@@ -241,8 +257,8 @@ export const updateProductCartAction = async (
       productImage: dbSelectedProduct?.product.image ?? '',
       productName: dbSelectedProduct?.product.name ?? '',
       productPrice: dbSelectedProduct?.product.price ?? 0,
-      productCategory: dbSelectedProduct?.product.category ?? '',
-      productSubcategory: dbSelectedProduct?.product.subcategory ?? '',
+      productCategory: dbSelectedProduct?.product.category.name ?? '',
+      productSubcategory: dbSelectedProduct?.product.subcategory.name ?? '',
       size: dbSelectedProduct?.size ?? '',
       color: dbSelectedProduct?.color ?? '',
       quantity: dbSelectedProduct?.quantity ?? 0

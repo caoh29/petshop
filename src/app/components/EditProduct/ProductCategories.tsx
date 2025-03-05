@@ -108,14 +108,20 @@ export function ProductCategories({
                     className={
                       !isEditing
                         ? 'bg-primary-foreground/10 text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                        : 'text-black bg-white'
+                        : 'text-black'
                     }
                   >
-                    <SelectValue />
+                    <SelectValue
+                      className={!isEditing ? 'text-white' : 'text-black'}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
+                      <SelectItem
+                        className='text-black focus:bg-secondary focus:text-white'
+                        key={category.id}
+                        value={category.id}
+                      >
                         {category.name}
                       </SelectItem>
                     ))}
@@ -147,18 +153,24 @@ export function ProductCategories({
                     className={
                       !isEditing
                         ? 'bg-primary-foreground/10 text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                        : 'text-black bg-white'
+                        : 'text-black'
                     }
                   >
                     {isLoadingSubcategories ? (
                       <Skeleton className='h-8 w-full' />
                     ) : (
-                      <SelectValue />
+                      <SelectValue
+                        className={!isEditing ? 'text-white' : 'text-black'}
+                      />
                     )}
                   </SelectTrigger>
                   <SelectContent>
                     {subcategories.map((subcategory) => (
-                      <SelectItem key={subcategory.id} value={subcategory.id}>
+                      <SelectItem
+                        className='text-black focus:bg-secondary focus:text-white'
+                        key={subcategory.id}
+                        value={subcategory.id}
+                      >
                         {subcategory.name}
                       </SelectItem>
                     ))}

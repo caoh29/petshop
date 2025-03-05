@@ -91,7 +91,20 @@ export const getOrderByIdUserAction = async ({ orderId }: { orderId: string; }) 
       include: {
         products: {
           include: {
-            product: true,
+            product: {
+              include: {
+                category: {
+                  select: {
+                    name: true,
+                  },
+                },
+                subcategory: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            }
           },
         },
         user: true,
@@ -109,8 +122,8 @@ export const getOrderByIdUserAction = async ({ orderId }: { orderId: string; }) 
         id: item.productId,
         image: item.product.image,
         name: item.product.name,
-        category: item.product.category,
-        subcategory: item.product.subcategory,
+        category: item.product.category.name,
+        subcategory: item.product.subcategory.name,
         price: item.price ?? 0,
         quantity: item.quantity,
         size: item.size ?? undefined,

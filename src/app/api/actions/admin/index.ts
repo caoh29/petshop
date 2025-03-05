@@ -216,7 +216,20 @@ export const getOrderByIdAdminAction = async ({ orderId }: { orderId: string; })
       include: {
         products: {
           include: {
-            product: true,
+            product: {
+              include: {
+                category: {
+                  select: {
+                    name: true,
+                  }
+                },
+                subcategory: {
+                  select: {
+                    name: true,
+                  }
+                },
+              },
+            },
           },
         },
         user: true,
@@ -234,8 +247,8 @@ export const getOrderByIdAdminAction = async ({ orderId }: { orderId: string; })
         id: item.productId,
         image: item.product.image,
         name: item.product.name,
-        category: item.product.category,
-        subcategory: item.product.subcategory,
+        category: item.product.category.name,
+        subcategory: item.product.subcategory.name,
         price: item.price ?? 0,
         quantity: item.quantity,
         size: item.size ?? undefined,
@@ -348,6 +361,18 @@ export const getPaginatedProductsAdminAction = async ({ searchParams }: GetProdu
       take,
       skip,
       orderBy: sortBy ?? undefined,
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        subcategory: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     return {
@@ -355,6 +380,8 @@ export const getPaginatedProductsAdminAction = async ({ searchParams }: GetProdu
       currentPage: page ?? 1, // Current page number
       products: products.map((product) => ({
         ...product,
+        category: product.category.name,
+        subcategory: product.subcategory.name,
         createdAt: product.createdAt.toISOString(),
       })),
     }
@@ -376,6 +403,16 @@ export const getProductByIdAdminAction = async (productId: string): Promise<{ pr
       },
       include: {
         reviews: true,
+        // category: {
+        //   select: {
+        //     name: true,
+        //   },
+        // },
+        // subcategory: {
+        //   select: {
+        //     name: true,
+        //   },
+        // },
       },
     });
 
@@ -384,6 +421,10 @@ export const getProductByIdAdminAction = async (productId: string): Promise<{ pr
     return {
       product: {
         ...product,
+        // category: product.category.name,
+        // subcategory: product.subcategory.name,
+        category: product.categoryId,
+        subcategory: product.subcategoryId,
         createdAt: product.createdAt.toISOString(),
         updatedAt: product.updatedAt.toISOString(),
         reviews: product.reviews.map((review) => ({
@@ -429,8 +470,8 @@ export const createProductAdminAction = async (values: SchemaCreateProduct) => {
         description: data.description,
         price: data.price,
         discount: data.discount,
-        category: data.category,
-        subcategory: data.subcategory,
+        categoryId: data.category,
+        subcategoryId: data.subcategory,
         stock: data.stock,
         sizes: data.sizes,
         colors: data.colors,
@@ -498,8 +539,8 @@ export const updateProductAdminAction = async (productId: string, values: Schema
         description: data.description,
         price: data.price,
         discount: data.discount,
-        category: data.category,
-        subcategory: data.subcategory,
+        categoryId: data.category,
+        subcategoryId: data.subcategory,
         stock: data.stock,
         sizes: data.sizes,
         availableSizes: data.availableSizes,

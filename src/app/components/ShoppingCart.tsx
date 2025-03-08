@@ -55,7 +55,7 @@ export default function ShoppingCart({ className, cart }: Readonly<Props>) {
               <TableBody>
                 {cart.products.map((product, index) => (
                   <TableRow
-                    key={index}
+                    key={product.productId + '-' + index}
                     className='bg-secondary hover:bg-secondary text-white text-center'
                   >
                     <TableCell className='font-medium'>

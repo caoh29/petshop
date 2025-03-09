@@ -58,6 +58,7 @@ export default async function ProductPage({ params: { id } }: Readonly<Props>) {
           category={product.category}
           subcategory={product.subcategory}
           reviews={product.reviews}
+          isOutOfStock={product.isOutOfStock}
         />
 
         <ProductImageGallery

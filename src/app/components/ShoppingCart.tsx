@@ -1,10 +1,14 @@
-import Link from 'next/link';
-
 import { ShoppingCart as ShoppingCartIcon } from 'lucide-react';
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from './ui/sheet';
 
 import { Cart } from '@/types/types';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { ScrollArea } from './ui/scroll-area';
 import CartDeleteSelector from './CartDeleteSelector';
 
 import {
@@ -37,9 +41,9 @@ export default function ShoppingCart({ className, cart }: Readonly<Props>) {
         </div>
       </SheetTrigger>
       <SheetContent side='right' className='bg-primary'>
-        <h3 className='text-2xl font-bold text-center text-white mb-4'>
+        <SheetTitle className='text-2xl font-bold text-center text-white mb-4'>
           Your Cart
-        </h3>
+        </SheetTitle>
         {cart.products.length === 0 ? (
           <p className='text-center text-muted my-6'>Your cart is empty.</p>
         ) : (
@@ -55,7 +59,7 @@ export default function ShoppingCart({ className, cart }: Readonly<Props>) {
               <TableBody>
                 {cart.products.map((product, index) => (
                   <TableRow
-                    key={index}
+                    key={product.productId + '-' + index}
                     className='bg-secondary hover:bg-secondary text-white text-center'
                   >
                     <TableCell className='font-medium'>
@@ -83,7 +87,7 @@ export default function ShoppingCart({ className, cart }: Readonly<Props>) {
           className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors disabled:pointer-events-none disabled:opacity-50 bg-secondary text-white hover:bg-secondary/80 w-full px-4 py-2'
           asChild
         >
-          <Link href='/cart'>Review Cart</Link>
+          <a href='/cart'>Review Cart</a>
         </SheetClose>
       </SheetContent>
     </Sheet>

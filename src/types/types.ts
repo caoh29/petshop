@@ -197,6 +197,20 @@ export interface Product {
   isOutOfStock: boolean;
   discount: number;
   createdAt: Date | string;
+  updatedAt?: Date | string;
+}
+
+export interface SimplifiedProduct {
+  id: string;
+  sku: string;
+  image: string;
+  name: string;
+  price: number;
+  category: string;
+  subcategory: string;
+  stock: number;
+  discount: number;
+  createdAt: Date | string;
 }
 
 export interface SelectedProduct {

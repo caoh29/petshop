@@ -35,6 +35,7 @@ export default function ProductDetails({
           category={product.category}
           subcategory={product.subcategory}
           reviews={product.reviews}
+          isOutOfStock={product.isOutOfStock}
         />
       </CardHeader>
       <CardContent className='space-y-6'>

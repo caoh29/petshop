@@ -6,6 +6,8 @@ export { addReviewAction } from './reviews';
 
 export { getCategoriesAction } from './categories';
 
+export { getSubCategoriesAction } from './subcategories';
+
 export { registerUserAction, loginUserAction, logoutUserAction, checkIfUserExistsAction, checkOTPAction, changePasswordWithTokenAction } from './auth';
 
 export { getUserDefaultValuesAction, createPaymentIntentAction, createOrderAction, getAmount } from './checkout';
@@ -16,4 +18,4 @@ export { updateUserAction, changePasswordAction } from './profile';
 
 export { getCountriesAction, getStatesByCountryCodeAction } from './location';
 
-export { getPaginatedUsersAdminAction, getUserByIdAdminAction, getPaginatedOrdersAdminAction, getOrderByIdAdminAction, promoteUserToAdminAction, inactivateUserAdminAction } from './admin';
+export { getPaginatedUsersAdminAction, getUserByIdAdminAction, getPaginatedOrdersAdminAction, getOrderByIdAdminAction, promoteUserToAdminAction, inactivateUserAdminAction, createProductAdminAction, getPaginatedProductsAdminAction, getProductByIdAdminAction, updateProductAdminAction, deleteProductAdminAction } from './admin';

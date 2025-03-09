@@ -3,8 +3,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // This is the direct URL to the database without the pool, use only when using pooling
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model User {
@@ -141,8 +143,8 @@ model Product {
   additionalImages String[]
   name             String
   price            Float
-  category         String
-  subcategory      String
+  categoryId       String
+  subcategoryId    String
   description      String
   sizes            String[]
   availableSizes   String[]
@@ -150,6 +152,7 @@ model Product {
   availableColors  String[]
   stock            Int
   isOutOfStock     Boolean
+  isDiscounted     Boolean           @default(false)
   createdAt        DateTime          @default(now())
   reservedStock    Int               @default(0)
   updatedAt        DateTime          @updatedAt
@@ -157,6 +160,8 @@ model Product {
   reviews          Review[]
   selectedProducts SelectedProduct[]
   wishedBy         User[]            @relation("UserWishlist")
+  category         Category          @relation(fields: [categoryId], references: [id])
+  subcategory      SubCategory       @relation(fields: [subcategoryId], references: [id])
 }
 
 model SelectedProduct {
@@ -181,15 +186,20 @@ model Cart {
 }
 
 model Category {
-  id    String @id @default(uuid())
-  name  String
-  image String
+  id            String        @id @default(uuid())
+  name          String
+  image         String
+  subCategories SubCategory[]
+  Product       Product[]
 }
 
 model SubCategory {
-  id    String @id @default(uuid())
-  name  String
-  image String
+  id         String    @id @default(uuid())
+  name       String
+  image      String
+  categoryId String
+  category   Category  @relation(fields: [categoryId], references: [id])
+  Product    Product[]
 }
 
 model Country {

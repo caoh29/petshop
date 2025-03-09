@@ -20,13 +20,12 @@ services:
     image: brainsam/pgbouncer:1.12.0
     container_name: petshop-pgbouncer-container
     ports:
-      - 6433:6432
+      - 6432:6432
     environment:
       - DB_HOST=petshop-db
       - DB_USER=${DATABASE_USER}
       - DB_PASSWORD=${DATABASE_PASSWORD}
       - DB_NAME=${DATABASE_NAME}
-      - DB_port=${DATABASE_PORT}
       - POOL_MODE=transaction
       - MAX_CLIENT_CONN=100
     depends_on:

@@ -474,11 +474,13 @@ export const createProductAdminAction = async (values: SchemaCreateProduct) => {
         subcategoryId: data.subcategory,
         stock: data.stock,
         sizes: data.sizes,
+        availableSizes: data.availableSizes,
         colors: data.colors,
+        availableColors: data.availableColors,
         sku: data.sku,
-        isOutOfStock: data.stock <= 0,
-        image: '',
-        additionalImages: []
+        isOutOfStock: data.isOutOfStock,
+        image: data.image,
+        additionalImages: data.additionalImages
       },
     });
 

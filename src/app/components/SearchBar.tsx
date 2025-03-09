@@ -7,6 +7,7 @@ import {
   SheetClose,
   SheetContent,
   SheetFooter,
+  SheetTitle,
   SheetTrigger,
 } from './ui/sheet';
 import { searchProductAction } from '../api/actions';
@@ -52,6 +53,7 @@ export default function SearchBar({
         />
       </SheetTrigger>
       <SheetContent side='top' className='bg-primary'>
+        <SheetTitle></SheetTitle>
         <div className='flex justify-center items-center gap-4 mb-5'>
           <label htmlFor='name' className='text-right text-white'>
             Search

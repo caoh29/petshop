@@ -164,8 +164,16 @@ export const addProductToCartAction = async (
             price: true,
             discount: true,
             image: true,
-            category: true,
-            subcategory: true,
+            category: {
+              select: {
+                name: true,
+              }
+            },
+            subcategory: {
+              select: {
+                name: true,
+              }
+            },
           }
         }
       }
@@ -178,8 +186,8 @@ export const addProductToCartAction = async (
     productImage: updatedCartProduct.product.image,
     productName: updatedCartProduct.product.name,
     productPrice: updatedCartProduct.product.price - (updatedCartProduct.product.price * updatedCartProduct.product.discount / 100),
-    productCategory: updatedCartProduct.product.category,
-    productSubcategory: updatedCartProduct.product.subcategory,
+    productCategory: updatedCartProduct.product.category.name,
+    productSubcategory: updatedCartProduct.product.subcategory.name,
     size: updatedCartProduct.size ?? '',
     color: updatedCartProduct.color ?? '',
     quantity: updatedCartProduct.quantity,

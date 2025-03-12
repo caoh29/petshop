@@ -150,14 +150,7 @@ export function SigninForm() {
               <span className='mx-4 font-medium'>OR</span>
             </div>
             <div className='mt-4 text-center text-sm'>
-              <Button
-                variant={'secondary'}
-                onClick={() =>
-                  signIn('google', {
-                    redirectTo: '/',
-                  })
-                }
-              >
+              <Button variant={'secondary'} onClick={() => signIn('google')}>
                 Google
               </Button>
             </div>

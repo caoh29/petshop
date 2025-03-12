@@ -25,12 +25,12 @@ type ProductCreate = {
 
 async function main() {
   await prisma.cart.deleteMany();
+  await prisma.selectedProduct.deleteMany();
+  await prisma.product.deleteMany();
   await prisma.subCategory.deleteMany();
   await prisma.category.deleteMany();
   await prisma.order.deleteMany();
-  await prisma.product.deleteMany();
   await prisma.review.deleteMany();
-  await prisma.selectedProduct.deleteMany();
   await prisma.user.deleteMany();
   await prisma.state.deleteMany();
   await prisma.country.deleteMany();
